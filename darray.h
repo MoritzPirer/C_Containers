@@ -26,30 +26,35 @@ typedef enum _DarrayStatus_ {
     DARRAY_OK,
     DARRAY_ERROR_ALLOCATION,
     DARRAY_ERROR_BOUNDS,
+    DARRAY_ERROR_NULL
 } DarrayStatus;
 
 /// @brief initialize the given Darray object
 /// @param darray the darray to initialize 
 /// @param initial_size how many elements should be usable right away
 /// @param element_size how large a single element is 
-/// @return DARRAY_OK if everything is fine or DARRAY_ERROR_ALLOCATION if the resizing failed
+/// @return DARRAY_OK if everything is fine, DARRAY_ERROR_ALLOCATION if the resizing failed
+///     or DARRAY_ERROR_NULL if the given darray was NULL
 DarrayStatus darrayInit(Darray* darray, size_t initial_size, size_t element_size);
 
 /// @brief destroy the given Darray. Using the darray after this function
 ///     results in undefined behavior
 /// @param darray the Darray to destroy 
-void darrayDestroy(Darray* darray);
+/// @return DARRAY_OK if everything is fine or DARRAY_ERROR_NULL if the given darray was NULL
+DarrayStatus darrayDestroy(Darray* darray);
 
 /// @brief guarantees that the darray can hold at least elements_to_reserve elements
 ///     without having to reallocate again
 /// @param darray the darray to size up 
 /// @param elements_to_reserve how many elements the darray should be able to hold 
-/// @return DARRAY_OK if everything is fine or DARRAY_ERROR_ALLOCATION if the resizing failed 
+/// @return DARRAY_OK if everything is fine, DARRAY_ERROR_ALLOCATION if the resizing failed 
+///     or DARRAY_ERROR_NULL if the given darray was NULL
 DarrayStatus darrayReserve(Darray* darray, size_t elements_to_reserve);
 
 /// @brief ensure the internal capacity matches the current size.
 /// @param darray the darray to size down
-/// @return DARRAY_OK if everything is fine or DARRAY_ERROR_ALLOCATION if the resizing failed 
+/// @return DARRAY_OK if everything is fine, DARRAY_ERROR_ALLOCATION if the resizing failed 
+///     or DARRAY_ERROR_NULL if the given darray was NULL
 DarrayStatus darrayShrinkToFit(Darray* darray);
 
 /// @brief return the amount of currently used elements
@@ -69,7 +74,19 @@ bool darrayIsEmpty(Darray darray);
 /// @param darray the darray to add to
 /// @param element a pointer to the element to add
 /// @return DARRAY_OK if everything is fine or DARRAY_ERROR_ALLOCATION if the resizing failed
+///     or DARRAY_ERROR_NULL if darray or element was NULL
 DarrayStatus darrayPushBack(Darray* darray, void* element);
 
+/// @brief removes the last element from the darray and writes it to the location
+///     pointed to by buffer.
+/// @param darray the darray to pop from
+/// @param buffer where to pop to
+/// @return DARRAY_ERROR_BOUNDS if there is no element to pop, DARRAY_ERROR_NULL if 
+///     darray or buffer are NULL, DARRAY_OK otherwise
+DarrayStatus darrayPopBackInto(Darray* darray, void* buffer);
+
+
 void show(Darray darray);
+
+
 #endif //DYNAMIC_ARRAY_H

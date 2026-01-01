@@ -37,6 +37,10 @@ DarrayStatus darraySetSizeTo(Darray* darray, size_t new_element_count) {
 }
 
 DarrayStatus darrayInit(Darray* darray, size_t initial_size, size_t element_size) {
+    if (darray == NULL) {
+        return DARRAY_ERROR_NULL;
+    }
+
     darray->m_elements_used = initial_size;
     darray->m_elements_allocated = max(initial_size, DARRAY_MIN_SIZE);
     darray->m_element_size = element_size;
@@ -49,14 +53,24 @@ DarrayStatus darrayInit(Darray* darray, size_t initial_size, size_t element_size
     return DARRAY_OK;
 }
 
-void darrayDestroy(Darray* darray) {
+DarrayStatus darrayDestroy(Darray* darray) {
+    if (darray == NULL) {
+        return DARRAY_ERROR_NULL;
+    }
+
     free(darray->m_data);
     darray->m_data = NULL;
     darray->m_elements_allocated = 0;
     darray->m_elements_used = 0;
+
+    return DARRAY_OK;
 }
 
 DarrayStatus darrayReserve(Darray* darray, size_t elements_to_reserve) {
+    if (darray == NULL) {
+        return DARRAY_ERROR_NULL;
+    }
+
     if (elements_to_reserve <= darray->m_elements_allocated) {
         return DARRAY_OK; 
     }
@@ -65,6 +79,10 @@ DarrayStatus darrayReserve(Darray* darray, size_t elements_to_reserve) {
 }
 
 DarrayStatus darrayShrinkToFit(Darray* darray) {
+    if (darray == NULL) {
+        return DARRAY_ERROR_NULL;
+    }
+    
     if (darray->m_elements_allocated == darray->m_elements_used) {
         return DARRAY_OK;
     }
@@ -85,6 +103,10 @@ bool darrayIsEmpty(Darray darray) {
 }
 
 DarrayStatus darrayPushBack(Darray* darray, void* element) {
+    if (darray == NULL || element == NULL) {
+        return DARRAY_ERROR_NULL;
+    }
+
     if (darray->m_elements_used == darray->m_elements_allocated) {
         DarrayStatus result = darraySetSizeTo(
             darray, darray->m_elements_allocated * DARRAY_GROW_FACTOR);
@@ -100,6 +122,25 @@ DarrayStatus darrayPushBack(Darray* darray, void* element) {
 
     darray->m_elements_used++;
     
+    return DARRAY_OK;
+}
+
+
+DarrayStatus darrayPopBackInto(Darray* darray, void* buffer) {
+    if (darray == NULL || buffer == NULL) {
+        return DARRAY_ERROR_NULL;
+    }
+    
+    if (darray->m_elements_used == 0) {
+        return DARRAY_ERROR_BOUNDS;
+    }
+    
+
+    size_t offset = (darray->m_elements_used - 1) * darray->m_element_size;
+    void* last_element = offsetPointer(darray->m_data, offset);
+    
+    memcpy(buffer, last_element, darray->m_element_size);
+
     return DARRAY_OK;
 }
 
