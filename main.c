@@ -26,10 +26,12 @@ int main() {
     temp = 6;
     darrayPushBack(&darray, (void*) &temp);
     show(darray);
-
-    darrayPopBackInto(&darray, (void*) &temp);
+    temp = -1;
+    darraySetAt(&darray, 0, &temp);
     show(darray);
     
+    darrayGetAt(&darray, 4, &temp);
+    printf("%d", temp);
     
     darrayDestroy(&darray);
 

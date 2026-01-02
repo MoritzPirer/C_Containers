@@ -29,6 +29,10 @@ typedef enum _DarrayStatus_ {
     DARRAY_ERROR_NULL
 } DarrayStatus;
 
+///
+/// INITIALIZE & DESTROY
+///
+
 /// @brief initialize the given Darray object
 /// @param darray the darray to initialize 
 /// @param initial_size how many elements should be usable right away
@@ -42,6 +46,10 @@ DarrayStatus darrayInit(Darray* darray, size_t initial_size, size_t element_size
 /// @param darray the Darray to destroy 
 /// @return DARRAY_OK if everything is fine or DARRAY_ERROR_NULL if the given darray was NULL
 DarrayStatus darrayDestroy(Darray* darray);
+
+///
+/// SIZE & CAPACITY
+///
 
 /// @brief guarantees that the darray can hold at least elements_to_reserve elements
 ///     without having to reallocate again
@@ -70,6 +78,10 @@ size_t darrayCapacity(Darray darray);
 /// @return true if the given darray is empty, false otherwise
 bool darrayIsEmpty(Darray darray);
 
+///
+/// ADD & REMOVE
+///
+
 /// @brief adds the element pointed to by element to the given darray, resizing if needed
 /// @param darray the darray to add to
 /// @param element a pointer to the element to add
@@ -85,8 +97,29 @@ DarrayStatus darrayPushBack(Darray* darray, void* element);
 ///     darray or buffer are NULL, DARRAY_OK otherwise
 DarrayStatus darrayPopBackInto(Darray* darray, void* buffer);
 
+/// 
+/// ACCESS
+///
+
+/// @brief Reads the element at position index into buffer 
+/// @param darray the darray to read from
+/// @param index the position to read from. The first element is 0
+/// @param buffer where to write the value that has been read 
+/// @return DARRAAY_OK if everything is fine, DARRAY_ERROR_NULL if darray or buffer is NULL
+///     or DARRAY_ERROR_BOUNDS if index < 0 or index > darraySize(darray) 
+DarrayStatus darrayGetAt(Darray* darray, size_t index, void* buffer);
+
+/// @brief Set the element at position index to the value pointed to by buffer
+/// @param darray the darray to write to
+/// @param index the position to write to. The first element is 0
+/// @param buffer where the value to write is 
+/// @return DARRAAY_OK if everything is fine, DARRAY_ERROR_NULL if darray or buffer is NULL
+///     or DARRAY_ERROR_BOUNDS if index < 0 or index > darraySize(darray) 
+DarrayStatus darraySetAt(Darray* darray, size_t index, void* buffer);
+
 
 void show(Darray darray);
+
 
 
 #endif //DYNAMIC_ARRAY_H

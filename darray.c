@@ -141,8 +141,45 @@ DarrayStatus darrayPopBackInto(Darray* darray, void* buffer) {
     
     memcpy(buffer, last_element, darray->m_element_size);
 
+    darray->m_elements_used--;
+
     return DARRAY_OK;
 }
+
+DarrayStatus darrayGetAt(Darray* darray, size_t index, void* buffer) {
+    if (darray == 0 || buffer == 0) {
+        return DARRAY_ERROR_NULL;
+    }
+    
+    if (index < 0 || index >= darray->m_elements_used) {
+        return DARRAY_ERROR_BOUNDS;
+    }
+
+    size_t offset = index * darray->m_element_size;
+    void* element_to_read = offsetPointer(darray->m_data, offset);
+
+    memcpy(buffer, element_to_read, darray->m_element_size);
+
+    return DARRAY_OK;
+}
+
+DarrayStatus darraySetAt(Darray* darray, size_t index, void* buffer) {
+    if (darray == 0 || buffer == 0) {
+        return DARRAY_ERROR_NULL;
+    }
+    
+    if (index < 0 || index >= darray->m_elements_used) {
+        return DARRAY_ERROR_BOUNDS;
+    }
+
+    size_t offset = index * darray->m_element_size;
+    void* element_to_write = offsetPointer(darray->m_data, offset);
+
+    memcpy(element_to_write, buffer, darray->m_element_size);
+
+    return DARRAY_OK;
+}
+
 
 void show(Darray darray) {
     void* current_element = darray.m_data;
@@ -153,3 +190,4 @@ void show(Darray darray) {
     }
     printf("\n");
 }
+
