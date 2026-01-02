@@ -26,13 +26,11 @@ int main() {
     temp = 6;
     darrayPushBack(&darray, (void*) &temp);
     show(darray);
-    temp = 7;
-    darrayPushBack(&darray, (void*) &temp);
+
+    darrayPopBackInto(&darray, (void*) &temp);
     show(darray);
     
-    printf("%zu", darraySize(darray));
-    darrayShrinkToFit(&darray);
-    printf("%zu", darrayCapacity(darray));
+    
     darrayDestroy(&darray);
 
     return 0;
