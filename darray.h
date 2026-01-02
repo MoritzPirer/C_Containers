@@ -34,18 +34,18 @@ typedef enum _DarrayStatus_ {
 ///
 
 /// @brief initialize the given Darray object
-/// @param darray the darray to initialize 
+/// @param this the darray to initialize 
 /// @param initial_size how many elements should be usable right away
 /// @param element_size how large a single element is 
 /// @return DARRAY_OK if everything is fine, DARRAY_ERROR_ALLOCATION if the resizing failed
 ///     or DARRAY_ERROR_NULL if the given darray was NULL
-DarrayStatus darrayInit(Darray* darray, size_t initial_size, size_t element_size);
+DarrayStatus darrayInit(Darray* this, size_t initial_size, size_t element_size);
 
-/// @brief destroy the given Darray. Using the darray after this function
+/// @brief destroy the given Darray. Using the this after this function
 ///     results in undefined behavior
-/// @param darray the Darray to destroy 
+/// @param this the Darray to destroy 
 /// @return DARRAY_OK if everything is fine or DARRAY_ERROR_NULL if the given darray was NULL
-DarrayStatus darrayDestroy(Darray* darray);
+DarrayStatus darrayDestroy(Darray* this);
 
 ///
 /// SIZE & CAPACITY
@@ -53,72 +53,119 @@ DarrayStatus darrayDestroy(Darray* darray);
 
 /// @brief guarantees that the darray can hold at least elements_to_reserve elements
 ///     without having to reallocate again
-/// @param darray the darray to size up 
+/// @param this the darray to size up 
 /// @param elements_to_reserve how many elements the darray should be able to hold 
 /// @return DARRAY_OK if everything is fine, DARRAY_ERROR_ALLOCATION if the resizing failed 
 ///     or DARRAY_ERROR_NULL if the given darray was NULL
-DarrayStatus darrayReserve(Darray* darray, size_t elements_to_reserve);
+DarrayStatus darrayReserve(Darray* this, size_t elements_to_reserve);
 
 /// @brief ensure the internal capacity matches the current size.
-/// @param darray the darray to size down
+/// @param this the darray to size down
 /// @return DARRAY_OK if everything is fine, DARRAY_ERROR_ALLOCATION if the resizing failed 
 ///     or DARRAY_ERROR_NULL if the given darray was NULL
-DarrayStatus darrayShrinkToFit(Darray* darray);
+DarrayStatus darrayShrinkToFit(Darray* this);
 
 /// @brief return the amount of currently used elements
-/// @param darray the darray to check
+/// @param this the darray to check
 /// @return the number of used elements
-size_t darraySize(Darray darray);
+size_t darraySize(Darray this);
 
 /// @brief return the number of elements there is space reserved for
-/// @param darray the darray to check 
+/// @param this the darray to check 
 /// @return the number of elements space is allocated for 
-size_t darrayCapacity(Darray darray);
+size_t darrayCapacity(Darray this);
 
 /// @return true if the given darray is empty, false otherwise
-bool darrayIsEmpty(Darray darray);
+bool darrayIsEmpty(Darray this);
 
 ///
 /// ADD & REMOVE
 ///
 
 /// @brief adds the element pointed to by element to the given darray, resizing if needed
-/// @param darray the darray to add to
+/// @param this the darray to add to
 /// @param element a pointer to the element to add
 /// @return DARRAY_OK if everything is fine or DARRAY_ERROR_ALLOCATION if the resizing failed
 ///     or DARRAY_ERROR_NULL if darray or element was NULL
-DarrayStatus darrayPushBack(Darray* darray, void* element);
+DarrayStatus darrayPushBack(Darray* this, void* element);
 
 /// @brief removes the last element from the darray and writes it to the location
 ///     pointed to by buffer.
-/// @param darray the darray to pop from
+/// @param this the darray to pop from
 /// @param buffer where to pop to
 /// @return DARRAY_ERROR_BOUNDS if there is no element to pop, DARRAY_ERROR_NULL if 
 ///     darray or buffer are NULL, DARRAY_OK otherwise
-DarrayStatus darrayPopBackInto(Darray* darray, void* buffer);
+DarrayStatus darrayPopBackInto(Darray* this, void* buffer);
+
+/// @brief removes all elements from index start to index end (both included), and potentially
+///     shrinks the darray if it is empty enough
+/// @param this the darray to erase from 
+/// @param start the first element to be erased 
+/// @param end the last element to be erased 
+/// @return DARRAY_ERROR_BOUNDS if start or end are invalid indices or if start is greater than end
+///     DARRAY_ERROR_NULL if this is NULL,
+///     DARRAY_ERROR_BOUNDS if the shrinking failed, DARRAY_OK ohterwise
+DarrayStatus darrayEraseFromTo(Darray* this, size_t start, size_t end);
+
+/// @brief removes all elements from index start (inclusive) to the end of the darray, and potentially
+///     shrinks the darray if it is empty enough
+/// @param this the darray to erase from 
+/// @param start the first element to be erased 
+/// @return DARRAY_ERROR_BOUNDS if start is an invalid index, 
+///     DARRAY_ERROR_NULL if this is NULL,
+///     DARRAY_ERROR_BOUNDS if the shrinking failed, DARRAY_OK ohterwise
+DarrayStatus darrayEraseFrom(Darray* this, size_t start);
+
+/// @brief removes all elements from the start to index end (inclusive), and potentially
+///     shrinks the darray if it is empty enough
+/// @param this the darray to erase from 
+/// @param end the last element to be erased 
+/// @return DARRAY_ERROR_BOUNDS if end is an invalid index, 
+///     DARRAY_ERROR_NULL if this is NULL,
+///     DARRAY_ERROR_BOUNDS if the shrinking failed, DARRAY_OK ohterwise
+DarrayStatus darrayEraseTo(Darray* this, size_t end);
+
+/// @brief removes the element at the given index and potentially
+///     shrinks the darray if it is empty enough
+/// @param this the darray to erase from 
+/// @param index the index to erase at 
+/// @return DARRAY_ERROR_BOUNDS if index is an invalid index, 
+///     DARRAY_ERROR_NULL if this is NULL,
+///     DARRAY_ERROR_BOUNDS if the shrinking failed, DARRAY_OK ohterwise
+DarrayStatus darrayEraseAt(Darray* this, size_t index);
+
+/// @brief removes all elements from the darray and shrinks it if it is empty enough
+/// @param this the darray to erase from 
+/// @param index the index to erase at 
+/// @return DARRAY_ERROR_BOUNDS if index is an invalid index, 
+///     DARRAY_ERROR_NULL if this is NULL,
+///     DARRAY_ERROR_BOUNDS if the shrinking failed, DARRAY_OK ohterwise
+DarrayStatus darrayEraseAll(Darray* this);
+
 
 /// 
 /// ACCESS
 ///
 
 /// @brief Reads the element at position index into buffer 
-/// @param darray the darray to read from
+/// @param this the darray to read from
 /// @param index the position to read from. The first element is 0
 /// @param buffer where to write the value that has been read 
 /// @return DARRAAY_OK if everything is fine, DARRAY_ERROR_NULL if darray or buffer is NULL
 ///     or DARRAY_ERROR_BOUNDS if index < 0 or index > darraySize(darray) 
-DarrayStatus darrayGetAt(Darray* darray, size_t index, void* buffer);
+DarrayStatus darrayGetAt(Darray* this, size_t index, void* buffer);
 
 /// @brief Set the element at position index to the value pointed to by buffer
-/// @param darray the darray to write to
+/// @param this the darray to write to
 /// @param index the position to write to. The first element is 0
 /// @param buffer where the value to write is 
 /// @return DARRAAY_OK if everything is fine, DARRAY_ERROR_NULL if darray or buffer is NULL
 ///     or DARRAY_ERROR_BOUNDS if index < 0 or index > darraySize(darray) 
-DarrayStatus darraySetAt(Darray* darray, size_t index, void* buffer);
+DarrayStatus darraySetAt(Darray* this, size_t index, void* buffer);
 
 
-void show(Darray darray);
+
+void show(Darray this);
 
 
 
