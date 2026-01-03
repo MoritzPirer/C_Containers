@@ -1,4 +1,4 @@
-#include "darray.h"
+#include "inc/darray.h"
 
 #include <stdio.h>
 

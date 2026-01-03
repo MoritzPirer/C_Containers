@@ -1,0 +1,63 @@
+///
+/// @file: darray_erase.c
+/// @description: Contains functions related to erasing elements from a darray 
+///
+/// @date: 2026-01-03 
+/// @author: Moritz Pirer
+///
+
+#include <string.h>
+
+#include "../darray_internal.h"
+
+DarrayStatus darrayEraseFromTo(Darray* this, size_t start, size_t end) {
+    if (this == NULL) {
+        return DARRAY_ERROR_NULL;
+    }
+    
+    if (!internal_darrayIsValidIndex(this, start)) {
+        return DARRAY_ERROR_BOUNDS;
+    }
+
+    if (!internal_darrayIsValidIndex(this, end)) {
+        return DARRAY_ERROR_BOUNDS;
+    }
+
+    if (end < start) {
+        return DARRAY_ERROR_BOUNDS;
+    }
+
+    size_t num_elements_behind_erase = this->m_elements_used - end;
+    if (num_elements_behind_erase > 0) { // if erase is at end, no overwrite is needed
+        size_t bytes_to_copy = num_elements_behind_erase * this->m_element_size;
+        internal_moveBytes(this, end + 1, start, bytes_to_copy);
+    }
+
+    this->m_elements_used -= (end - start + 1);
+
+    return internal_darrayShrinkIfNeeded(this);
+}
+
+DarrayStatus darrayEraseFrom(Darray* this, size_t start) {
+    if (this == NULL) {
+        return DARRAY_ERROR_NULL;
+    }
+    
+    return darrayEraseFromTo(this, start, this->m_elements_used - 1);
+}
+
+DarrayStatus darrayEraseTo(Darray* this, size_t end) {
+    return darrayEraseFromTo(this, 0, end);
+}
+
+DarrayStatus darrayEraseAt(Darray* this, size_t index) {
+    return darrayEraseFromTo(this, index, index);
+}
+
+DarrayStatus darrayEraseAll(Darray* this) {
+    if (this == NULL) {
+        return DARRAY_ERROR_NULL;
+    }
+    
+    return darrayEraseFromTo(this, 0, this->m_elements_used - 1);
+}
