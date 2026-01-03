@@ -63,7 +63,7 @@ DarrayStatus darrayGrow(Darray* this) {
 /// @return DARRAY_ERROR_ALLOCATION if reallocation failed, DARRAY_OK otherwise
 DarrayStatus darrayShrinkIfNeeded(Darray* this) {
     if ((float) this->m_elements_used / this->m_elements_allocated < 1.0 / DARRAY_GROW_FACTOR) {
-        return darraySetSizeTo(this, this->m_elements_allocated / DARRAY_GROW_FACTOR);
+        return darraySetSizeTo(this, this->m_elements_allocated / (float) DARRAY_GROW_FACTOR);
     }
 
     return DARRAY_OK;
@@ -109,7 +109,7 @@ DarrayStatus darrayReserve(Darray* this, size_t elements_to_reserve) {
     if (elements_to_reserve <= this->m_elements_allocated) {
         return DARRAY_OK; 
     }
-
+    //MODO rework tu use geometric growth
     return darraySetSizeTo(this, elements_to_reserve);
 }
 

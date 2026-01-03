@@ -13,7 +13,7 @@
 #include <stdbool.h>
 
 #define DARRAY_MIN_SIZE 1
-#define DARRAY_GROW_FACTOR 2.0f
+#define DARRAY_GROW_FACTOR 2
 
 typedef struct _Darray_ {
     size_t m_elements_used;
@@ -115,7 +115,7 @@ DarrayStatus darrayPopFrontInto(Darray* this, void* element);
 /// @param end the last element to be erased 
 /// @return DARRAY_ERROR_BOUNDS if start or end are invalid indices or if start is greater than end
 ///     DARRAY_ERROR_NULL if this is NULL,
-///     DARRAY_ERROR_BOUNDS if the shrinking failed, DARRAY_OK ohterwise
+///     DARRAY_ERROR_ALLOCATION if the shrinking failed, DARRAY_OK otherwise
 DarrayStatus darrayEraseFromTo(Darray* this, size_t start, size_t end);
 
 /// @brief removes all elements from index start (inclusive) to the end of the darray, and potentially
@@ -124,7 +124,7 @@ DarrayStatus darrayEraseFromTo(Darray* this, size_t start, size_t end);
 /// @param start the first element to be erased 
 /// @return DARRAY_ERROR_BOUNDS if start is an invalid index, 
 ///     DARRAY_ERROR_NULL if this is NULL,
-///     DARRAY_ERROR_BOUNDS if the shrinking failed, DARRAY_OK ohterwise
+///     DARRAY_ERROR_ALLOCATION if the shrinking failed, DARRAY_OK otherwise
 DarrayStatus darrayEraseFrom(Darray* this, size_t start);
 
 /// @brief removes all elements from the start to index end (inclusive), and potentially
@@ -133,7 +133,7 @@ DarrayStatus darrayEraseFrom(Darray* this, size_t start);
 /// @param end the last element to be erased 
 /// @return DARRAY_ERROR_BOUNDS if end is an invalid index, 
 ///     DARRAY_ERROR_NULL if this is NULL,
-///     DARRAY_ERROR_BOUNDS if the shrinking failed, DARRAY_OK ohterwise
+///     DARRAY_ERROR_ALLOCATION if the shrinking failed, DARRAY_OK otherwise
 DarrayStatus darrayEraseTo(Darray* this, size_t end);
 
 /// @brief removes the element at the given index and potentially
@@ -142,7 +142,7 @@ DarrayStatus darrayEraseTo(Darray* this, size_t end);
 /// @param index the index to erase at 
 /// @return DARRAY_ERROR_BOUNDS if index is an invalid index, 
 ///     DARRAY_ERROR_NULL if this is NULL,
-///     DARRAY_ERROR_BOUNDS if the shrinking failed, DARRAY_OK ohterwise
+///     DARRAY_ERROR_ALLOCATION if the shrinking failed, DARRAY_OK otherwise
 DarrayStatus darrayEraseAt(Darray* this, size_t index);
 
 /// @brief removes all elements from the darray and shrinks it if it is empty enough
@@ -150,7 +150,7 @@ DarrayStatus darrayEraseAt(Darray* this, size_t index);
 /// @param index the index to erase at 
 /// @return DARRAY_ERROR_BOUNDS if index is an invalid index, 
 ///     DARRAY_ERROR_NULL if this is NULL,
-///     DARRAY_ERROR_BOUNDS if the shrinking failed, DARRAY_OK ohterwise
+///     DARRAY_ERROR_ALLOCATION if the shrinking failed, DARRAY_OK otherwise
 DarrayStatus darrayEraseAll(Darray* this);
 
 /// @brief insert the given element at the given index, pushing all elements with index >= index back
@@ -171,22 +171,18 @@ DarrayStatus darrayInsertAt(Darray* this, size_t index, void* element);
 /// @param this the darray to read from
 /// @param index the position to read from. The first element is 0
 /// @param buffer where to write the value that has been read 
-/// @return DARRAAY_OK if everything is fine, DARRAY_ERROR_NULL if darray or buffer is NULL
-///     or DARRAY_ERROR_BOUNDS if index < 0 or index > darraySize(darray) 
+/// @return DARRAY_OK if everything is fine, DARRAY_ERROR_NULL if darray or buffer is NULL
+///     or DARRAY_ERROR_BOUNDS if index > darraySize(darray) 
 DarrayStatus darrayGetAt(Darray* this, size_t index, void* buffer);
 
 /// @brief Set the element at position index to the value pointed to by buffer
 /// @param this the darray to write to
 /// @param index the position to write to. The first element is 0
 /// @param buffer where the value to write is 
-/// @return DARRAAY_OK if everything is fine, DARRAY_ERROR_NULL if darray or buffer is NULL
-///     or DARRAY_ERROR_BOUNDS if index < 0 or index > darraySize(darray) 
+/// @return DARRAY_OK if everything is fine, DARRAY_ERROR_NULL if darray or buffer is NULL
+///     or DARRAY_ERROR_BOUNDS if index > darraySize(darray) 
 DarrayStatus darraySetAt(Darray* this, size_t index, void* buffer);
 
-
-
 void show(Darray this);
-
-
 
 #endif //DYNAMIC_ARRAY_H
