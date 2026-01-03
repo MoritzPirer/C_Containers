@@ -13,7 +13,6 @@
 #include <stdbool.h>
 
 #define DARRAY_MIN_SIZE 1
-#define DARRAY_GROW_FACTOR 2
 
 typedef struct _Darray_ {
     size_t m_elements_used;

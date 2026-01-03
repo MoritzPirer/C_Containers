@@ -48,22 +48,19 @@ DarrayStatus darrayGrow(Darray* this) {
     if (this->m_elements_used == this->m_elements_allocated) {
         DarrayStatus result = darraySetSizeTo(
             this,
-            this->m_elements_allocated * DARRAY_GROW_FACTOR);
+            this->m_elements_allocated >> 1);
         return result;
     }
 
     return DARRAY_OK;
 }
 
-/// @brief If the darray is less than 1 / DARRAY_GROW_FACTOR full,
-///     shrink to be 1 / DARRAY_GROW_FACTOR times the size
-/// @example if DARRAY_GROW_FACTOR = 2, when less than half full (e.g. 2 used, 6 allocated),
-///     shrink to be half as large (e.g. shrink from 6 used to 3 used)
+/// @brief If the darray is less than half full, shrink to be half the size
 /// @param this the darray to shrink
 /// @return DARRAY_ERROR_ALLOCATION if reallocation failed, DARRAY_OK otherwise
 DarrayStatus darrayShrinkIfNeeded(Darray* this) {
-    if ((float) this->m_elements_used / this->m_elements_allocated < 1.0 / DARRAY_GROW_FACTOR) {
-        return darraySetSizeTo(this, this->m_elements_allocated / (float) DARRAY_GROW_FACTOR);
+    if (this->m_elements_allocated >> 1 > this->m_elements_used) {
+        return darraySetSizeTo(this, this->m_elements_allocated >> 1);
     }
 
     return DARRAY_OK;
@@ -110,7 +107,12 @@ DarrayStatus darrayReserve(Darray* this, size_t elements_to_reserve) {
         return DARRAY_OK; 
     }
     //MODO rework tu use geometric growth
-    return darraySetSizeTo(this, elements_to_reserve);
+    size_t new_size = max(this->m_elements_allocated, 1);
+    while (new_size < elements_to_reserve) {
+        new_size <<= 1;
+    }
+    
+    return darraySetSizeTo(this, new_size);
 }
 
 DarrayStatus darrayShrinkToFit(Darray* this) {
