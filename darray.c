@@ -155,8 +155,8 @@ DarrayStatus darrayPushBack(Darray* this, void* element) {
 }
 
 
-DarrayStatus darrayPopBackInto(Darray* this, void* buffer) {
-    if (this == NULL || buffer == NULL) {
+DarrayStatus darrayPopBackInto(Darray* this, void* element) {
+    if (this == NULL || element == NULL) {
         return DARRAY_ERROR_NULL;
     }
     
@@ -164,15 +164,40 @@ DarrayStatus darrayPopBackInto(Darray* this, void* buffer) {
         return DARRAY_ERROR_BOUNDS;
     }
     
-    memcpy(buffer, nThElement(this, this->m_elements_used - 1), this->m_element_size);
+    memcpy(element, nThElement(this, this->m_elements_used - 1), this->m_element_size);
 
     this->m_elements_used--;
 
-    return DARRAY_OK;
+    return darrayShrinkIfNeeded(this);
 }
 
 DarrayStatus darrayPushFront(Darray* this, void* element) {
     return darrayInsertAt(this, 0, element);
+}
+
+DarrayStatus darrayPopFrontInto(Darray* this, void* element) {
+    if (this == NULL || element == NULL) {
+        return DARRAY_ERROR_NULL;
+    }
+    
+    if (this->m_elements_used == 0) {
+        return DARRAY_ERROR_BOUNDS;
+    }
+
+    memcpy(element, this->m_data, this->m_element_size);
+    this->m_elements_used--;
+
+    if (this->m_elements_used == 0) { // only element removed -> no need to move over others
+        return DARRAY_OK;
+    }
+
+    size_t bytes_to_copy = this->m_elements_used * this->m_element_size;
+    char buffer[bytes_to_copy];
+    
+    memcpy(buffer, nThElement(this, 1), bytes_to_copy);
+    memcpy(nThElement(this, 0), buffer, bytes_to_copy);
+    
+    return darrayShrinkIfNeeded(this);
 }
 
 DarrayStatus darrayEraseFromTo(Darray* this, size_t start, size_t end) {
@@ -236,7 +261,7 @@ DarrayStatus darrayInsertAt(Darray* this, size_t index, void* element) {
         return DARRAY_ERROR_NULL;
     }
     
-    if (index < 0 || index >= this->m_elements_used) {
+    if (index < 0 || index > this->m_elements_used) {
         return DARRAY_ERROR_BOUNDS;
     }
     
@@ -289,6 +314,7 @@ DarrayStatus darraySetAt(Darray* this, size_t index, void* buffer) {
 }
 
 void show(Darray this) {
+    printf("darray has these %zu elements: ", this.m_elements_used);
     for (size_t index = 0; index < this.m_elements_used; index++) {
         printf("%d, ", *(int*) nThElement(&this, index));
     }

@@ -90,12 +90,12 @@ bool darrayIsEmpty(Darray this);
 DarrayStatus darrayPushBack(Darray* this, void* element);
 
 /// @brief removes the last element from the darray and writes it to the location
-///     pointed to by buffer.
+///     pointed to by element.
 /// @param this the darray to pop from
-/// @param buffer where to pop to
+/// @param element where to pop to
 /// @return DARRAY_ERROR_BOUNDS if there is no element to pop, DARRAY_ERROR_NULL if 
 ///     darray or buffer are NULL, DARRAY_OK otherwise
-DarrayStatus darrayPopBackInto(Darray* this, void* buffer);
+DarrayStatus darrayPopBackInto(Darray* this, void* element);
 
 /// @brief adds the element pointed to by element to the front of
 ///     the given darray, resizing if needed
@@ -105,6 +105,8 @@ DarrayStatus darrayPopBackInto(Darray* this, void* buffer);
 ///     DARRAY_ERROR_ALLOCATION if resizing the darray failed,
 ///     DARRAY_OK otherwise
 DarrayStatus darrayPushFront(Darray* this, void* element);
+
+DarrayStatus darrayPopFrontInto(Darray* this, void* element);
 
 /// @brief removes all elements from index start to index end (both included), and potentially
 ///     shrinks the darray if it is empty enough
