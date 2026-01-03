@@ -32,7 +32,6 @@ DarrayStatus darraySetSizeTo(Darray* this, size_t new_element_count) {
     void* temp = realloc(this->m_data, new_element_count * this->m_element_size);
 
     if (temp == NULL) {
-        darrayDestroy(this);
         return DARRAY_ERROR_ALLOCATION;
     }
 
@@ -43,6 +42,17 @@ DarrayStatus darraySetSizeTo(Darray* this, size_t new_element_count) {
     this->m_elements_used = min(this->m_elements_used, new_element_count); 
 
     return DARRAY_OK; 
+}
+
+DarrayStatus darrayGrow(Darray* this) {
+    if (this->m_elements_used == this->m_elements_allocated) {
+        DarrayStatus result = darraySetSizeTo(
+            this,
+            this->m_elements_allocated * DARRAY_GROW_FACTOR);
+        return result;
+    }
+
+    return DARRAY_OK;
 }
 
 /// @brief If the darray is less than 1 / DARRAY_GROW_FACTOR full,
@@ -132,12 +142,9 @@ DarrayStatus darrayPushBack(Darray* this, void* element) {
         return DARRAY_ERROR_NULL;
     }
 
-    if (this->m_elements_used == this->m_elements_allocated) {
-        DarrayStatus result = darraySetSizeTo(
-            this, this->m_elements_allocated * DARRAY_GROW_FACTOR);
-        if (result != DARRAY_OK) {
-            return result;
-        }
+    DarrayStatus grow_result = darrayGrow(this);
+    if (grow_result != DARRAY_OK) {
+        return grow_result;
     }
     
     memcpy(nThElement(this, this->m_elements_used), element, this->m_element_size);
@@ -162,6 +169,10 @@ DarrayStatus darrayPopBackInto(Darray* this, void* buffer) {
     this->m_elements_used--;
 
     return DARRAY_OK;
+}
+
+DarrayStatus darrayPushFront(Darray* this, void* element) {
+    return darrayInsertAt(this, 0, element);
 }
 
 DarrayStatus darrayEraseFromTo(Darray* this, size_t start, size_t end) {
@@ -218,6 +229,35 @@ DarrayStatus darrayEraseAll(Darray* this) {
     }
     
     return darrayEraseFromTo(this, 0, this->m_elements_used - 1);
+}
+
+DarrayStatus darrayInsertAt(Darray* this, size_t index, void* element) {
+    if (this == NULL) {
+        return DARRAY_ERROR_NULL;
+    }
+    
+    if (index < 0 || index >= this->m_elements_used) {
+        return DARRAY_ERROR_BOUNDS;
+    }
+    
+    DarrayStatus grow_result = darrayGrow(this);
+    if (grow_result != DARRAY_OK) {
+        return grow_result;
+    }
+    
+    size_t num_elements_behind_insert = this->m_elements_used - index;
+
+    size_t bytes_to_copy = num_elements_behind_insert * this->m_element_size;
+
+    char buffer[bytes_to_copy];
+    memcpy(buffer, nThElement(this, index), bytes_to_copy);
+    memcpy(nThElement(this, index + 1), buffer, bytes_to_copy);
+
+    memcpy(nThElement(this, index), element, this->m_element_size);
+
+    this->m_elements_used++;
+
+    return DARRAY_OK;
 }
 
 DarrayStatus darrayGetAt(Darray* this, size_t index, void* buffer) {

@@ -12,8 +12,11 @@ int main() {
         darrayPushBack(&darray, &temp);
     }
     show(darray);
-     
-    darrayEraseAll(&darray);
+    
+    int temp = 100;
+    darrayPushFront(&darray, &temp);
+    show(darray);
+    darrayPushFront(&darray, &temp);
     show(darray);
 
     darrayDestroy(&darray);

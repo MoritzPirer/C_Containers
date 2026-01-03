@@ -82,7 +82,7 @@ bool darrayIsEmpty(Darray this);
 /// ADD & REMOVE
 ///
 
-/// @brief adds the element pointed to by element to the given darray, resizing if needed
+/// @brief adds the element pointed to by element to the end of given darray, resizing if needed
 /// @param this the darray to add to
 /// @param element a pointer to the element to add
 /// @return DARRAY_OK if everything is fine or DARRAY_ERROR_ALLOCATION if the resizing failed
@@ -96,6 +96,15 @@ DarrayStatus darrayPushBack(Darray* this, void* element);
 /// @return DARRAY_ERROR_BOUNDS if there is no element to pop, DARRAY_ERROR_NULL if 
 ///     darray or buffer are NULL, DARRAY_OK otherwise
 DarrayStatus darrayPopBackInto(Darray* this, void* buffer);
+
+/// @brief adds the element pointed to by element to the front of
+///     the given darray, resizing if needed
+/// @param this the darray to add to
+/// @param element a pointer to the element to add 
+/// @return DARRAY_ERROR_NULL if this or element is NULL,
+///     DARRAY_ERROR_ALLOCATION if resizing the darray failed,
+///     DARRAY_OK otherwise
+DarrayStatus darrayPushFront(Darray* this, void* element);
 
 /// @brief removes all elements from index start to index end (both included), and potentially
 ///     shrinks the darray if it is empty enough
@@ -142,6 +151,15 @@ DarrayStatus darrayEraseAt(Darray* this, size_t index);
 ///     DARRAY_ERROR_BOUNDS if the shrinking failed, DARRAY_OK ohterwise
 DarrayStatus darrayEraseAll(Darray* this);
 
+/// @brief insert the given element at the given index, pushing all elements with index >= index back
+/// @param this the darray to insert into 
+/// @param index the index to insert at 
+/// @param element the element to insert 
+/// @return DARRAY_ERROR_NULL if this or element is NULL,
+///     DARRAY_ERROR_BOUNDS if the index is out of range,
+///     DARRAY_ERROR_ALLOCATION if resizing the darray failed,
+///     DARRAY_OK otherwise
+DarrayStatus darrayInsertAt(Darray* this, size_t index, void* element);
 
 /// 
 /// ACCESS
