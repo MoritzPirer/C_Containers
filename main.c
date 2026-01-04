@@ -4,23 +4,31 @@
 
 int main() {
     Darray darray;
-    if (darrayInit(&darray, 0, sizeof(char)) != DARRAY_OK) { printf("ALARM");}
-    //getchar();
-    darrayReserve(&darray, 10);
-    for (char temp = 'a'; temp < 'z'; temp++) {
-        darrayPushBack(&darray, &temp);
-    }
-    show(darray);
-
+    Darray darray2;
     
-    char temp = '1';
-    darrayResize(&darray, 40);
-    printf("size: %d", darraySize(darray));
-    darrayGetAt(&darray, 30, &temp);
-    temp += 'a';
-    printf("%c", temp);
+    darrayInit(&darray, 0, sizeof(int));
+    darrayInit(&darray2, 0, sizeof(int));
+
+    for (int temp = 0; temp < 15; temp++) {
+        int tempi = 15 - temp;
+        darrayPushBack(&darray, &temp);
+        darrayPushBack(&darray2, &tempi);
+    }
+    int i = 20;
+    darrayPushBack(&darray2, &i);
+    show(darray);
+    show(darray2);
+    
+    darraySwap(&darray, &darray2);
+    
+    show(darray);
+    show(darray2);
+   
+    printf("%zu\n", darraySize(darray));
+    printf("%zu\n", darraySize(darray2));
 
     darrayDestroy(&darray);
+    darrayDestroy(&darray2);
 
     return 0;
 }

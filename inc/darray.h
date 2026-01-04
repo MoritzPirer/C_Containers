@@ -46,6 +46,11 @@ DarrayStatus darrayInit(Darray* this, size_t initial_size, size_t element_size);
 /// @return DARRAY_OK if everything is fine or DARRAY_ERROR_NULL if the given darray was NULL
 DarrayStatus darrayDestroy(Darray* this);
 
+DarrayStatus darraySwap(Darray* this, Darray* other);
+
+DarrayStatus darrayDeepCopy(Darray* original, Darray* copy);
+
+
 ///
 /// SIZE & CAPACITY
 ///
@@ -83,6 +88,7 @@ bool darrayIsEmpty(Darray this);
 /// @param new_size the size the darray should be set to 
 /// @return 
 DarrayStatus darrayResize(Darray* this, size_t new_size);
+
 ///
 /// STRUCTURE
 ///

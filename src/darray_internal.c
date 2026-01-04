@@ -11,6 +11,12 @@ size_t min(size_t a, size_t b) {
     return (a < b? a : b);
 }
 
+void swapValues(size_t* a, size_t* b) {
+    size_t temp = *a;
+    *a =  *b;
+    *b = temp;
+}
+
 /// @brief return a pointer to the n-th element of array. Only for internal use
 ///     because pointer can become stale if the array reallocates
 /// @attention caller is responsible for making sure that address is valid
