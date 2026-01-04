@@ -77,6 +77,12 @@ size_t darrayCapacity(Darray this);
 /// @return true if the given darray is empty, false otherwise
 bool darrayIsEmpty(Darray this);
 
+/// @brief resize the darray to hold exactly new_size elements. Sizing up zeros new memory.
+///     sizing down loses elements that don't fit into the new size.
+/// @param this the darray to resize 
+/// @param new_size the size the darray should be set to 
+/// @return 
+DarrayStatus darrayResize(Darray* this, size_t new_size);
 ///
 /// STRUCTURE
 ///

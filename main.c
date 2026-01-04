@@ -14,10 +14,11 @@ int main() {
 
     
     char temp = '1';
-    darrayPushFront(&darray, &temp);
-    show(darray);
-    darrayPopFrontInto(&darray, &temp);
-    show(darray);
+    darrayResize(&darray, 40);
+    printf("size: %d", darraySize(darray));
+    darrayGetAt(&darray, 30, &temp);
+    temp += 'a';
+    printf("%c", temp);
 
     darrayDestroy(&darray);
 
