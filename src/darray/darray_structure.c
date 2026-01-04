@@ -6,20 +6,22 @@
 /// @author: Moritz Pirer
 ///
 
+#include <stdio.h>
 #include <string.h>
 
 #include "../darray_internal.h"
 
 DarrayStatus darrayPushBack(Darray* this, void* element) {
     if (this == NULL || element == NULL) {
+        printf("NULL");
         return DARRAY_ERROR_NULL;
     }
 
     DarrayStatus grow_result = internal_darrayGrow(this);
     if (grow_result != DARRAY_OK) {
+        printf("GROW");
         return grow_result;
     }
-    
     memcpy(internal_darrayNThElement(this, this->m_elements_used), element, this->m_element_size);
 
     this->m_elements_used++;
@@ -65,7 +67,7 @@ DarrayStatus darrayPopFrontInto(Darray* this, void* element) {
     }
 
     size_t bytes_to_copy = this->m_elements_used * this->m_element_size;
-    internal_moveBytes(this, 1, 2, bytes_to_copy);
+    internal_moveBytes(this, 1, 0, bytes_to_copy);
     
     return internal_darrayShrinkIfNeeded(this);
 }

@@ -47,7 +47,7 @@ DarrayStatus darrayDestroy(Darray* this) {
 void show(Darray this) {
     printf("darray has these %zu elements: ", this.m_elements_used);
     for (size_t index = 0; index < this.m_elements_used; index++) {
-        printf("%d, ", *(int*) internal_darrayNThElement(&this, index));
+        printf("%c, ", *(char*) internal_darrayNThElement(&this, index));
     }
     printf("\n");
 }

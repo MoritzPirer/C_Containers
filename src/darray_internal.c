@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "darray_internal.h"
 
@@ -45,7 +46,7 @@ DarrayStatus internal_darrayGrow(Darray* this) {
     if (this->m_elements_used == this->m_elements_allocated) {
         DarrayStatus result = internal_darraySetSizeTo(
             this,
-            this->m_elements_allocated >> 1);
+            this->m_elements_allocated << 1);
         return result;
     }
 

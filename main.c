@@ -4,16 +4,16 @@
 
 int main() {
     Darray darray;
-    darrayInit(&darray, 0, sizeof(int));
-
-    // printf("%d\n", darrayIsEmpty(darray));
-    // darrayReserve(&darray, 10);
-    // for (int temp = 0; temp < 8; temp++) {
-    //     darrayPushBack(&darray, &temp);
-    // }
+    if (darrayInit(&darray, 0, sizeof(char)) != DARRAY_OK) { printf("ALARM");}
+    //getchar();
+    darrayReserve(&darray, 10);
+    for (char temp = 'a'; temp < 'z'; temp++) {
+        darrayPushBack(&darray, &temp);
+    }
     show(darray);
+
     
-    int temp = 100;
+    char temp = '1';
     darrayPushFront(&darray, &temp);
     show(darray);
     darrayPopFrontInto(&darray, &temp);
