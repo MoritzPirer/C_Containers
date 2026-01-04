@@ -61,3 +61,7 @@ DarrayStatus darrayEraseAll(Darray* this) {
     
     return darrayEraseFromTo(this, 0, this->m_elements_used - 1);
 }
+
+DarrayStatus darrayClear(Darray* this) {
+    return darrayEraseAll(this);
+}

@@ -176,6 +176,9 @@ DarrayStatus darrayEraseAt(Darray* this, size_t index);
 ///     DARRAY_ERROR_ALLOCATION if the shrinking failed, DARRAY_OK otherwise
 DarrayStatus darrayEraseAll(Darray* this);
 
+/// @brief alias for darrayEraseAll
+DarrayStatus darrayClear(Darray* this);
+
 /// 
 /// ACCESS
 ///
@@ -195,6 +198,12 @@ DarrayStatus darrayGetAt(Darray* this, size_t index, void* buffer);
 /// @return DARRAY_OK if everything is fine, DARRAY_ERROR_NULL if darray or buffer is NULL
 ///     or DARRAY_ERROR_BOUNDS if index > darraySize(darray) 
 DarrayStatus darraySetAt(Darray* this, size_t index, void* buffer);
+
+/// @brief returns a raw pointer to the darrays heap memory. Pointer may become invalid if used
+///     after any operation that adds or removes elements
+/// @param this the darray who's data shoud be accessed 
+/// @return a pointer to the heap data or NULL if this was NULL 
+void* darrayData(Darray* this);
 
 void show(Darray this);
 

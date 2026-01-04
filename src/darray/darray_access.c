@@ -36,3 +36,11 @@ DarrayStatus darraySetAt(Darray* this, size_t index, void* buffer) {
 
     return DARRAY_OK;
 }
+
+void* darrayData(Darray* this) {
+    if (this == NULL) {
+        return NULL;
+    }
+
+    return this->m_data;
+}
