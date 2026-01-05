@@ -25,7 +25,8 @@ typedef enum _DarrayStatus_ {
     DARRAY_OK,
     DARRAY_ERROR_ALLOCATION,
     DARRAY_ERROR_BOUNDS,
-    DARRAY_ERROR_NULL
+    DARRAY_ERROR_NULL,
+    DARRAY_ERROR_INVALID
 } DarrayStatus;
 
 ///
@@ -36,7 +37,8 @@ typedef enum _DarrayStatus_ {
 /// @param this the darray to initialize 
 /// @param initial_size how many elements should be usable right away
 /// @param element_size how large a single element is 
-/// @return DARRAY_OK if everything is fine, DARRAY_ERROR_ALLOCATION if the resizing failed
+/// @return DARRAY_OK if everything is fine, DARRAY_ERROR_ALLOCATION if the resizing failed,
+///     DARRAY_ERROR_INVALID if element_size is 0,
 ///     or DARRAY_ERROR_NULL if the given darray was NULL
 DarrayStatus darrayInit(Darray* this, size_t initial_size, size_t element_size);
 
@@ -69,8 +71,6 @@ DarrayStatus darrayDeepCopy(const Darray* original, Darray* copy);
 ///     DARRAY_ERROR_ALLOCATION if resiting failed,
 ///     DARRAY_OK otherwise 
 DarrayStatus darrayAppend(Darray* this, const Darray* other);
-
-DarrayStatus darraySteal(Darray* this, Darray* other);
 
 ///
 /// SIZE & CAPACITY

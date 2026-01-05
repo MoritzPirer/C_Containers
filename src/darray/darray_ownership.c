@@ -17,6 +17,9 @@ DarrayStatus darrayInit(Darray* this, size_t initial_size, size_t element_size) 
     if (this == NULL) {
         return DARRAY_ERROR_NULL;
     }
+    if (element_size == 0) {
+        return DARRAY_ERROR_INVALID;
+    }
 
     this->m_elements_used = initial_size;
     this->m_elements_allocated = max(initial_size, DARRAY_MIN_SIZE);
