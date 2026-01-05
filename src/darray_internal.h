@@ -26,7 +26,7 @@ void swapValues(size_t* a, size_t* b);
 /// @param this the darray to access 
 /// @param index the index to access in the darray
 /// @return a pointer to the n-th element
-void* internal_darrayNThElement(Darray* this, size_t index);
+void* internal_darrayNThElement(const Darray* this, size_t index);
 
 /// @brief set the size of the darray to new_element_count. 
 ///     If the new size is less than the amount of elements in use, they are lost.
@@ -46,7 +46,7 @@ DarrayStatus internal_darrayGrow(Darray* this);
 DarrayStatus internal_darrayShrinkIfNeeded(Darray* this);
 
 /// @return true if index is valid for this, false otherwise
-bool internal_darrayIsValidIndex(Darray* this, size_t index);
+bool internal_darrayIsValidIndex(const Darray* this, size_t index);
 
 void internal_moveBytes(Darray* this, size_t read_index, size_t write_index, size_t bytes_to_copy);
 #endif //DARRAY_INTERNAL_H

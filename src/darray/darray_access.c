@@ -9,7 +9,7 @@
 
 #include "../darray_internal.h"
 
-DarrayStatus darrayGetAt(Darray* this, size_t index, void* buffer) {
+DarrayStatus darrayGetAt(const Darray* this, size_t index, void* buffer) {
     if (this == NULL || buffer == NULL) {
         return DARRAY_ERROR_NULL;
     }
@@ -23,7 +23,7 @@ DarrayStatus darrayGetAt(Darray* this, size_t index, void* buffer) {
     return DARRAY_OK;
 }
 
-DarrayStatus darraySetAt(Darray* this, size_t index, void* buffer) {
+DarrayStatus darraySetAt(Darray* this, size_t index, const void* buffer) {
     if (this == NULL) {
         return DARRAY_ERROR_NULL;
     }
@@ -37,7 +37,7 @@ DarrayStatus darraySetAt(Darray* this, size_t index, void* buffer) {
     return DARRAY_OK;
 }
 
-void* darrayData(Darray* this) {
+void* darrayData(const Darray* this) {
     if (this == NULL) {
         return NULL;
     }

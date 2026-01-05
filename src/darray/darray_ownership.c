@@ -59,7 +59,7 @@ DarrayStatus darraySwap(Darray* this, Darray* other) {
     return DARRAY_OK;
 }
 
-DarrayStatus darrayDeepCopy(Darray* original, Darray* copy) {
+DarrayStatus darrayDeepCopy(const Darray* original, Darray* copy) {
     if (original == NULL || copy == NULL) {
         return DARRAY_ERROR_NULL;
     }
@@ -75,7 +75,33 @@ DarrayStatus darrayDeepCopy(Darray* original, Darray* copy) {
     copy->m_elements_used = original->m_elements_used;
     copy->m_elements_allocated = original->m_elements_used;
     copy->m_element_size = original->m_element_size;
-    
+   
+    return DARRAY_OK;
+}
+
+DarrayStatus darrayAppend(Darray* this, const Darray* other) {
+    if (this == NULL || other == NULL) {
+        return DARRAY_ERROR_NULL;
+    }
+
+    // increase capacity if needed
+    size_t needed_element_capacity = this->m_elements_used + other->m_elements_used;
+    if (this->m_elements_allocated < needed_element_capacity) {
+        DarrayStatus grow_result = internal_darraySetSizeTo(this, needed_element_capacity);
+        if (grow_result != DARRAY_OK) {
+            return grow_result;
+        }
+    }
+
+    memcpy(
+        internal_darrayNThElement(this, this->m_elements_used),
+        internal_darrayNThElement(other, 0),
+        other->m_elements_used * other->m_element_size
+    );
+
+    this->m_elements_used += other->m_elements_used;
+
+    return DARRAY_OK;
 }
 
 //ONLY FOR DEVELOPMENT

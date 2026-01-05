@@ -23,7 +23,7 @@ void swapValues(size_t* a, size_t* b) {
 /// @param this the darray to access 
 /// @param index the index to access in the darray
 /// @return a pointer to the n-th element
-void* internal_darrayNThElement(Darray* this, size_t index) {
+void* internal_darrayNThElement(const Darray* this, size_t index) {
     return (void*) ((char*) this->m_data + (index * this->m_element_size));
 }
 
@@ -70,7 +70,7 @@ DarrayStatus internal_darrayShrinkIfNeeded(Darray* this) {
     return DARRAY_OK;
 }
 
-bool internal_darrayIsValidIndex(Darray* this, size_t index) {
+bool internal_darrayIsValidIndex(const Darray* this, size_t index) {
     return (index >= 0 && index < this->m_elements_used);
 }
 

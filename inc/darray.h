@@ -46,10 +46,31 @@ DarrayStatus darrayInit(Darray* this, size_t initial_size, size_t element_size);
 /// @return DARRAY_OK if everything is fine or DARRAY_ERROR_NULL if the given darray was NULL
 DarrayStatus darrayDestroy(Darray* this);
 
+/// @brief swap two darrays
+/// @param this the first darray to swap 
+/// @param other the second darray to swap
+/// @return DARRAY_ERROR_NULL if this or other was NULL, DARRAY_OK otherwise 
 DarrayStatus darraySwap(Darray* this, Darray* other);
 
-DarrayStatus darrayDeepCopy(Darray* original, Darray* copy);
+/// @brief Initializes copy as a deep copy of original (same values, but it's own memory).
+///     copy should not own memory (i.e. should be uninitialized) to avoid memory leaks
+/// @param original the darray to copy 
+/// @param copy the darray that should be a copy of original 
+/// @return DARRAY_ERROR_NULL if original or copy was NULL,
+///     DARRAY_ERROR_ALLOCATION if allocation failed,
+///     DARRAY_OK otherwise
+DarrayStatus darrayDeepCopy(const Darray* original, Darray* copy);
 
+/// @brief Copies all elements of other to the end of this. other is not modified and stays a 
+///     valid darray. Caller is responsible for ensuring this and other store the same datatype
+/// @param this the darray that should be added to 
+/// @param other the darray that shoud be added to this 
+/// @return DARRAY_ERROR_NULL if this or other was NULL,
+///     DARRAY_ERROR_ALLOCATION if resiting failed,
+///     DARRAY_OK otherwise 
+DarrayStatus darrayAppend(Darray* this, const Darray* other);
+
+DarrayStatus darraySteal(Darray* this, Darray* other);
 
 ///
 /// SIZE & CAPACITY
@@ -201,7 +222,7 @@ DarrayStatus darrayClear(Darray* this);
 /// @param buffer where to write the value that has been read 
 /// @return DARRAY_OK if everything is fine, DARRAY_ERROR_NULL if darray or buffer is NULL
 ///     or DARRAY_ERROR_BOUNDS if index > darraySize(darray) 
-DarrayStatus darrayGetAt(Darray* this, size_t index, void* buffer);
+DarrayStatus darrayGetAt(const Darray* this, size_t index, void* buffer);
 
 /// @brief Set the element at position index to the value pointed to by buffer
 /// @param this the darray to write to
@@ -209,13 +230,13 @@ DarrayStatus darrayGetAt(Darray* this, size_t index, void* buffer);
 /// @param buffer where the value to write is 
 /// @return DARRAY_OK if everything is fine, DARRAY_ERROR_NULL if darray or buffer is NULL
 ///     or DARRAY_ERROR_BOUNDS if index > darraySize(darray) 
-DarrayStatus darraySetAt(Darray* this, size_t index, void* buffer);
+DarrayStatus darraySetAt(Darray* this, size_t index, const void* buffer);
 
 /// @brief returns a raw pointer to the darrays heap memory. Pointer may become invalid if used
 ///     after any operation that adds or removes elements
 /// @param this the darray who's data shoud be accessed 
 /// @return a pointer to the heap data or NULL if this was NULL 
-void* darrayData(Darray* this);
+void* darrayData(const Darray* this);
 
 void show(Darray this);
 

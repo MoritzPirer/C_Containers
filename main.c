@@ -19,13 +19,11 @@ int main() {
     show(darray);
     show(darray2);
     
-    darraySwap(&darray, &darray2);
-    
+    darrayAppend(&darray, &darray2);
+
     show(darray);
     show(darray2);
    
-    printf("%zu\n", darraySize(darray));
-    printf("%zu\n", darraySize(darray2));
 
     darrayDestroy(&darray);
     darrayDestroy(&darray2);
