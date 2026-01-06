@@ -11,10 +11,20 @@ int init_size_pow2();
 int init_size_XL();
 int init_size_XXXL();
 
+int destroy_initialized();
+int destroy_NULL();
+int destroy_double();
+
+
+int size_empty();
+int size_push_pop();
+int size_afterErase();
+int size_afterPartialErase();
+int size_afterReserveResize();
+
 typedef struct _Test_ {
     const char* m_name;
     int (*test_function)(void);
-    int expected_return;
 } Test;
 
 bool runTest(Test test) {
@@ -22,26 +32,34 @@ bool runTest(Test test) {
 
     int return_value = test.test_function();
     
-    if (return_value == test.expected_return) {
+    if (return_value == 0) {
         printf("\033[32m[PASS] test '%s' correctly returned %d\n", test.m_name, return_value);
         return true;
     }
     else {
-        printf("\033[31m[FAIL] test '%s' returned %d instead of expected value %d\n",
-            test.m_name, return_value, test.expected_return);
+        printf("\033[31m[FAIL] test '%s' returned %d\n",
+            test.m_name, return_value);
         return false;
     }
 }
 
 void testrunner() {
     Test tests[] = {
-        {"init_elementSize_0", init_elementSize_0, 0},
-        {"init_NULL", init_NULL, 0},
-        {"init_size_0",init_size_0, 0},
-        {"init_size_1", init_size_1, 0},
-        {"init_size_pow2", init_size_pow2, 0},
-        {"init_size_XL", init_size_XL, 0},
-        {"init_size_XXXL", init_size_XXXL, 0}
+        {"init_elementSize_0", init_elementSize_0},
+        {"init_NULL", init_NULL},
+        {"init_size_0",init_size_0},
+        {"init_size_1", init_size_1},
+        {"init_size_pow2", init_size_pow2},
+        {"init_size_XL", init_size_XL},
+        {"init_size_XXXL", init_size_XXXL},
+        {"destroy_initialized", destroy_initialized},
+        {"destroy_NULL", destroy_NULL},
+        {"destroy_double", destroy_double},
+        {"size_empty", size_empty},
+        {"size_push_pop", size_push_pop},
+        {"size_afterErase", size_afterErase},
+        {"size_afterPartialErase", size_afterPartialErase},
+        {"size_afterReserveResize", size_afterReserveResize}
     };
 
     size_t total = sizeof(tests) / sizeof(Test);
@@ -51,10 +69,13 @@ void testrunner() {
         passed += runTest(tests[i]);
     }
 
-    printf("\n%zu/%zu tests passed\n", passed, total);
+    printf("\033[0m\n%zu/%zu tests passed\n", passed, total);
 
     if (passed != total) {
-        printf("\nWARNING! SOME TESTS FAILED\n");
+        printf("\033[31m\nWARNING! SOME TESTS FAILED!\n");
+    }
+    else {
+        printf("\033[32m\nALL TESTS PASSED!\n");
     }
    
 }
