@@ -11,89 +11,89 @@
 
 #include "../darray_internal.h"
 
-DarrayStatus darrayPushBack(Darray* this, void* element) {
-    if (this == NULL || element == NULL) {
+DarrayStatus darrayPushBack(Darray* self, void* element) {
+    if (self == NULL || element == NULL) {
         printf("NULL");
         return DARRAY_ERROR_NULL;
     }
 
-    DarrayStatus grow_result = internal_darrayGrow(this);
+    DarrayStatus grow_result = internal_darrayGrow(self);
     if (grow_result != DARRAY_OK) {
         printf("GROW");
         return grow_result;
     }
-    memcpy(internal_darrayNThElement(this, this->m_elements_used), element, this->m_element_size);
+    memcpy(internal_darrayNThElement(self, self->m_elements_used), element, self->m_element_size);
 
-    this->m_elements_used++;
+    self->m_elements_used++;
     
     return DARRAY_OK;
 }
 
 
-DarrayStatus darrayPopBackInto(Darray* this, void* element) {
-    if (this == NULL || element == NULL) {
+DarrayStatus darrayPopBackInto(Darray* self, void* element) {
+    if (self == NULL || element == NULL) {
         return DARRAY_ERROR_NULL;
     }
     
-    if (this->m_elements_used == 0) {
+    if (self->m_elements_used == 0) {
         return DARRAY_ERROR_BOUNDS;
     }
     
-    memcpy(element, internal_darrayNThElement(this, this->m_elements_used - 1), this->m_element_size);
+    memcpy(element, internal_darrayNThElement(self, self->m_elements_used - 1), self->m_element_size);
 
-    this->m_elements_used--;
+    self->m_elements_used--;
 
-    return internal_darrayShrinkIfNeeded(this);
+    return internal_darrayShrinkIfNeeded(self);
 }
 
-DarrayStatus darrayPushFront(Darray* this, void* element) {
-    return darrayInsertAt(this, 0, element);
+DarrayStatus darrayPushFront(Darray* self, void* element) {
+    return darrayInsertAt(self, 0, element);
 }
 
-DarrayStatus darrayPopFrontInto(Darray* this, void* element) {
-    if (this == NULL || element == NULL) {
+DarrayStatus darrayPopFrontInto(Darray* self, void* element) {
+    if (self == NULL || element == NULL) {
         return DARRAY_ERROR_NULL;
     }
     
-    if (this->m_elements_used == 0) {
+    if (self->m_elements_used == 0) {
         return DARRAY_ERROR_BOUNDS;
     }
 
-    memcpy(element, this->m_data, this->m_element_size);
-    this->m_elements_used--;
+    memcpy(element, self->m_data, self->m_element_size);
+    self->m_elements_used--;
 
-    if (this->m_elements_used == 0) { // only element removed -> no need to move over others
+    if (self->m_elements_used == 0) { // only element removed -> no need to move over others
         return DARRAY_OK;
     }
 
-    size_t bytes_to_copy = this->m_elements_used * this->m_element_size;
-    internal_moveBytes(this, 1, 0, bytes_to_copy);
+    size_t bytes_to_copy = self->m_elements_used * self->m_element_size;
+    internal_moveBytes(self, 1, 0, bytes_to_copy);
     
-    return internal_darrayShrinkIfNeeded(this);
+    return internal_darrayShrinkIfNeeded(self);
 }
 
-DarrayStatus darrayInsertAt(Darray* this, size_t index, void* element) {
-    if (this == NULL) {
+DarrayStatus darrayInsertAt(Darray* self, size_t index, void* element) {
+    if (self == NULL) {
         return DARRAY_ERROR_NULL;
     }
     
-    if (!internal_darrayIsValidIndex(this, index)) {
+    if (!internal_darrayIsValidIndex(self, index)) {
         return DARRAY_ERROR_BOUNDS;
     }
     
-    DarrayStatus grow_result = internal_darrayGrow(this);
+    DarrayStatus grow_result = internal_darrayGrow(self);
     if (grow_result != DARRAY_OK) {
         return grow_result;
     }
     
-    size_t num_elements_behind_insert = this->m_elements_used - index;
+    size_t num_elements_behind_insert = self->m_elements_used - index;
 
-    size_t bytes_to_copy = num_elements_behind_insert * this->m_element_size;
-    internal_moveBytes(this, index, index + 1, bytes_to_copy);
+    size_t bytes_to_copy = num_elements_behind_insert * self->m_element_size;
+    internal_moveBytes(self, index, index + 1, bytes_to_copy);
 
-    memcpy(internal_darrayNThElement(this, index), element, this->m_element_size);
+    memcpy(internal_darrayNThElement(self, index), element, self->m_element_size);
 
-    this->m_elements_used++;
+    self->m_elements_used++;
 
     return DARRAY_OK;
 }

@@ -13,50 +13,50 @@
 
 #include "../darray_internal.h"
 
-DarrayStatus darrayInit(Darray* this, size_t initial_size, size_t element_size) {
-    if (this == NULL) {
+DarrayStatus darrayInit(Darray* self, size_t initial_size, size_t element_size) {
+    if (self == NULL) {
         return DARRAY_ERROR_NULL;
     }
     if (element_size == 0) {
         return DARRAY_ERROR_INVALID;
     }
 
-    this->m_elements_used = initial_size;
-    this->m_elements_allocated = max(initial_size, DARRAY_MIN_SIZE);
-    this->m_element_size = element_size;
-    this->m_data = malloc(this->m_elements_allocated * element_size);
+    self->m_elements_used = initial_size;
+    self->m_elements_allocated = max(initial_size, DARRAY_MIN_SIZE);
+    self->m_element_size = element_size;
+    self->m_data = malloc(self->m_elements_allocated * element_size);
 
-    if (this->m_data == NULL) {
+    if (self->m_data == NULL) {
         return DARRAY_ERROR_ALLOCATION;
     }
 
     return DARRAY_OK;
 }
 
-DarrayStatus darrayDestroy(Darray* this) {
-    if (this == NULL) {
+DarrayStatus darrayDestroy(Darray* self) {
+    if (self == NULL) {
         return DARRAY_ERROR_NULL;
     }
 
-    free(this->m_data);
-    this->m_data = NULL;
-    this->m_elements_allocated = 0;
-    this->m_elements_used = 0;
+    free(self->m_data);
+    self->m_data = NULL;
+    self->m_elements_allocated = 0;
+    self->m_elements_used = 0;
 
     return DARRAY_OK;
 }
 
-DarrayStatus darraySwap(Darray* this, Darray* other) {
-    if (this == NULL || other == NULL) {
+DarrayStatus darraySwap(Darray* self, Darray* other) {
+    if (self == NULL || other == NULL) {
         return DARRAY_ERROR_NULL;
     }
 
-    swapValues(&(this->m_element_size), &(other->m_element_size));
-    swapValues(&(this->m_elements_allocated), &(other->m_elements_allocated));
-    swapValues(&(this->m_elements_used), &(other->m_elements_used));
+    swapValues(&(self->m_element_size), &(other->m_element_size));
+    swapValues(&(self->m_elements_allocated), &(other->m_elements_allocated));
+    swapValues(&(self->m_elements_used), &(other->m_elements_used));
 
-    void* temp = this->m_data;
-    this->m_data = other->m_data;
+    void* temp = self->m_data;
+    self->m_data = other->m_data;
     other->m_data = temp;
     
     return DARRAY_OK;
@@ -82,36 +82,36 @@ DarrayStatus darrayDeepCopy(const Darray* original, Darray* copy) {
     return DARRAY_OK;
 }
 
-DarrayStatus darrayAppend(Darray* this, const Darray* other) {
-    if (this == NULL || other == NULL) {
+DarrayStatus darrayAppend(Darray* self, const Darray* other) {
+    if (self == NULL || other == NULL) {
         return DARRAY_ERROR_NULL;
     }
 
     // increase capacity if needed
-    size_t needed_element_capacity = this->m_elements_used + other->m_elements_used;
-    if (this->m_elements_allocated < needed_element_capacity) {
-        DarrayStatus grow_result = internal_darraySetSizeTo(this, needed_element_capacity);
+    size_t needed_element_capacity = self->m_elements_used + other->m_elements_used;
+    if (self->m_elements_allocated < needed_element_capacity) {
+        DarrayStatus grow_result = internal_darraySetSizeTo(self, needed_element_capacity);
         if (grow_result != DARRAY_OK) {
             return grow_result;
         }
     }
 
     memcpy(
-        internal_darrayNThElement(this, this->m_elements_used),
+        internal_darrayNThElement(self, self->m_elements_used),
         internal_darrayNThElement(other, 0),
         other->m_elements_used * other->m_element_size
     );
 
-    this->m_elements_used += other->m_elements_used;
+    self->m_elements_used += other->m_elements_used;
 
     return DARRAY_OK;
 }
 
 //ONLY FOR DEVELOPMENT
-void show(Darray this) {
-    printf("darray has these %zu elements: ", this.m_elements_used);
-    for (size_t index = 0; index < this.m_elements_used; index++) {
-        printf("%d, ", *(int*) internal_darrayNThElement(&this, index));
+void show(Darray self) {
+    printf("darray has these %zu elements: ", self.m_elements_used);
+    for (size_t index = 0; index < self.m_elements_used; index++) {
+        printf("%d, ", *(int*) internal_darrayNThElement(&self, index));
     }
     printf("\n");
 }

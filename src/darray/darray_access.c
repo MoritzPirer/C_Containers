@@ -9,38 +9,38 @@
 
 #include "../darray_internal.h"
 
-DarrayStatus darrayGetAt(const Darray* this, size_t index, void* buffer) {
-    if (this == NULL || buffer == NULL) {
+DarrayStatus darrayGetAt(const Darray* self, size_t index, void* buffer) {
+    if (self == NULL || buffer == NULL) {
         return DARRAY_ERROR_NULL;
     }
     
-    if (!internal_darrayIsValidIndex(this, index)) {
+    if (!internal_darrayIsValidIndex(self, index)) {
         return DARRAY_ERROR_BOUNDS;
     }
 
-    memcpy(buffer, internal_darrayNThElement(this, index), this->m_element_size);
+    memcpy(buffer, internal_darrayNThElement(self, index), self->m_element_size);
 
     return DARRAY_OK;
 }
 
-DarrayStatus darraySetAt(Darray* this, size_t index, const void* buffer) {
-    if (this == NULL) {
+DarrayStatus darraySetAt(Darray* self, size_t index, const void* buffer) {
+    if (self == NULL) {
         return DARRAY_ERROR_NULL;
     }
     
-    if (!internal_darrayIsValidIndex(this, index)) {
+    if (!internal_darrayIsValidIndex(self, index)) {
         return DARRAY_ERROR_BOUNDS;
     }
 
-    memcpy(internal_darrayNThElement(this, index), buffer, this->m_element_size);
+    memcpy(internal_darrayNThElement(self, index), buffer, self->m_element_size);
 
     return DARRAY_OK;
 }
 
-void* darrayData(const Darray* this) {
-    if (this == NULL) {
+void* darrayData(const Darray* self) {
+    if (self == NULL) {
         return NULL;
     }
 
-    return this->m_data;
+    return self->m_data;
 }

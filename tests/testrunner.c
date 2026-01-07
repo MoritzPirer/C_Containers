@@ -22,6 +22,17 @@ int size_afterErase();
 int size_afterPartialErase();
 int size_afterReserveResize();
 
+int find_first_two_options();
+int find_first_one_option();
+int find_first_no_option();
+int find_last_one_option();
+int find_last_two_options();
+int find_last_no_option();
+int find_first_last_empty();
+int binary_search_simple();
+int binary_search_empty();
+int binary_search_small();
+
 typedef struct _Test_ {
     const char* m_name;
     int (*test_function)(void);
@@ -59,7 +70,17 @@ void testrunner() {
         {"size_push_pop", size_push_pop},
         {"size_afterErase", size_afterErase},
         {"size_afterPartialErase", size_afterPartialErase},
-        {"size_afterReserveResize", size_afterReserveResize}
+        {"size_afterReserveResize", size_afterReserveResize},
+        {"find_first_two_options", find_first_two_options},
+        {"find_first_one_option", find_first_one_option},
+        {"find_first_no_option", find_first_no_option},
+        {"find_last_one_option", find_last_one_option},
+        {"find_last_two_options", find_last_two_options},
+        {"find_last_no_option", find_last_no_option},
+        {"find_first_last_empty", find_first_last_empty},
+        {"binary_search_simple", binary_search_simple},
+        {"binary_search_empty", binary_search_empty},
+        {"binary_search_small", binary_search_small},
     };
 
     size_t total = sizeof(tests) / sizeof(Test);

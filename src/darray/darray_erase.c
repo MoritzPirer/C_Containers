@@ -10,16 +10,16 @@
 
 #include "../darray_internal.h"
 
-DarrayStatus darrayEraseFromTo(Darray* this, size_t start, size_t end) {
-    if (this == NULL) {
+DarrayStatus darrayEraseFromTo(Darray* self, size_t start, size_t end) {
+    if (self == NULL) {
         return DARRAY_ERROR_NULL;
     }
     
-    if (!internal_darrayIsValidIndex(this, start)) {
+    if (!internal_darrayIsValidIndex(self, start)) {
         return DARRAY_ERROR_BOUNDS;
     }
 
-    if (!internal_darrayIsValidIndex(this, end)) {
+    if (!internal_darrayIsValidIndex(self, end)) {
         return DARRAY_ERROR_BOUNDS;
     }
 
@@ -27,41 +27,41 @@ DarrayStatus darrayEraseFromTo(Darray* this, size_t start, size_t end) {
         return DARRAY_ERROR_BOUNDS;
     }
 
-    size_t num_elements_behind_erase = this->m_elements_used - end;
+    size_t num_elements_behind_erase = self->m_elements_used - end;
     if (num_elements_behind_erase > 0) { // if erase is at end, no overwrite is needed
-        size_t bytes_to_copy = num_elements_behind_erase * this->m_element_size;
-        internal_moveBytes(this, end + 1, start, bytes_to_copy);
+        size_t bytes_to_copy = num_elements_behind_erase * self->m_element_size;
+        internal_moveBytes(self, end + 1, start, bytes_to_copy);
     }
 
-    this->m_elements_used -= (end - start + 1);
+    self->m_elements_used -= (end - start + 1);
 
-    return internal_darrayShrinkIfNeeded(this);
+    return internal_darrayShrinkIfNeeded(self);
 }
 
-DarrayStatus darrayEraseFrom(Darray* this, size_t start) {
-    if (this == NULL) {
+DarrayStatus darrayEraseFrom(Darray* self, size_t start) {
+    if (self == NULL) {
         return DARRAY_ERROR_NULL;
     }
     
-    return darrayEraseFromTo(this, start, this->m_elements_used - 1);
+    return darrayEraseFromTo(self, start, self->m_elements_used - 1);
 }
 
-DarrayStatus darrayEraseTo(Darray* this, size_t end) {
-    return darrayEraseFromTo(this, 0, end);
+DarrayStatus darrayEraseTo(Darray* self, size_t end) {
+    return darrayEraseFromTo(self, 0, end);
 }
 
-DarrayStatus darrayEraseAt(Darray* this, size_t index) {
-    return darrayEraseFromTo(this, index, index);
+DarrayStatus darrayEraseAt(Darray* self, size_t index) {
+    return darrayEraseFromTo(self, index, index);
 }
 
-DarrayStatus darrayEraseAll(Darray* this) {
-    if (this == NULL) {
+DarrayStatus darrayEraseAll(Darray* self) {
+    if (self == NULL) {
         return DARRAY_ERROR_NULL;
     }
     
-    return darrayEraseFromTo(this, 0, this->m_elements_used - 1);
+    return darrayEraseFromTo(self, 0, self->m_elements_used - 1);
 }
 
-DarrayStatus darrayClear(Darray* this) {
-    return darrayEraseAll(this);
+DarrayStatus darrayClear(Darray* self) {
+    return darrayEraseAll(self);
 }
