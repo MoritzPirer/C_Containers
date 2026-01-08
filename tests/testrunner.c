@@ -41,6 +41,15 @@ int is_sorted_desc_simple();
 int is_sorted_desc_all_same();
 int is_sorted_desc_false();
 
+int is_unique_simple();
+int is_unique_false();
+int is_unique_empty();
+int is_unique_all_same();
+int get_unique_simple();
+int get_unique_all_same();
+int get_unique_already_unique();
+
+
 typedef struct _Test_ {
     const char* m_name;
     int (*test_function)(void);
@@ -96,6 +105,13 @@ void testrunner() {
         {"is_sorted_desc_simple", is_sorted_desc_simple},
         {"is_sorted_desc_all_same", is_sorted_desc_all_same},
         {"is_sorted_desc_false", is_sorted_desc_false},
+        {"is_unique_simple", is_unique_simple},
+        {"is_unique_false", is_unique_false},
+        {"is_unique_empty", is_unique_empty},
+        {"is_unique_all_same", is_unique_all_same},
+        {"get_unique_simple", get_unique_simple},
+        {"get_unique_all_same", get_unique_all_same},
+        {"get_unique_already_unique", get_unique_already_unique}
     };
 
     size_t total = sizeof(tests) / sizeof(Test);

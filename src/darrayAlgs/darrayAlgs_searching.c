@@ -49,8 +49,8 @@ bool darrayContains(Darray self, darrayCondition condition, const void* data) {
     return darrayFindFirst(&self, condition, &dummy, data) == DARRAY_OK;
 }
 
-DarrayStatus darrayBinarySearch(Darray* self, darrayOrdering darray_ordering,
-    size_t* index_buffer, void* key) {
+DarrayStatus darrayBinarySearch(const Darray* self, darrayOrdering darray_ordering,
+    size_t* index_buffer, const void* key) {
 
     if (self == NULL || index_buffer == NULL || key == NULL) {
         return DARRAY_ERROR_NULL;

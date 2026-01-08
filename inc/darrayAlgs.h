@@ -14,27 +14,33 @@
 
 #include "darray.h"
 
-///
-/// SEARCHING
-///
-
 /// @brief takes a pointer to an element of a darray. Should return true if the element
 ///     matches a criteria and false otherwise. data can optionally be used for additional data
-///     Must ensure to only touch that element (i.e. element_size bytes)
+///     Should be a constant time operation to uphold the time complexity specified for each algorithm
 typedef bool (*darrayCondition) (const void* element, const void* data);
+
+/// @brief compares two elements of the type that the darray contains. Should return any negative
+///     value if a < b, any positive value if a > b and 0 if a == b. Should be a constant time operation
+///     to uphold the time complexity specified for each algorithm
+typedef int (*darrayOrdering) (const void* a, const void* b);
+
+///
+/// DEFAULTS
+///
 
 /// @brief simple equality comparison for find algorithms (among others).
 ///     Usable if the data type of the darray can (meaningfully) be convertet to a size_t (i.e. most built-in types)
 /// @return true if element == data
 bool darrayDefaultCondition(const void* element, const void* data);
 
-
-typedef int (*darrayOrdering) (const void* a, const void* b);
-
 /// @brief simple ordering for algorithms that need to compare elements.
 ///     Usable if the data type of the darray can (meaningfully) be converted to a size_t (i.e. most built-in types)
 /// @return a negative value if a < b, a positive value if a > b, 0 if a == b
 int darrayDefaultOrdering(const void* a, const void* b);
+
+///
+/// SEARCHING
+///
 
 /// @brief find the index of the first element for which condition returns true
 ///     and write it to index_buffer
@@ -85,13 +91,23 @@ bool darrayContains(Darray self, darrayCondition condition, const void* data);
 ///     DARRAY_NOT_FOUND if key was not found
 ///     DARRAY_OK if key was found (only then is the value at index_buffer valid)
 /// @complexity O(log(n))
-DarrayStatus darrayBinarySearch(Darray* self, darrayOrdering darray_ordering,
-    size_t* index_buffer, void* key);
+DarrayStatus darrayBinarySearch(const Darray* self, darrayOrdering darray_ordering,
+    size_t* index_buffer, const void* key);
 
 ///
 /// SET OPERATIONS
 ///
 
+/// @brief checks if the darray is unique, i.e. has no duplicate elements. Caller is 
+///     responsible for ensuring darray is sorted (ascending or descending), otherwise behavior is
+///     undefined
+/// @param self the darray to check
+/// @param darray_ordering a function that can compare two elements of the darray's datatype
+/// @return true if all elements are unique, false if there is at least one duplicate value 
+/// @complexity O(n)
+bool darrayIsUnique(Darray self, darrayOrdering darray_ordering);
+
+DarrayStatus darrayGetUnique(const Darray* self, darrayOrdering darray_ordering, Darray* unique);
 ///
 /// SORTING
 ///
@@ -104,6 +120,7 @@ DarrayStatus darrayBinarySearch(Darray* self, darrayOrdering darray_ordering,
 ///     a negative value if the first value is smaller, a positive one if the second is smaller,
 ///     or 0 if they are equal
 /// @return true if the darray is sorted, false otherwise
+/// @complexity O(n)
 bool darrayIsSortedAscending(Darray self, darrayOrdering darray_ordering);
 
 /// @brief checks if self is sorted in descending order (each element is <= the previous element)
@@ -112,6 +129,7 @@ bool darrayIsSortedAscending(Darray self, darrayOrdering darray_ordering);
 ///     a negative value if the first value is smaller, a positive one if the second is smaller,
 ///     or 0 if they are equal
 /// @return true if the darray is sorted, false otherwise
+/// @complexity O(n)
 bool darrayIsSortedDescending(Darray self, darrayOrdering darray_ordering);
 
 #endif //DARRAY_ALGS_H
