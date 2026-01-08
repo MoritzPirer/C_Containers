@@ -33,6 +33,14 @@ int binary_search_simple();
 int binary_search_empty();
 int binary_search_small();
 
+int is_sorted_asc_simple();
+int is_sorted_empty();
+int is_sorted_asc_all_same();
+int is_sorted_asc_false();
+int is_sorted_desc_simple();
+int is_sorted_desc_all_same();
+int is_sorted_desc_false();
+
 typedef struct _Test_ {
     const char* m_name;
     int (*test_function)(void);
@@ -81,6 +89,13 @@ void testrunner() {
         {"binary_search_simple", binary_search_simple},
         {"binary_search_empty", binary_search_empty},
         {"binary_search_small", binary_search_small},
+        {"is_sorted_empty", is_sorted_empty},
+        {"is_sorted_asc_simple", is_sorted_asc_simple},
+        {"is_sorted_asc_all_same", is_sorted_asc_all_same},
+        {"is_sorted_asc_false", is_sorted_asc_false},
+        {"is_sorted_desc_simple", is_sorted_desc_simple},
+        {"is_sorted_desc_all_same", is_sorted_desc_all_same},
+        {"is_sorted_desc_false", is_sorted_desc_false},
     };
 
     size_t total = sizeof(tests) / sizeof(Test);

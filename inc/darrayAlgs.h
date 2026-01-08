@@ -23,8 +23,18 @@
 ///     Must ensure to only touch that element (i.e. element_size bytes)
 typedef bool (*darrayCondition) (const void* element, const void* data);
 
-/// @brief 
-typedef int (*darrayOrdering) (const void*, const void*);
+/// @brief simple equality comparison for find algorithms (among others).
+///     Usable if the data type of the darray can (meaningfully) be convertet to a size_t (i.e. most built-in types)
+/// @return true if element == data
+bool darrayDefaultCondition(const void* element, const void* data);
+
+
+typedef int (*darrayOrdering) (const void* a, const void* b);
+
+/// @brief simple ordering for algorithms that need to compare elements.
+///     Usable if the data type of the darray can (meaningfully) be converted to a size_t (i.e. most built-in types)
+/// @return a negative value if a < b, a positive value if a > b, 0 if a == b
+int darrayDefaultOrdering(const void* a, const void* b);
 
 /// @brief find the index of the first element for which condition returns true
 ///     and write it to index_buffer
@@ -77,5 +87,31 @@ bool darrayContains(Darray self, darrayCondition condition, const void* data);
 /// @complexity O(log(n))
 DarrayStatus darrayBinarySearch(Darray* self, darrayOrdering darray_ordering,
     size_t* index_buffer, void* key);
+
+///
+/// SET OPERATIONS
+///
+
+///
+/// SORTING
+///
+
+//sort
+
+/// @brief checks if self is sorted in ascending order (each element is >= the previous element)
+/// @param self the darray to check
+/// @param darray_ordering a function that compares two elements of the darray and returns
+///     a negative value if the first value is smaller, a positive one if the second is smaller,
+///     or 0 if they are equal
+/// @return true if the darray is sorted, false otherwise
+bool darrayIsSortedAscending(Darray self, darrayOrdering darray_ordering);
+
+/// @brief checks if self is sorted in descending order (each element is <= the previous element)
+/// @param self the darray to check
+/// @param darray_ordering a function that compares two elements of the darray and returns
+///     a negative value if the first value is smaller, a positive one if the second is smaller,
+///     or 0 if they are equal
+/// @return true if the darray is sorted, false otherwise
+bool darrayIsSortedDescending(Darray self, darrayOrdering darray_ordering);
 
 #endif //DARRAY_ALGS_H

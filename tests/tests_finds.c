@@ -1,12 +1,5 @@
 #include "../inc/darrayAlgs.h"
 
-bool condition(const void* element, const void* data) {
-    return (*(size_t*) element == *(size_t*) data);
-}
-
-int ordering(const void* a, const void* b) {
-    return (*(size_t*) a - *(size_t*) b);
-}
 
 int find_first_one_option() {
     Darray d;
@@ -17,7 +10,7 @@ int find_first_one_option() {
     }
     size_t temp;
     size_t target = 2;
-    DarrayStatus res = darrayFindFirst(&d, condition, &temp, &target);
+    DarrayStatus res = darrayFindFirst(&d, darrayDefaultCondition, &temp, &target);
     if (res != DARRAY_OK) return 1;
     if (temp != 2) return 2;
 
@@ -36,7 +29,7 @@ int find_first_two_options() {
     darrayPushBack(&d, &temp);
 
     size_t target = 2;
-    DarrayStatus res = darrayFindFirst(&d, condition, &temp, &target);
+    DarrayStatus res = darrayFindFirst(&d, darrayDefaultCondition, &temp, &target);
     if (res != DARRAY_OK) return 1;
     if (temp != 2) return 2;
 
@@ -54,7 +47,7 @@ int find_first_no_option() {
     size_t temp;
 
     size_t target = 15;
-    DarrayStatus res = darrayFindFirst(&d, condition, &temp, &target);
+    DarrayStatus res = darrayFindFirst(&d, darrayDefaultCondition, &temp, &target);
     if (res != DARRAY_NOT_FOUND) return 1;
 
     darrayDestroy(&d);
@@ -70,7 +63,7 @@ int find_last_one_option() {
     }
     size_t temp;
     size_t target = 2;
-    DarrayStatus res = darrayFindLast(&d, condition, &temp, &target);
+    DarrayStatus res = darrayFindLast(&d, darrayDefaultCondition, &temp, &target);
     if (res != DARRAY_OK) return 1;
     if (temp != 2) return 2;
 
@@ -89,7 +82,7 @@ int find_last_two_options() {
     darrayPushBack(&d, &temp);
 
     size_t target = 2;
-    DarrayStatus res = darrayFindLast(&d, condition, &temp, &target);
+    DarrayStatus res = darrayFindLast(&d, darrayDefaultCondition, &temp, &target);
     if (res != DARRAY_OK) return 1;
     if (temp != 10) return 2;
 
@@ -107,7 +100,7 @@ int find_last_no_option() {
     size_t temp;
 
     size_t target = 15;
-    DarrayStatus res = darrayFindLast(&d, condition, &temp, &target);
+    DarrayStatus res = darrayFindLast(&d, darrayDefaultCondition, &temp, &target);
     if (res != DARRAY_NOT_FOUND) return 1;
 
     darrayDestroy(&d);
@@ -118,8 +111,8 @@ int find_first_last_empty() {
     Darray d;
     darrayInit(&d, 0, sizeof(size_t));
     size_t temp = 1;
-    if (darrayFindFirst(&d, condition, &temp, &temp) != DARRAY_NOT_FOUND) return 1;
-    if (darrayFindLast(&d, condition, &temp, &temp) != DARRAY_NOT_FOUND) return 2;
+    if (darrayFindFirst(&d, darrayDefaultCondition, &temp, &temp) != DARRAY_NOT_FOUND) return 1;
+    if (darrayFindLast(&d, darrayDefaultCondition, &temp, &temp) != DARRAY_NOT_FOUND) return 2;
 
     return 0;
 }
@@ -133,7 +126,7 @@ int binary_search_simple() {
     }
     size_t temp;
     size_t target = 2;
-    DarrayStatus res = darrayBinarySearch(&d, ordering, &temp, &target);
+    DarrayStatus res = darrayBinarySearch(&d, darrayDefaultOrdering, &temp, &target);
     if (res != DARRAY_OK) return 1;
     if (temp != 2) return 2;
 
@@ -147,7 +140,7 @@ int binary_search_empty() {
 
     size_t temp;
     size_t target = 2;
-    DarrayStatus res = darrayBinarySearch(&d, ordering, &temp, &target);
+    DarrayStatus res = darrayBinarySearch(&d, darrayDefaultOrdering, &temp, &target);
     if (res != DARRAY_NOT_FOUND) return 1;
 
     darrayDestroy(&d);
@@ -164,7 +157,7 @@ int binary_search_small() {
 
     size_t temp;
     size_t target = 2;
-    DarrayStatus res = darrayBinarySearch(&d, ordering, &temp, &target);
+    DarrayStatus res = darrayBinarySearch(&d, darrayDefaultOrdering, &temp, &target);
     if (res != DARRAY_OK) return 1;
     if (temp != 2) return 2;
 

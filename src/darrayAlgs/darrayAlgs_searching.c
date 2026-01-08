@@ -1,3 +1,11 @@
+///
+/// @file: darrayAlgs_searching.c
+/// @description: Contains functions related to searching for the index of elements
+///
+/// @date: 2026-01-06 
+/// @author: Moritz Pirer
+///
+
 #include "../darray_internal.h"
 #include "../../inc/darrayAlgs.h"
 
