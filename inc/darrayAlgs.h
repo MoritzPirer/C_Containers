@@ -107,7 +107,30 @@ DarrayStatus darrayBinarySearch(const Darray* self, darrayOrdering darray_orderi
 /// @complexity O(n)
 bool darrayIsUnique(Darray self, darrayOrdering darray_ordering);
 
+/// @brief create a new darray consisting of only the unique elements of self. Caller is responsible
+///     for ensuring self is sorted (ascending or descending), otherwise behavior is undefined
+/// @param self the darray to make unique
+/// @param darray_ordering a function that can compare two elements of the darray's datatype
+/// @param unique where to write the result. must not be initialized to avoid memory leaks.
+/// @return DARRAY_ERROR_NULL if self or unique is NULL 
+///     DARRAY_ERROR_ALLOCATION if creating the new darray failed,
+///     DARRAY_OK if everything went fine (only then is unique valid) 
+/// @complexity O(n)
 DarrayStatus darrayGetUnique(const Darray* self, darrayOrdering darray_ordering, Darray* unique);
+
+/// @brief create a new darray consisting of the elements that both left and right contain.
+///     Caller is responsible for ensuring both are sorted in (either both ascending or both descending)
+/// @param left a sorted darry (may contain duplicates) 
+/// @param right a darray sorted the same way and containing the same type as left (may contain duplicates) 
+/// @param darray_ordering a function that can compare the elements of the darrays' datatype 
+/// @param intersection where to write the result. Must not be initialized to avoid memory leaks.
+/// @return DARRAY_ERROR_NULL if left, right or intersection is NULL 
+///     DARRAY_ERROR_ALLOCATION if creating the new darray failed,
+///     DARRAY_OK if everything went fine (only then is intersection valid) 
+/// @complexity O(n + m)
+DarrayStatus darrayGetIntersection(const Darray* left, const Darray* right,
+    darrayOrdering darray_ordering, Darray* intersection);
+
 ///
 /// SORTING
 ///

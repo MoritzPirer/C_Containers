@@ -49,6 +49,16 @@ int get_unique_simple();
 int get_unique_all_same();
 int get_unique_already_unique();
 
+int get_intersection_basic();
+int get_intersection_none();
+int get_intersection_left_empty();
+int get_intersection_both_empty();
+int get_intersection_with_duplicates();
+int get_intersection_identical();
+int get_intersection_null_args();
+int get_intersection_unsorted_input();
+int get_intersection_descending();
+
 
 typedef struct _Test_ {
     const char* m_name;
@@ -111,7 +121,16 @@ void testrunner() {
         {"is_unique_all_same", is_unique_all_same},
         {"get_unique_simple", get_unique_simple},
         {"get_unique_all_same", get_unique_all_same},
-        {"get_unique_already_unique", get_unique_already_unique}
+        {"get_unique_already_unique", get_unique_already_unique},
+        {"get_intersection_basic", get_intersection_basic},
+        {"get_intersection_none", get_intersection_none},
+        {"get_intersection_left_empty", get_intersection_left_empty},
+        {"get_intersection_both_empty", get_intersection_both_empty},
+        {"get_intersection_with_duplicates", get_intersection_with_duplicates},
+        {"get_intersection_identical", get_intersection_identical},
+        {"get_intersection_null_args", get_intersection_null_args},
+        {"get_intersection_unsorted_input", get_intersection_unsorted_input},
+        {"get_intersection_descending", get_intersection_descending},
     };
 
     size_t total = sizeof(tests) / sizeof(Test);
