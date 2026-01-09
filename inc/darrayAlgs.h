@@ -120,7 +120,7 @@ bool darrayIsUnique(Darray self, darrayOrdering darray_ordering);
 DarrayStatus darrayGetUnique(const Darray* self, darrayOrdering darray_ordering, Darray* unique);
 
 /// @brief create a new darray consisting of the elements that both left and right contain.
-///     Caller is responsible for ensuring both are sorted in (either both ascending or both descending)
+///     Caller is responsible for ensuring both are sorted (either both ascending or both descending)
 /// @param left a sorted darry (may contain duplicates) 
 /// @param right a darray sorted the same way and containing the same type as left (may contain duplicates) 
 /// @param darray_ordering a function that can compare the elements of the darrays' datatype 
@@ -132,6 +132,20 @@ DarrayStatus darrayGetUnique(const Darray* self, darrayOrdering darray_ordering,
 /// @complexity O(n + m)
 DarrayStatus darrayGetIntersection(const Darray* left, const Darray* right,
     darrayOrdering darray_ordering, Darray* intersection);
+
+/// @brief create a new darray consisting of the elements contained by left and / or right.
+///     Caller is responsible for ensuring both are sorted (either both ascending or both descending)
+/// @param left a sorted darray (may contain duplicates)
+/// @param right a darray sorted the same way and containing the same type as left (may contain duplicates)
+/// @param darray_ordering a function that compare the elements of the darrays' datatype
+/// @param union_elements where to write the result. Must not be initialized to avoid memory leaks 
+/// @return DARRAY_ERROR_NULL if left, right or union_elements is NULL
+///     DARRAY_ERROR_INVALID if left or right was not sorted (or if the were not sorted the same way)
+///     DARRAY_ERROR_ALLOCATION if creating the new darray failed,
+///     DARRAY_OK if everything went fine (only then is union_elements valid) 
+/// @complexity O(n + m)
+DarrayStatus darrayGetUnion(const Darray* left, const Darray* right,
+    darrayOrdering darray_ordering, Darray* union_elements);
 
 ///
 /// SORTING
@@ -156,5 +170,7 @@ bool darrayIsSortedAscending(Darray self, darrayOrdering darray_ordering);
 /// @return true if the darray is sorted, false otherwise
 /// @complexity O(n)
 bool darrayIsSortedDescending(Darray self, darrayOrdering darray_ordering);
+
+bool darrayEquals(Darray left, Darray right, darrayOrdering darray_ordering);
 
 #endif //DARRAY_ALGS_H

@@ -59,6 +59,15 @@ int get_intersection_null_args();
 int get_intersection_unsorted_input();
 int get_intersection_descending();
 
+int get_union_basic();
+int get_union_left_empty();
+int get_union_both_empty();
+int get_union_with_duplicates();
+int get_union_identical();
+int get_union_null_args();
+int get_union_unsorted_input();
+int get_union_descending();
+
 
 typedef struct _Test_ {
     const char* m_name;
@@ -131,6 +140,14 @@ void testrunner() {
         {"get_intersection_null_args", get_intersection_null_args},
         {"get_intersection_unsorted_input", get_intersection_unsorted_input},
         {"get_intersection_descending", get_intersection_descending},
+        {"get_union_basic", get_union_basic},
+        {"get_union_left_empty", get_union_left_empty},
+        {"get_union_both_empty", get_union_both_empty},
+        {"get_union_with_duplicates", get_union_with_duplicates},
+        {"get_union_identical", get_union_identical},
+        {"get_union_null_args", get_union_null_args},
+        {"get_union_unsorted_input", get_union_unsorted_input},
+        {"get_union_descending", get_union_descending}
     };
 
     size_t total = sizeof(tests) / sizeof(Test);
