@@ -113,6 +113,7 @@ bool darrayIsUnique(Darray self, darrayOrdering darray_ordering);
 /// @param darray_ordering a function that can compare two elements of the darray's datatype
 /// @param unique where to write the result. must not be initialized to avoid memory leaks.
 /// @return DARRAY_ERROR_NULL if self or unique is NULL 
+///     DARRAY_ERROR_INVALID if self was not sorted 
 ///     DARRAY_ERROR_ALLOCATION if creating the new darray failed,
 ///     DARRAY_OK if everything went fine (only then is unique valid) 
 /// @complexity O(n)
@@ -124,7 +125,8 @@ DarrayStatus darrayGetUnique(const Darray* self, darrayOrdering darray_ordering,
 /// @param right a darray sorted the same way and containing the same type as left (may contain duplicates) 
 /// @param darray_ordering a function that can compare the elements of the darrays' datatype 
 /// @param intersection where to write the result. Must not be initialized to avoid memory leaks.
-/// @return DARRAY_ERROR_NULL if left, right or intersection is NULL 
+/// @return DARRAY_ERROR_NULL if left, right or intersection is NULL
+///     DARRAY_ERROR_INVALID if left or right was not sorted (or if the were not sorted the same way)
 ///     DARRAY_ERROR_ALLOCATION if creating the new darray failed,
 ///     DARRAY_OK if everything went fine (only then is intersection valid) 
 /// @complexity O(n + m)
