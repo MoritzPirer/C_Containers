@@ -5,7 +5,6 @@
 /// @date: 2026-01-08 
 /// @author: Moritz Pirer
 ///
-#include <stdio.h>
 #include "../darray_internal.h"
 #include "../../inc/darrayAlgs.h"
 

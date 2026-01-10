@@ -95,6 +95,43 @@ DarrayStatus darrayBinarySearch(const Darray* self, darrayOrdering darray_orderi
     size_t* index_buffer, const void* key);
 
 ///
+/// ITERATING
+///
+
+/// @brief check if condition is true for at least one element of the darray
+/// @param self the darray to check
+/// @param condition the condition to apply to each element
+/// @param data any additional data needed by condition (can pass NULL if not needed)
+/// @return true if condition is true for at least one element, false otherwise
+bool darrayAny(Darray self, darrayCondition condition, void* data);
+
+/// @brief check if condition is true for all elements of the darray
+/// @param self the darray to check
+/// @param condition the condition to apply to each element
+/// @param data any additional data needed by condition (can pass NULL if not needed)
+/// @return true if condition is true for every element, false otherwise
+bool darrayAll(Darray self, darrayCondition condition, void* data);
+
+/// @brief check if condition is false for all elements of the darray
+/// @param self the darray to check
+/// @param condition the condition to apply to each element
+/// @param data any additional data needed by condition (can pass NULL if not needed)
+/// @return true if condition is false for every element, false otherwise
+bool darrayNone(Darray self, darrayCondition condition, void* data);
+
+///
+/// RANGES
+///
+
+DarrayStatus darrayRangeFromToStep(Darray* self, size_t start, size_t stop, int step);
+
+DarrayStatus darrayRangeFromTo(Darray* self, size_t start, size_t stop);
+
+DarrayStatus darrayRangeToStep(Darray* self, size_t stop, int step);
+
+DarrayStatus darrayRangeTo(Darray* self, size_t stop);
+
+///
 /// SET OPERATIONS
 ///
 
@@ -151,7 +188,10 @@ DarrayStatus darrayGetUnion(const Darray* left, const Darray* right,
 /// SORTING
 ///
 
-//sort
+/// @brief sorts the darray using stdlib's qsort().
+/// @param self the darray to sort 
+/// @param darray_ordering the comparison function to use
+/// @return DARRAY_ERROR_NULL if self is NULL, DARRAY_OK otherwise
 DarrayStatus darraySort(Darray* self, darrayOrdering darray_ordering);
 
 /// @brief checks if self is sorted in ascending order (each element is >= the previous element)

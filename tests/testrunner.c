@@ -75,6 +75,16 @@ int sort_with_duplicates();
 int sort_random_small();
 int sort_all_equal();
 
+int range_simple_forward();
+int range_forward_step_two();
+int range_backward();
+int range_backward_step_two();
+int range_empty();
+int range_zero_step();
+int range_invalid_negative_step_forward();
+int range_stop_exclusive();
+int range_null_self();
+
 
 typedef struct _Test_ {
     const char* m_name;
@@ -160,7 +170,16 @@ void testrunner() {
         {"sort_reverse", sort_reverse},
         {"sort_with_duplicates", sort_with_duplicates},
         {"sort_random_small", sort_random_small},
-        {"sort_all_equal", sort_all_equal}
+        {"sort_all_equal", sort_all_equal},
+        {"range_simple_forward", range_simple_forward},
+        {"range_forward_step_two", range_forward_step_two},
+        {"range_backward", range_backward},
+        {"range_backward_step_two", range_backward_step_two},
+        {"range_empty", range_empty},
+        {"range_zero_step", range_zero_step},
+        {"range_invalid_negative_step_forward", range_invalid_negative_step_forward},
+        {"range_stop_exclusive", range_stop_exclusive},
+        {"range_null_self", range_null_self},
     };
 
     size_t total = sizeof(tests) / sizeof(Test);
