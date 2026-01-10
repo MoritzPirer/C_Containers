@@ -119,6 +119,7 @@ bool darrayAll(Darray self, darrayCondition condition, void* data);
 /// @return true if condition is false for every element, false otherwise
 bool darrayNone(Darray self, darrayCondition condition, void* data);
 
+void darrayReverse(Darray* self);
 ///
 /// RANGES
 ///

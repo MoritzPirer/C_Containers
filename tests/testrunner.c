@@ -85,6 +85,8 @@ int range_invalid_negative_step_forward();
 int range_stop_exclusive();
 int range_null_self();
 
+int reverse_basic();
+
 
 typedef struct _Test_ {
     const char* m_name;
@@ -180,6 +182,7 @@ void testrunner() {
         {"range_invalid_negative_step_forward", range_invalid_negative_step_forward},
         {"range_stop_exclusive", range_stop_exclusive},
         {"range_null_self", range_null_self},
+        {"reverse_basic", reverse_basic},
     };
 
     size_t total = sizeof(tests) / sizeof(Test);
