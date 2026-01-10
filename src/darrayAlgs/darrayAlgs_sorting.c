@@ -1,4 +1,4 @@
-///
+ ///
 /// @file: darrayAlgs_sorting.c
 /// @description: Contains functions related to sorting darrays 
 ///
@@ -6,9 +6,20 @@
 /// @author: Moritz Pirer
 ///
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "../../inc/darrayAlgs.h"
 #include "../darray_internal.h"
+
+DarrayStatus darraySort(Darray* self, darrayOrdering darray_ordering) {
+    if (self == NULL) {
+        return DARRAY_ERROR_NULL;
+    }
+
+    qsort(self->m_data, self->m_elements_used, self->m_element_size, darray_ordering);
+    
+    return DARRAY_OK;
+}
 
 bool darrayIsSorted(Darray self, darrayOrdering darray_ordering, bool is_ascending) {
     if (self.m_elements_used <= 1) { //sorted by definition

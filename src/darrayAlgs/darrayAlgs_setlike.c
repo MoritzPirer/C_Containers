@@ -170,21 +170,17 @@ DarrayStatus darrayGetUnion(const Darray* left, const Darray* right,
 
         if (ordering == 0) {
             darrayPushBack(union_elements, internal_darrayNThElement(left, left_index));
-            printf("equal: added %d\n", *(int*) internal_darrayNThElement(left, left_index));
             left_index = skipDuplicates(left, left_index, darray_ordering);
             right_index = skipDuplicates(right, right_index, darray_ordering);
         }
         else if (ordering < 0) {
             darrayPushBack(union_elements, internal_darrayNThElement(left, left_index));
-            printf("left smaller: added %d\n", *(int*) internal_darrayNThElement(left, left_index));
             left_index = skipDuplicates(left, left_index, darray_ordering);
         }
         else {
             darrayPushBack(union_elements, internal_darrayNThElement(right, right_index));
-            printf("right smaller: added %d\n", *(int*) internal_darrayNThElement(right, right_index));
             right_index = skipDuplicates(right, right_index, darray_ordering);
         }
-        show(*union_elements);
     }
 
     // Add remaining

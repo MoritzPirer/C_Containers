@@ -152,6 +152,7 @@ DarrayStatus darrayGetUnion(const Darray* left, const Darray* right,
 ///
 
 //sort
+DarrayStatus darraySort(Darray* self, darrayOrdering darray_ordering);
 
 /// @brief checks if self is sorted in ascending order (each element is >= the previous element)
 /// @param self the darray to check
@@ -171,6 +172,13 @@ bool darrayIsSortedAscending(Darray self, darrayOrdering darray_ordering);
 /// @complexity O(n)
 bool darrayIsSortedDescending(Darray self, darrayOrdering darray_ordering);
 
+/// @brief checks if two darrays holding the same dataytpe are equal with regard to darray_ordering
+/// @param left one of the darrays to compare
+/// @param right the other darray ot compare
+/// @param darray_ordering a function that can compare two elements of the darrays' datatype.
+///     should return 0 for equal elements
+/// @return true if the darrays are equal, false otherwise
+/// @complexity O(n)
 bool darrayEquals(Darray left, Darray right, darrayOrdering darray_ordering);
 
 #endif //DARRAY_ALGS_H

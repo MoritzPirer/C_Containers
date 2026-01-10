@@ -68,6 +68,13 @@ int get_union_null_args();
 int get_union_unsorted_input();
 int get_union_descending();
 
+int sort_empty();
+int sort_single();
+int sort_reverse();
+int sort_with_duplicates();
+int sort_random_small();
+int sort_all_equal();
+
 
 typedef struct _Test_ {
     const char* m_name;
@@ -147,7 +154,13 @@ void testrunner() {
         {"get_union_identical", get_union_identical},
         {"get_union_null_args", get_union_null_args},
         {"get_union_unsorted_input", get_union_unsorted_input},
-        {"get_union_descending", get_union_descending}
+        {"get_union_descending", get_union_descending},
+        {"sort_empty", sort_empty},
+        {"sort_single", sort_single},
+        {"sort_reverse", sort_reverse},
+        {"sort_with_duplicates", sort_with_duplicates},
+        {"sort_random_small", sort_random_small},
+        {"sort_all_equal", sort_all_equal}
     };
 
     size_t total = sizeof(tests) / sizeof(Test);
