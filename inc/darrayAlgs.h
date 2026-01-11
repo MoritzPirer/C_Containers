@@ -103,6 +103,8 @@ DarrayStatus darrayBinarySearch(const Darray* self, darrayOrdering darray_orderi
 /// @param condition the condition to apply to each element
 /// @param data any additional data needed by condition (can pass NULL if not needed)
 /// @return true if condition is true for at least one element, false otherwise
+/// @param self the darray to reverse 
+/// @complexity O(n)
 bool darrayAny(Darray self, darrayCondition condition, void* data);
 
 /// @brief check if condition is true for all elements of the darray
@@ -110,6 +112,8 @@ bool darrayAny(Darray self, darrayCondition condition, void* data);
 /// @param condition the condition to apply to each element
 /// @param data any additional data needed by condition (can pass NULL if not needed)
 /// @return true if condition is true for every element, false otherwise
+/// @param self the darray to reverse 
+/// @complexity O(n)
 bool darrayAll(Darray self, darrayCondition condition, void* data);
 
 /// @brief check if condition is false for all elements of the darray
@@ -117,19 +121,57 @@ bool darrayAll(Darray self, darrayCondition condition, void* data);
 /// @param condition the condition to apply to each element
 /// @param data any additional data needed by condition (can pass NULL if not needed)
 /// @return true if condition is false for every element, false otherwise
+/// @complexity O(n)
 bool darrayNone(Darray self, darrayCondition condition, void* data);
 
+/// @brief reverses the elements of the darray in-place
+/// @param self the darray to reverse 
+/// @complexity O(n)
 void darrayReverse(Darray* self);
+
 ///
 /// RANGES
 ///
 
+/// @brief generates a range from start (inclusive) to stop (exclusive), increasing by step each time
+/// @param self where to write the range. Must be uninitialized
+/// @param start the first value in the range
+/// @param stop the first value outside of the range
+/// @param step how much to increase or decrease between elements. If negative,
+///     start must be greater than stop. May not be 0
+/// @return DARRAY_ERROR_NULL if self is NULL
+///     DARRAY_ERROR_INVALID if step is 0 or step direction is away from stop point
+///     DARRAY_ERROR_ALLOCATION if creating the darray failed,
+///     DARRAY_OK if everything worked (only then is self valid)
 DarrayStatus darrayRangeFromToStep(Darray* self, size_t start, size_t stop, int step);
 
+/// @brief generates a range from start (inclusive) to stop (exclusive), increasing by 1 each time
+/// @param self where to write the range. Must be uninitialized
+/// @param start the first value in the range
+/// @param stop the first value outside of the range
+/// @return DARRAY_ERROR_NULL if self is NULL
+///     DARRAY_ERROR_INVALID if start > stop (use darrayRangeFromToStep with
+///     a negative step if you want a decrementing range)
+///     DARRAY_ERROR_ALLOCATION if creating the darray failed,
+///     DARRAY_OK if everything worked (only then is self valid)
 DarrayStatus darrayRangeFromTo(Darray* self, size_t start, size_t stop);
 
+/// @brief generates a range from 0 (inclusive) to stop (exclusive), increasing by step each time
+/// @param self where to write the range. Must be uninitialized
+/// @param stop the first value outside of the range
+/// @param step how much to increase or decrease between elements. May not be negative
+/// @return DARRAY_ERROR_NULL if self is NULL
+///     DARRAY_ERROR_INVALID if step is <= 0
+///     DARRAY_ERROR_ALLOCATION if creating the darray failed,
+///     DARRAY_OK if everything worked (only then is self valid)
 DarrayStatus darrayRangeToStep(Darray* self, size_t stop, int step);
 
+/// @brief generates a range from 0 (inclusive) to stop (exclusive), increasing by 1 each time
+/// @param self where to write the range. Must be uninitialized
+/// @param stop the first value outside of the range
+/// @return DARRAY_ERROR_NULL if self is NULL
+///     DARRAY_ERROR_ALLOCATION if creating the darray failed,
+///     DARRAY_OK if everything worked (only then is self valid)
 DarrayStatus darrayRangeTo(Darray* self, size_t stop);
 
 ///
