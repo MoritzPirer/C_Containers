@@ -106,13 +106,3 @@ DarrayStatus darrayAppend(Darray* self, const Darray* other) {
 
     return DARRAY_OK;
 }
-
-//ONLY FOR DEVELOPMENT
-void show(Darray self) {
-    printf("darray has these %zu elements: ", self.m_elements_used);
-    for (size_t index = 0; index < self.m_elements_used; index++) {
-        printf("%d, ", *(int*) internal_darrayNThElement(&self, index));
-    }
-    printf("\n");
-}
-

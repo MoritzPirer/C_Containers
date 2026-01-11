@@ -239,6 +239,4 @@ DarrayStatus darraySetAt(Darray* self, size_t index, const void* buffer);
 /// @return a pointer to the heap data or NULL if self was NULL 
 void* darrayData(const Darray* self);
 
-void show(Darray self);
-
 #endif //DYNAMIC_ARRAY_H

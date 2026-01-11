@@ -141,6 +141,7 @@ void darrayReverse(Darray* self);
 /// @return DARRAY_ERROR_NULL if self or filtered was NULL
 ///     DARRAY_ERROR_ALLOCATION if creating or resizing filtered failed, 
 ///     DARRAY_OK if everything worked (only then is filtered valid)
+/// @complexity O(n)
 DarrayStatus darrayFilter(const Darray* self, darrayCondition condition,
     Darray* filtered, const void* data);
 
@@ -151,6 +152,7 @@ DarrayStatus darrayFilter(const Darray* self, darrayCondition condition,
 ///     more bytes than the one element uses.
 /// @param data any additional data needed by transformation. Can pass NULL if not needed.
 /// @return DARRAY_ERROR_NULL if self was null, DARRAY_OK otherwise
+/// @complexity O(n)
 DarrayStatus darrayTransform(Darray* self, darrayTransformation transformation, const void* data);
 
 ///
