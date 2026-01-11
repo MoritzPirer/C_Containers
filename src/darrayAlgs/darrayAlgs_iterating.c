@@ -11,7 +11,7 @@
 #include "../darray_internal.h"
 #include "../../inc/darrayAlgs.h"
 
-bool darrayAny(Darray self, darrayCondition condition, void* data) {
+bool darrayAny(Darray self, darrayCondition condition, const void* data) {
     for (size_t index = 0; index < self.m_elements_used; index++) {
         if (condition(internal_darrayNThElement(&self, index), data) == true) {
             return true;
@@ -21,7 +21,7 @@ bool darrayAny(Darray self, darrayCondition condition, void* data) {
     return false;
 }
 
-bool darrayAll(Darray self, darrayCondition condition, void* data) {
+bool darrayAll(Darray self, darrayCondition condition, const void* data) {
     for (size_t index = 0; index < self.m_elements_used; index++) {
         if (condition(internal_darrayNThElement(&self, index), data) == false) {
             return false;
@@ -31,7 +31,7 @@ bool darrayAll(Darray self, darrayCondition condition, void* data) {
     return true;
 }
 
-bool darrayNone(Darray self, darrayCondition condition, void* data) {
+bool darrayNone(Darray self, darrayCondition condition, const void* data) {
     for (size_t index = 0; index < self.m_elements_used; index++) {
         if (condition(internal_darrayNThElement(&self, index), data) == true) {
             return false;
@@ -53,4 +53,44 @@ void darrayReverse(Darray* self) {
         );
         memcpy(internal_darrayNThElement(self, swap_index), buffer, self->m_elements_used);
     }
+}
+
+DarrayStatus darrayFilter(const Darray* self, darrayCondition condition,
+    Darray* filtered, const void* data) {
+   
+    if (self == NULL || filtered == NULL) {
+        return DARRAY_ERROR_NULL;
+    }
+
+    if (darrayInit(filtered, 0, sizeof(size_t)) != DARRAY_OK) {
+        return DARRAY_ERROR_ALLOCATION;
+    }
+    
+    if (darrayReserve(filtered, self->m_elements_used) != DARRAY_OK) {
+        return DARRAY_ERROR_ALLOCATION;
+    }
+
+    for (size_t index = 0; index < self->m_elements_used; index++) {
+        if (condition(internal_darrayNThElement(self, index), data) == false) {
+            continue;
+        }
+        DarrayStatus result = darrayPushBack(filtered, internal_darrayNThElement(self, index));
+        if (result != DARRAY_OK) {
+            return result;
+        }
+    }
+
+    return darrayShrinkToFit(filtered);
+}
+
+DarrayStatus darrayTransform(Darray* self, darrayTransformation transfomration, const void* data) {
+    if (self == NULL) {
+        return DARRAY_ERROR_NULL;
+    }
+
+    for (size_t index = 0; index < self->m_elements_used; index++) {
+        transfomration(internal_darrayNThElement(self, index), data);
+    }
+
+    return DARRAY_OK;
 }

@@ -24,6 +24,10 @@ typedef bool (*darrayCondition) (const void* element, const void* data);
 ///     to uphold the time complexity specified for each algorithm
 typedef int (*darrayOrdering) (const void* a, const void* b);
 
+/// @brief used by darrayTransform. May change the element in-place. Should not change the dataype of 
+///     the darray, although that is not enforced as long as the element size stays the same. data can
+///     be used to pass in additional date (for easier reuse of functions)
+typedef void (*darrayTransformation) (void* element, const void* data);
 ///
 /// DEFAULTS
 ///
@@ -105,7 +109,7 @@ DarrayStatus darrayBinarySearch(const Darray* self, darrayOrdering darray_orderi
 /// @return true if condition is true for at least one element, false otherwise
 /// @param self the darray to reverse 
 /// @complexity O(n)
-bool darrayAny(Darray self, darrayCondition condition, void* data);
+bool darrayAny(Darray self, darrayCondition condition, const void* data);
 
 /// @brief check if condition is true for all elements of the darray
 /// @param self the darray to check
@@ -114,7 +118,7 @@ bool darrayAny(Darray self, darrayCondition condition, void* data);
 /// @return true if condition is true for every element, false otherwise
 /// @param self the darray to reverse 
 /// @complexity O(n)
-bool darrayAll(Darray self, darrayCondition condition, void* data);
+bool darrayAll(Darray self, darrayCondition condition, const void* data);
 
 /// @brief check if condition is false for all elements of the darray
 /// @param self the darray to check
@@ -122,12 +126,32 @@ bool darrayAll(Darray self, darrayCondition condition, void* data);
 /// @param data any additional data needed by condition (can pass NULL if not needed)
 /// @return true if condition is false for every element, false otherwise
 /// @complexity O(n)
-bool darrayNone(Darray self, darrayCondition condition, void* data);
+bool darrayNone(Darray self, darrayCondition condition, const void* data);
 
 /// @brief reverses the elements of the darray in-place
 /// @param self the darray to reverse 
 /// @complexity O(n)
 void darrayReverse(Darray* self);
+
+/// @brief creates a new darray of all elements of self for which condition returns true
+/// @param self the array to use as an input
+/// @param condition the condition to check for all elements of self
+/// @param filtered where to write the filtered result. Must be uninitialized.
+/// @param data any additional data needed by condition. can pass NULL if not needed.
+/// @return DARRAY_ERROR_NULL if self or filtered was NULL
+///     DARRAY_ERROR_ALLOCATION if creating or resizing filtered failed, 
+///     DARRAY_OK if everything worked (only then is filtered valid)
+DarrayStatus darrayFilter(const Darray* self, darrayCondition condition,
+    Darray* filtered, const void* data);
+
+/// @brief applies the given transformation function to each element of the darray.
+/// @param self the darray to transform
+/// @param transformation the transformation to apply. Should modify the element in-place.
+///     Should not change the data type (although that is not technically enforced). Should not touch 
+///     more bytes than the one element uses.
+/// @param data any additional data needed by transformation. Can pass NULL if not needed.
+/// @return DARRAY_ERROR_NULL if self was null, DARRAY_OK otherwise
+DarrayStatus darrayTransform(Darray* self, darrayTransformation transformation, const void* data);
 
 ///
 /// RANGES
