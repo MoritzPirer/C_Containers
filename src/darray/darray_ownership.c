@@ -29,6 +29,7 @@ DarrayStatus darrayInit(Darray* self, size_t initial_size, size_t element_size) 
     if (self->m_data == NULL) {
         return DARRAY_ERROR_ALLOCATION;
     }
+    pthread_mutex_init(&(self->darray_lock), NULL);
 
     return DARRAY_OK;
 }
@@ -42,6 +43,7 @@ DarrayStatus darrayDestroy(Darray* self) {
     self->m_data = NULL;
     self->m_elements_allocated = 0;
     self->m_elements_used = 0;
+    pthread_mutex_destroy(&(self->darray_lock));
 
     return DARRAY_OK;
 }
@@ -49,6 +51,18 @@ DarrayStatus darrayDestroy(Darray* self) {
 DarrayStatus darraySwap(Darray* self, Darray* other) {
     if (self == NULL || other == NULL) {
         return DARRAY_ERROR_NULL;
+    }
+
+    // Always lock the pointer with the lower address first
+    if (self == other) {
+        return DARRAY_OK; // swap with self
+    }
+    else if ((void*) self < (void*) other) {
+        pthread_mutex_lock(&self->darray_lock);
+        pthread_mutex_lock(&other->darray_lock);
+    } else {
+        pthread_mutex_lock(&other->darray_lock);
+        pthread_mutex_lock(&self->darray_lock);
     }
 
     swapValues(&(self->m_element_size), &(other->m_element_size));
@@ -59,17 +73,24 @@ DarrayStatus darraySwap(Darray* self, Darray* other) {
     self->m_data = other->m_data;
     other->m_data = temp;
     
+    pthread_mutex_unlock(&self->darray_lock);
+    pthread_mutex_unlock(&other->darray_lock);
+
     return DARRAY_OK;
 }
 
-DarrayStatus darrayDeepCopy(const Darray* original, Darray* copy) {
+DarrayStatus darrayDeepCopy(Darray* original, Darray* copy) {
     if (original == NULL || copy == NULL) {
         return DARRAY_ERROR_NULL;
     }
+
+    pthread_mutex_lock(&(original->darray_lock));
     
     size_t data_amount_bytes = original->m_elements_allocated * original->m_element_size;
+
     copy->m_data = malloc(data_amount_bytes);
     if (copy->m_data == NULL) {
+        pthread_mutex_unlock(&(original->darray_lock));
         return DARRAY_ERROR_ALLOCATION;
     }
 
@@ -78,20 +99,40 @@ DarrayStatus darrayDeepCopy(const Darray* original, Darray* copy) {
     copy->m_elements_used = original->m_elements_used;
     copy->m_elements_allocated = original->m_elements_used;
     copy->m_element_size = original->m_element_size;
+    pthread_mutex_init(&copy->darray_lock, NULL);
    
+    pthread_mutex_unlock(&(original->darray_lock));
+
     return DARRAY_OK;
 }
 
-DarrayStatus darrayAppend(Darray* self, const Darray* other) {
+DarrayStatus darrayAppend(Darray* self, Darray* other) {
     if (self == NULL || other == NULL) {
         return DARRAY_ERROR_NULL;
     }
 
+    // Always lock the pointer with the lower address first
+    if (self == other) {
+        pthread_mutex_lock(&self->darray_lock);
+    }
+    else if ((void*) self < (void*) other) {
+        pthread_mutex_lock(&self->darray_lock);
+        pthread_mutex_lock(&other->darray_lock);
+    } else {
+        pthread_mutex_lock(&other->darray_lock);
+        pthread_mutex_lock(&self->darray_lock);
+    }
     // increase capacity if needed
     size_t needed_element_capacity = self->m_elements_used + other->m_elements_used;
     if (self->m_elements_allocated < needed_element_capacity) {
         DarrayStatus grow_result = internal_darraySetSizeTo(self, needed_element_capacity);
         if (grow_result != DARRAY_OK) {
+            if (self == other) {
+                pthread_mutex_lock(&self->darray_lock);
+            } else {
+                pthread_mutex_lock(&self->darray_lock);
+                pthread_mutex_lock(&other->darray_lock);
+            }
             return grow_result;
         }
     }
@@ -104,5 +145,11 @@ DarrayStatus darrayAppend(Darray* self, const Darray* other) {
 
     self->m_elements_used += other->m_elements_used;
 
+    if (self == other) {
+        pthread_mutex_lock(&self->darray_lock);
+    } else {
+        pthread_mutex_lock(&self->darray_lock);
+        pthread_mutex_lock(&other->darray_lock);
+    }
     return DARRAY_OK;
 }

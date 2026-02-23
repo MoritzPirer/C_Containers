@@ -16,8 +16,11 @@ DarrayStatus darraySort(Darray* self, darrayOrdering darray_ordering) {
         return DARRAY_ERROR_NULL;
     }
 
+    pthread_mutex_lock(&self->darray_lock);
+
     qsort(self->m_data, self->m_elements_used, self->m_element_size, darray_ordering);
     
+    pthread_mutex_unlock(&self->darray_lock);
     return DARRAY_OK;
 }
 
@@ -26,6 +29,7 @@ bool darrayIsSorted(Darray self, darrayOrdering darray_ordering, bool is_ascendi
         return true;
     }
     
+    pthread_mutex_lock(&self.darray_lock);
     int factor = (is_ascending? 1 : -1); //inverts comparision for descending sorting
 
     for (size_t index = 1; index < self.m_elements_used; index++) {
@@ -33,10 +37,12 @@ bool darrayIsSorted(Darray self, darrayOrdering darray_ordering, bool is_ascendi
             internal_darrayNThElement(&self, index - 1),
             internal_darrayNThElement(&self, index)) * factor > 0
         ) {
+            pthread_mutex_unlock(&self.darray_lock);
             return false;
         }
     }
 
+    pthread_mutex_unlock(&self.darray_lock);
     return true;
 }
 

@@ -57,7 +57,7 @@ int darrayDefaultOrdering(const void* a, const void* b);
 ///     DARRAY_NOT_FOUND if key was not found
 ///     DARRAY_OK if key was found (only then is the value at index_buffer valid)
 /// @complexity O(n)
-DarrayStatus darrayFindFirst(const Darray* self, darrayCondition condition,
+DarrayStatus darrayFindFirst(Darray* self, darrayCondition condition,
     size_t* index_buffer, const void* data);
 
 /// @brief find the index of the last element for which condition returns true
@@ -71,7 +71,7 @@ DarrayStatus darrayFindFirst(const Darray* self, darrayCondition condition,
 ///     DARRAY_NOT_FOUND if key was not found
 ///     DARRAY_OK if key was found (only then is the value at index_buffer valid)
 /// @complexity O(n)
-DarrayStatus darrayFindLast(const Darray* self, darrayCondition condition,
+DarrayStatus darrayFindLast(Darray* self, darrayCondition condition,
     size_t* index_buffer, const void* data);
 
 /// @brief checks if the darray contains at least one item for which condition returns true
@@ -95,7 +95,7 @@ bool darrayContains(Darray self, darrayCondition condition, const void* data);
 ///     DARRAY_NOT_FOUND if key was not found
 ///     DARRAY_OK if key was found (only then is the value at index_buffer valid)
 /// @complexity O(log(n))
-DarrayStatus darrayBinarySearch(const Darray* self, darrayOrdering darray_ordering,
+DarrayStatus darrayBinarySearch(Darray* self, darrayOrdering darray_ordering,
     size_t* index_buffer, const void* key);
 
 ///
@@ -142,7 +142,7 @@ void darrayReverse(Darray* self);
 ///     DARRAY_ERROR_ALLOCATION if creating or resizing filtered failed, 
 ///     DARRAY_OK if everything worked (only then is filtered valid)
 /// @complexity O(n)
-DarrayStatus darrayFilter(const Darray* self, darrayCondition condition,
+DarrayStatus darrayFilter(Darray* self, darrayCondition condition,
     Darray* filtered, const void* data);
 
 /// @brief applies the given transformation function to each element of the darray.
@@ -223,7 +223,7 @@ bool darrayIsUnique(Darray self, darrayOrdering darray_ordering);
 ///     DARRAY_ERROR_ALLOCATION if creating the new darray failed,
 ///     DARRAY_OK if everything went fine (only then is unique valid) 
 /// @complexity O(n)
-DarrayStatus darrayGetUnique(const Darray* self, darrayOrdering darray_ordering, Darray* unique);
+DarrayStatus darrayGetUnique(Darray* self, darrayOrdering darray_ordering, Darray* unique);
 
 /// @brief create a new darray consisting of the elements that both left and right contain.
 ///     Caller is responsible for ensuring both are sorted (either both ascending or both descending)
@@ -236,7 +236,7 @@ DarrayStatus darrayGetUnique(const Darray* self, darrayOrdering darray_ordering,
 ///     DARRAY_ERROR_ALLOCATION if creating the new darray failed,
 ///     DARRAY_OK if everything went fine (only then is intersection valid) 
 /// @complexity O(n + m)
-DarrayStatus darrayGetIntersection(const Darray* left, const Darray* right,
+DarrayStatus darrayGetIntersection(Darray* left, Darray* right,
     darrayOrdering darray_ordering, Darray* intersection);
 
 /// @brief create a new darray consisting of the elements contained by left and / or right.
@@ -250,7 +250,7 @@ DarrayStatus darrayGetIntersection(const Darray* left, const Darray* right,
 ///     DARRAY_ERROR_ALLOCATION if creating the new darray failed,
 ///     DARRAY_OK if everything went fine (only then is union_elements valid) 
 /// @complexity O(n + m)
-DarrayStatus darrayGetUnion(const Darray* left, const Darray* right,
+DarrayStatus darrayGetUnion(Darray* left, Darray* right,
     darrayOrdering darray_ordering, Darray* union_elements);
 
 ///

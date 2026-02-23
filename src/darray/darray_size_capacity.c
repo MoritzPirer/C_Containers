@@ -14,7 +14,9 @@ DarrayStatus darrayReserve(Darray* self, size_t elements_to_reserve) {
         return DARRAY_ERROR_NULL;
     }
 
+    pthread_mutex_lock(&(self->darray_lock));
     if (elements_to_reserve <= self->m_elements_allocated) {
+        pthread_mutex_unlock(&(self->darray_lock));
         return DARRAY_OK; 
     }
     
@@ -23,19 +25,28 @@ DarrayStatus darrayReserve(Darray* self, size_t elements_to_reserve) {
         new_size <<= 1;
     }
     
-    return internal_darraySetSizeTo(self, new_size);
+    DarrayStatus result = internal_darraySetSizeTo(self, new_size);
+    pthread_mutex_unlock(&(self->darray_lock));
+
+    return result;
 }
 
 DarrayStatus darrayShrinkToFit(Darray* self) {
     if (self == NULL) {
         return DARRAY_ERROR_NULL;
     }
+
+    pthread_mutex_lock(&(self->darray_lock));
     
     if (self->m_elements_allocated == self->m_elements_used) {
+        pthread_mutex_unlock(&(self->darray_lock));
         return DARRAY_OK;
     }
 
-    return internal_darraySetSizeTo(self, self->m_elements_used);
+    DarrayStatus result = internal_darraySetSizeTo(self, self->m_elements_used);
+    pthread_mutex_unlock(&(self->darray_lock));
+
+    return result;
 }
 
 size_t darraySize(Darray self) {
@@ -55,6 +66,7 @@ DarrayStatus darrayResize(Darray* self, size_t new_size) {
         return DARRAY_ERROR_NULL;
     }
     
+    pthread_mutex_lock(&(self->darray_lock));
     if (new_size == self->m_elements_used) {
         return DARRAY_OK;
     }
@@ -63,6 +75,7 @@ DarrayStatus darrayResize(Darray* self, size_t new_size) {
 
     DarrayStatus resize_result = internal_darraySetSizeTo(self, new_size);
     if (resize_result != DARRAY_OK) {
+        pthread_mutex_unlock(&(self->darray_lock));
         return resize_result;
     }
 
@@ -72,5 +85,6 @@ DarrayStatus darrayResize(Darray* self, size_t new_size) {
         memset(internal_darrayNThElement(self, old_size), 0, (new_size - old_size) * self->m_element_size);
     }
 
+    pthread_mutex_unlock(&(self->darray_lock));
     return DARRAY_OK;
 }

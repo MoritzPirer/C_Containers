@@ -90,7 +90,7 @@ int get_union_with_duplicates() {
         return 1;
 
     if (darraySize(out) != 4) {
-        show(out);   
+        // show(out);   
         return 2;
     }
 

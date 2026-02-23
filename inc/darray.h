@@ -11,6 +11,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <pthread.h>
 
 #define DARRAY_MIN_SIZE 1
 
@@ -19,6 +20,7 @@ typedef struct _Darray_ {
     size_t m_elements_allocated;
     size_t m_element_size;
     void* m_data;
+    pthread_mutex_t darray_lock;
 } Darray;
 
 typedef enum _DarrayStatus_ {
@@ -56,13 +58,13 @@ DarrayStatus darrayDestroy(Darray* self);
 DarrayStatus darraySwap(Darray* self, Darray* other);
 
 /// @brief Initializes copy as a deep copy of original (same values, but it's own memory).
-///     copy should not own memory (i.e. should be uninitialized) to avoid memory leaks
+///     copy should be uninitialized to avoid memory leaks
 /// @param original the darray to copy 
 /// @param copy the darray that should be a copy of original 
 /// @return DARRAY_ERROR_NULL if original or copy was NULL,
 ///     DARRAY_ERROR_ALLOCATION if allocation failed,
 ///     DARRAY_OK otherwise
-DarrayStatus darrayDeepCopy(const Darray* original, Darray* copy);
+DarrayStatus darrayDeepCopy(Darray* original, Darray* copy);
 
 /// @brief Copies all elements of other to the end of self. other is not modified and stays a 
 ///     valid darray. Caller is responsible for ensuring self and other store the same datatype
@@ -71,7 +73,7 @@ DarrayStatus darrayDeepCopy(const Darray* original, Darray* copy);
 /// @return DARRAY_ERROR_NULL if self or other was NULL,
 ///     DARRAY_ERROR_ALLOCATION if resiting failed,
 ///     DARRAY_OK otherwise 
-DarrayStatus darrayAppend(Darray* self, const Darray* other);
+DarrayStatus darrayAppend(Darray* self, Darray* other);
 
 ///
 /// SIZE & CAPACITY
@@ -117,7 +119,8 @@ DarrayStatus darrayResize(Darray* self, size_t new_size);
 
 /// @brief adds the element pointed to by element to the end of given darray, resizing if needed
 /// @param self the darray to add to
-/// @param element a pointer to the element to add
+/// @param element a pointer to the element to add. Caller must guarantee element is valid until 
+///     the function call returns
 /// @return DARRAY_OK if everything is fine or DARRAY_ERROR_ALLOCATION if the resizing failed
 ///     or DARRAY_ERROR_NULL if darray or element was NULL
 DarrayStatus darrayPushBack(Darray* self, void* element);
@@ -125,7 +128,8 @@ DarrayStatus darrayPushBack(Darray* self, void* element);
 /// @brief removes the last element from the darray and writes it to the location
 ///     pointed to by element. Shrinks the darray if it becomes empty enough
 /// @param self the darray to pop from
-/// @param element where to pop to
+/// @param element a pointer to the location to write to. Caller must guarantee element is valid until 
+///     the function call returns
 /// @return DARRAY_ERROR_BOUNDS if there is no element to pop, 
 ///     DARRAY_ERROR_NULL if darray or buffer are NULL,
 ///     DARRAY_ERROR_ALLOC if shrinking failed,
@@ -135,7 +139,8 @@ DarrayStatus darrayPopBackInto(Darray* self, void* element);
 /// @brief adds the element pointed to by element to the front of
 ///     the given darray, resizing if needed
 /// @param self the darray to add to
-/// @param element a pointer to the element to add 
+/// @param element a pointer to the location to write to. Caller must guarantee element is valid until 
+///     the function call returns
 /// @return DARRAY_ERROR_NULL if self or element is NULL,
 ///     DARRAY_ERROR_ALLOCATION if resizing the darray failed,
 ///     DARRAY_OK otherwise
@@ -144,7 +149,8 @@ DarrayStatus darrayPushFront(Darray* self, void* element);
 /// @brief removes the first element from the darray and writes it to the location
 ///     pointed to by element.
 /// @param self the darray to pop from 
-/// @param element where to pop to 
+/// @param element where to pop to. Caller must guarantee that element is valid
+///     until the function call returns
 /// @return DARRAY_ERROR_NULL if self or element is NULL,
 ///     DARRAY_ERROR_BOUNDS if the index is out of range,
 ///     DARRAY_ERROR_ALLOCATION if resizing the darray failed,
@@ -154,7 +160,8 @@ DarrayStatus darrayPopFrontInto(Darray* self, void* element);
 /// @brief insert the given element at the given index, pushing all elements with index >= index back
 /// @param self the darray to insert into 
 /// @param index the index to insert at 
-/// @param element the element to insert 
+/// @param element the element to insert. Caller must guarantee that element is
+///     valid until the function call returns
 /// @return DARRAY_ERROR_NULL if self or element is NULL,
 ///     DARRAY_ERROR_BOUNDS if the index is out of range,
 ///     DARRAY_ERROR_ALLOCATION if resizing the darray failed,
@@ -220,15 +227,17 @@ DarrayStatus darrayClear(Darray* self);
 /// @brief Reads the element at position index into buffer 
 /// @param self the darray to read from
 /// @param index the position to read from. The first element is 0
-/// @param buffer where to write the value that has been read 
+/// @param buffer where to write the value that has been read. Caller must
+///     guarantee that buffer is valid until the function call returns
 /// @return DARRAY_OK if everything is fine, DARRAY_ERROR_NULL if darray or buffer is NULL
 ///     or DARRAY_ERROR_BOUNDS if index > darraySize(darray) 
-DarrayStatus darrayGetAt(const Darray* self, size_t index, void* buffer);
+DarrayStatus darrayGetAt(Darray* self, size_t index, void* buffer);
 
 /// @brief Set the element at position index to the value pointed to by buffer
 /// @param self the darray to write to
 /// @param index the position to write to. The first element is 0
-/// @param buffer where the value to write is 
+/// @param buffer where the value to write is. Caller must
+///     guarantee that buffer is valid until the function call returns
 /// @return DARRAY_OK if everything is fine, DARRAY_ERROR_NULL if darray or buffer is NULL
 ///     or DARRAY_ERROR_BOUNDS if index > darraySize(darray) 
 DarrayStatus darraySetAt(Darray* self, size_t index, const void* buffer);
@@ -237,6 +246,6 @@ DarrayStatus darraySetAt(Darray* self, size_t index, const void* buffer);
 ///     after any operation that adds or removes elements
 /// @param self the darray who's data shoud be accessed 
 /// @return a pointer to the heap data or NULL if self was NULL 
-void* darrayData(const Darray* self);
+void* darrayData(Darray* self);
 
 #endif //DYNAMIC_ARRAY_H

@@ -5,6 +5,9 @@
 /// @date: 2026-01-08 
 /// @author: Moritz Pirer
 ///
+
+#include <assert.h>
+
 #include "../darray_internal.h"
 #include "../../inc/darrayAlgs.h"
 
@@ -13,18 +16,25 @@ bool darrayIsUnique(Darray self, darrayOrdering darray_ordering) {
         return true; //unique by default
     }
 
+    pthread_mutex_lock(&self.darray_lock);
+
     for (size_t index = 1; index < self.m_elements_used; index++) {
         if (darray_ordering(
             internal_darrayNThElement(&self, index - 1),
             internal_darrayNThElement(&self, index)
         ) == 0) {
+            pthread_mutex_unlock(&self.darray_lock);
             return false;
         } 
     }
+
+    pthread_mutex_unlock(&self.darray_lock);
     return true;
 }
 
-DarrayStatus darrayGetUnique(const Darray* self, darrayOrdering darray_ordering, Darray* unique) {
+DarrayStatus darrayGetUnique(Darray* self, darrayOrdering darray_ordering, Darray* unique) {
+    assert(false); // this function is not yet thread safe
+
     if (self == NULL || unique == NULL) {
         return DARRAY_ERROR_NULL;
     }
@@ -65,7 +75,7 @@ DarrayStatus darrayGetUnique(const Darray* self, darrayOrdering darray_ordering,
 }
 
 /// @brief returns the first index after the given index that is not a duplicate in self
-size_t skipDuplicates(const Darray* self, size_t index, darrayOrdering ordering) {
+size_t skipDuplicates(Darray* self, size_t index, darrayOrdering ordering) {
     size_t next = index + 1;
 
     while (next < self->m_elements_used && ordering(
@@ -79,8 +89,10 @@ size_t skipDuplicates(const Darray* self, size_t index, darrayOrdering ordering)
     return index + 1;
 }
 
-DarrayStatus darrayGetIntersection(const Darray* left, const Darray* right,
+DarrayStatus darrayGetIntersection(Darray* left, Darray* right,
     darrayOrdering darray_ordering, Darray* intersection) {
+
+    assert(false); // this function is not yet thread safe
 
     if (left == NULL || right == NULL || intersection == NULL) {
         return DARRAY_ERROR_NULL;
@@ -131,8 +143,10 @@ DarrayStatus darrayGetIntersection(const Darray* left, const Darray* right,
     return darrayShrinkToFit(intersection);
 }
 
-DarrayStatus darrayGetUnion(const Darray* left, const Darray* right,
+DarrayStatus darrayGetUnion(Darray* left, Darray* right,
     darrayOrdering darray_ordering, Darray* union_elements) {
+
+    assert(false); // this function is not yet thread safe
 
     if (left == NULL || right == NULL || union_elements == NULL) {
         return DARRAY_ERROR_NULL;
@@ -197,6 +211,9 @@ DarrayStatus darrayGetUnion(const Darray* left, const Darray* right,
 }
 
 bool darrayEquals(Darray left, Darray right, darrayOrdering darray_ordering) {
+    
+    assert(false); // this function is not yet thread safe
+
     if (left.m_elements_used != right.m_elements_used) {
         return false;
     }

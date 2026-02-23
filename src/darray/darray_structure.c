@@ -13,19 +13,20 @@
 
 DarrayStatus darrayPushBack(Darray* self, void* element) {
     if (self == NULL || element == NULL) {
-        printf("NULL");
         return DARRAY_ERROR_NULL;
     }
 
+    pthread_mutex_lock(&(self->darray_lock));
     DarrayStatus grow_result = internal_darrayGrow(self);
     if (grow_result != DARRAY_OK) {
-        printf("GROW");
+        pthread_mutex_unlock(&(self->darray_lock));
         return grow_result;
     }
     memcpy(internal_darrayNThElement(self, self->m_elements_used), element, self->m_element_size);
 
     self->m_elements_used++;
     
+    pthread_mutex_unlock(&(self->darray_lock));
     return DARRAY_OK;
 }
 
@@ -35,7 +36,9 @@ DarrayStatus darrayPopBackInto(Darray* self, void* element) {
         return DARRAY_ERROR_NULL;
     }
     
+    pthread_mutex_lock(&(self->darray_lock));
     if (self->m_elements_used == 0) {
+        pthread_mutex_unlock(&(self->darray_lock));
         return DARRAY_ERROR_BOUNDS;
     }
     
@@ -43,10 +46,14 @@ DarrayStatus darrayPopBackInto(Darray* self, void* element) {
 
     self->m_elements_used--;
 
-    return internal_darrayShrinkIfNeeded(self);
+    DarrayStatus result = internal_darrayShrinkIfNeeded(self);
+    pthread_mutex_unlock(&(self->darray_lock));
+
+    return result;
 }
 
 DarrayStatus darrayPushFront(Darray* self, void* element) {
+    // insertAt handles synchronization
     return darrayInsertAt(self, 0, element);
 }
 
@@ -55,6 +62,8 @@ DarrayStatus darrayPopFrontInto(Darray* self, void* element) {
         return DARRAY_ERROR_NULL;
     }
     
+    pthread_mutex_lock(&(self->darray_lock));
+
     if (self->m_elements_used == 0) {
         return DARRAY_ERROR_BOUNDS;
     }
@@ -69,20 +78,26 @@ DarrayStatus darrayPopFrontInto(Darray* self, void* element) {
     size_t bytes_to_copy = self->m_elements_used * self->m_element_size;
     internal_moveBytes(self, 1, 0, bytes_to_copy);
     
-    return internal_darrayShrinkIfNeeded(self);
+    DarrayStatus result = internal_darrayShrinkIfNeeded(self);
+    pthread_mutex_unlock(&(self->darray_lock));
+
+    return result;
 }
 
 DarrayStatus darrayInsertAt(Darray* self, size_t index, void* element) {
     if (self == NULL) {
         return DARRAY_ERROR_NULL;
     }
-    
+   
+    pthread_mutex_lock(&(self->darray_lock));
     if (!internal_darrayIsValidIndex(self, index)) {
+        pthread_mutex_unlock(&(self->darray_lock));
         return DARRAY_ERROR_BOUNDS;
     }
     
     DarrayStatus grow_result = internal_darrayGrow(self);
     if (grow_result != DARRAY_OK) {
+        pthread_mutex_unlock(&(self->darray_lock));
         return grow_result;
     }
     
@@ -95,5 +110,6 @@ DarrayStatus darrayInsertAt(Darray* self, size_t index, void* element) {
 
     self->m_elements_used++;
 
+    pthread_mutex_unlock(&(self->darray_lock));
     return DARRAY_OK;
 }

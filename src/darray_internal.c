@@ -3,6 +3,9 @@
 
 #include "darray_internal.h"
 
+// IMPORTANT!!!
+// Synchronization must be done by the functions calling these internal function
+
 size_t max(size_t a, size_t b) {
     return (a > b? a : b);
 }
@@ -17,7 +20,7 @@ void swapValues(size_t* a, size_t* b) {
     *b = temp;
 }
 
-void* internal_darrayNThElement(const Darray* self, size_t index) {
+void* internal_darrayNThElement(Darray* self, size_t index) {
     return (void*) ((char*) self->m_data + (index * self->m_element_size));
 }
 
@@ -56,7 +59,7 @@ DarrayStatus internal_darrayShrinkIfNeeded(Darray* self) {
     return DARRAY_OK;
 }
 
-bool internal_darrayIsValidIndex(const Darray* self, size_t index) {
+bool internal_darrayIsValidIndex(Darray* self, size_t index) {
     return (index >= 0 && index < self->m_elements_used);
 }
 

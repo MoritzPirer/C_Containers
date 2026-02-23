@@ -9,6 +9,8 @@
 #include "../../inc/darrayAlgs.h"
 
 DarrayStatus darrayRangeFromToStep(Darray* self, size_t start, size_t stop, int step) {
+    // this function doesn't need to lock because it creates the darray, therefore no other thread can see it.    
+
     if (self == NULL) {
         return DARRAY_ERROR_NULL;
     }

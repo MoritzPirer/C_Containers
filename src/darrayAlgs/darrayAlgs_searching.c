@@ -9,54 +9,64 @@
 #include "../darray_internal.h"
 #include "../../inc/darrayAlgs.h"
 
-DarrayStatus darrayFindFirst(const Darray* self, darrayCondition condition,
+DarrayStatus darrayFindFirst(Darray* self, darrayCondition condition,
     size_t* index_buffer, const void* data) {
 
     if (self == NULL || index_buffer == NULL) {
         return DARRAY_ERROR_NULL;
     }
+    pthread_mutex_lock(&self->darray_lock);
 
     for (size_t index = 0; index < self->m_elements_used; index++) {
         if (condition(internal_darrayNThElement(self, index), data) == true) {
             *index_buffer = index;
+            pthread_mutex_unlock(&self->darray_lock);
             return DARRAY_OK;
         }
     }
 
+    pthread_mutex_unlock(&self->darray_lock);
     return DARRAY_NOT_FOUND;
 }
 
-DarrayStatus darrayFindLast(const Darray* self, darrayCondition condition,
+DarrayStatus darrayFindLast(Darray* self, darrayCondition condition,
     size_t* index_buffer, const void* data) {
 
     if (self == NULL || index_buffer == NULL) {
         return DARRAY_ERROR_NULL;
     }
+
+    pthread_mutex_lock(&self->darray_lock);
 
     for (size_t i = 0; i < self->m_elements_used; i++) {
         size_t index = self->m_elements_used - i - 1; //covers some edge cases better because of underflow
         if (condition(internal_darrayNThElement(self, index), data) == true) {
             *index_buffer = index;
+            pthread_mutex_unlock(&self->darray_lock);
             return DARRAY_OK;
         }
     }
 
+    pthread_mutex_unlock(&self->darray_lock);
     return DARRAY_NOT_FOUND;
 }
 
 bool darrayContains(Darray self, darrayCondition condition, const void* data) {
     size_t dummy;
+    // findFirst handles synchronization
     return darrayFindFirst(&self, condition, &dummy, data) == DARRAY_OK;
 }
 
-DarrayStatus darrayBinarySearch(const Darray* self, darrayOrdering darray_ordering,
+DarrayStatus darrayBinarySearch(Darray* self, darrayOrdering darray_ordering,
     size_t* index_buffer, const void* key) {
 
     if (self == NULL || index_buffer == NULL || key == NULL) {
         return DARRAY_ERROR_NULL;
     }
 
+    pthread_mutex_lock(&self->darray_lock);
     if (self->m_elements_used == 0) {
+        pthread_mutex_unlock(&self->darray_lock);
         return DARRAY_NOT_FOUND;
     }
 
@@ -70,6 +80,7 @@ DarrayStatus darrayBinarySearch(const Darray* self, darrayOrdering darray_orderi
 
         if (ordering == 0) {
             *index_buffer = middle;
+            pthread_mutex_unlock(&self->darray_lock);
             return DARRAY_OK;
         }
         
@@ -84,5 +95,6 @@ DarrayStatus darrayBinarySearch(const Darray* self, darrayOrdering darray_orderi
         }
     }
     
+    pthread_mutex_unlock(&self->darray_lock);
     return DARRAY_NOT_FOUND;
 }
