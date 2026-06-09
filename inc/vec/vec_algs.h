@@ -17,30 +17,30 @@
 /// @brief takes a pointer to an element of a vec. Should return true if the element
 ///     matches a criteria and false otherwise. data can optionally be used for additional data
 ///     Should be a constant time operation to uphold the time complexity specified for each algorithm
-typedef bool (*vec_condition_t)(const void *element, const void *data);
+typedef bool (*vec_condition_t)(const void* element, const void* data);
 
 /// @brief compares two elements of the type that the vec contains. Should return any negative
 ///     value if a < b, any positive value if a > b and 0 if a == b. Should be a constant time operation
 ///     to uphold the time complexity specified for each algorithm
-typedef int (*vec_ordering_t)(const void *a, const void *b);
+typedef int (*vec_ordering_t)(const void* a, const void* b);
 
 /// @brief used by vecTransform. May change the element in-place. Should not change the dataype of
 ///     the vec, although that is not enforced as long as the element size stays the same. data can
 ///     be used to pass in additional date (for easier reuse of functions)
-typedef void (*vec_transformation_t)(void *element, const void *data);
+typedef void (*vec_transformation_t)(void* element, const void* data);
 ///
 /// DEFAULTS
 ///
 
 /// @brief simple equality comparison for find algorithms (among others).
-///     Usable if the data type of the vec can (meaningfully) be convertet to a size_t (i.e. most built-in types)
+///     Usable if the data type of the vec can (meaningfully) be converted to a size_t (i.e. most built-in types)
 /// @return true if element == data
-bool vec_default_condition(const void *element, const void *data);
+bool vec_default_condition(const void* element, const void* data);
 
 /// @brief simple ordering for algorithms that need to compare elements.
 ///     Usable if the data type of the vec can (meaningfully) be converted to a size_t (i.e. most built-in types)
 /// @return a negative value if a < b, a positive value if a > b, 0 if a == b
-int vec_default_ordering(const void *a, const void *b);
+int vec_default_ordering(const void* a, const void* b);
 
 ///
 /// SEARCHING
@@ -58,7 +58,7 @@ int vec_default_ordering(const void *a, const void *b);
 ///     VEC_OK if key was found (only then is the value at index_buffer valid)
 /// @complexity O(n)
 vec_status_t vec_find_first(vec_t* self, vec_condition_t condition,
-                         size_t* index_buffer, const void *data);
+                         size_t* index_buffer, const void* data);
 
 /// @brief find the index of the last element for which condition returns true
 ///     and write it to index_buffer
@@ -72,7 +72,7 @@ vec_status_t vec_find_first(vec_t* self, vec_condition_t condition,
 ///     VEC_OK if key was found (only then is the value at index_buffer valid)
 /// @complexity O(n)
 vec_status_t vec_find_last(vec_t* self, vec_condition_t condition,
-                         size_t* index_buffer, const void *data);
+                         size_t* index_buffer, const void* data);
 
 /// @brief checks if the vec contains at least one item for which condition returns true
 /// @param self the vec to search
@@ -80,7 +80,7 @@ vec_status_t vec_find_last(vec_t* self, vec_condition_t condition,
 /// @param data any additional data for the condition function. Can pass NULL if not needed
 /// @return true if self contains an element for chich condition returns true, false otherwise
 /// @complexity O(n)
-bool vec_contains(vec_t self, vec_condition_t condition, const void *data);
+bool vec_contains(vec_t self, vec_condition_t condition, const void* data);
 
 /// @brief performs a binary search to find the index of key. Caller is responsible for
 ///     ensuring that the vec has no duplicates and is sorted in ascending order. Otherwise, the
@@ -96,7 +96,7 @@ bool vec_contains(vec_t self, vec_condition_t condition, const void *data);
 ///     VEC_OK if key was found (only then is the value at index_buffer valid)
 /// @complexity O(log(n))
 vec_status_t vec_binary_search(vec_t* self, vec_ordering_t vec_ordering,
-                            size_t* index_buffer, const void *key);
+                            size_t* index_buffer, const void* key);
 
 ///
 /// ITERATING
@@ -109,7 +109,7 @@ vec_status_t vec_binary_search(vec_t* self, vec_ordering_t vec_ordering,
 /// @return true if condition is true for at least one element, false otherwise
 /// @param self the vec to reverse
 /// @complexity O(n)
-bool vec_any(vec_t self, vec_condition_t condition, const void *data);
+bool vec_any(vec_t self, vec_condition_t condition, const void* data);
 
 /// @brief check if condition is true for all elements of the vec
 /// @param self the vec to check
@@ -118,7 +118,7 @@ bool vec_any(vec_t self, vec_condition_t condition, const void *data);
 /// @return true if condition is true for every element, false otherwise
 /// @param self the vec to reverse
 /// @complexity O(n)
-bool vec_all(vec_t self, vec_condition_t condition, const void *data);
+bool vec_all(vec_t self, vec_condition_t condition, const void* data);
 
 /// @brief check if condition is false for all elements of the vec
 /// @param self the vec to check
@@ -126,7 +126,7 @@ bool vec_all(vec_t self, vec_condition_t condition, const void *data);
 /// @param data any additional data needed by condition (can pass NULL if not needed)
 /// @return true if condition is false for every element, false otherwise
 /// @complexity O(n)
-bool vec_none(vec_t self, vec_condition_t condition, const void *data);
+bool vec_none(vec_t self, vec_condition_t condition, const void* data);
 
 /// @brief reverses the elements of the vec in-place
 /// @param self the vec to reverse
@@ -143,7 +143,7 @@ void vec_reverse(vec_t* self);
 ///     VEC_OK if everything worked (only then is filtered valid)
 /// @complexity O(n)
 vec_status_t vec_filter(vec_t* self, vec_condition_t condition,
-                       vec_t* filtered, const void *data);
+                       vec_t* filtered, const void* data);
 
 /// @brief applies the given transformation function to each element of the vec.
 /// @param self the vec to transform
@@ -153,7 +153,7 @@ vec_status_t vec_filter(vec_t* self, vec_condition_t condition,
 /// @param data any additional data needed by transformation. Can pass NULL if not needed.
 /// @return VEC_ERROR_NULL if self was null, VEC_OK otherwise
 /// @complexity O(n)
-vec_status_t vec_transform(vec_t* self, vec_transformation_t transformation, const void *data);
+vec_status_t vec_transform(vec_t* self, vec_transformation_t transformation, const void* data);
 
 ///
 /// RANGES

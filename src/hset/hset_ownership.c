@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "../../inc/hset/hset.h"
+#include "hset_internal.h"
 
 bool hset_default_comparison(void* a, void* b, size_t item_size) {
     unsigned char a_bits[item_size];

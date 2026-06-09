@@ -12,17 +12,16 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-/// @brief for internal use; indicates if an entry in the hash table is free
-typedef enum hset_item_state_t {
-    HSET_EMPTY = 0,
-    HSET_USED = 1,
-    HSET_DELETED = 2,
-} hset_item_state_t;
+
 
 /// @brief a function that compares two items of the type stored in the hash set; return
 ///     true if they are equal, false otherwise
 /// @param item_size the size of the item stored in the table
 typedef bool (*hset_comparison_t)(void* a, void* b, size_t item_size);
+
+/// @brief takes a pointer to an element of an hset. Should return true if the element
+///     matches a criteria and false otherwise. data can optionally be used for additional data (e.g passing along a numerical value)
+typedef bool (*hset_condition_t)(const void* element, const void* data);
 
 #define HSET_MIN_SIZE 4
 #define HSET_LOAD_FACTOR_GROW 0.75f
@@ -188,5 +187,43 @@ bool hset_contains_all(hset_t* self, vec_t* source);
 /// @param source the vec with the items to look for
 /// @return false if self and source aren't compatible or if no item in source is contained in self
 bool hset_contains_any(hset_t* self, vec_t* source);
+
+///
+/// Content Testing
+///
+
+/// @brief simple equality comparison. Usable if the data type of the vec can (meaningfully) be converted to a size_t 
+/// @return true if element == data
+bool hset_default_condition(const void* element, const void* data);
+
+/// @brief check if condition is true for at least one element of the hset
+/// @param self the hset to check
+/// @param condition the condition to apply to each element
+/// @param data any additional data needed by condition (can pass NULL if not needed)
+/// @return true if condition is true for at least one element, false otherwise
+bool hset_any(hset_t* self, hset_condition_t condition, const void* data);
+
+/// @brief check if condition is true for all elements of the hset
+/// @param self the hset to check
+/// @param condition the condition to apply to each element
+/// @param data any additional data needed by condition (can pass NULL if not needed)
+/// @return true if condition is true for every element, false otherwise
+bool hset_all(hset_t* self, hset_condition_t condition, const void* data);
+
+/// @brief check if condition is false for all elements of the hset
+/// @param self the hset to check
+/// @param condition the condition to apply to each element
+/// @param data any additional data needed by condition (can pass NULL if not needed)
+/// @return true if condition is false for every element, false otherwise
+bool hset_none(hset_t* self, hset_condition_t condition, const void* data);
+
+/// @brief initializes filtered as a new hset containing all elements of self for which condition returned true
+/// @param self the hset to filter 
+/// @param condition the condition that decides whether to keep an element
+/// @param filtered the hset that should contain the filtered values. Must be uninitialized
+/// @param data any optional data needed by the condition function, may be NULL if not needed
+/// @return HSET_OK if everything worked, HSET_ERROR_NULL if self or filtered were NULL, HSET_ERROR_ALLOCATION
+///     if new memory could not be allocated for filtered
+hset_status_t hset_filter(hset_t* self, hset_condition_t condition, hset_t* filtered, const void* data);
 
 #endif // HSET_H
