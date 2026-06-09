@@ -25,6 +25,8 @@ typedef enum hset_item_state_t {
 typedef bool (*hset_comparison_t)(void* a, void* b, size_t item_size);
 
 #define HSET_MIN_SIZE 4
+#define HSET_LOAD_FACTOR_GROW 0.75f
+#define HSET_LOAD_FACTOR_SHRINK 0.25f
 
 typedef struct hset_t_ {
     void* table;
@@ -61,6 +63,8 @@ hset_status_t hset_init(hset_t* self, size_t initial_size, size_t element_size, 
 /// @return HSET_ERROR_NULL if self is NULL, HSET_ERROR_OK otherwise
 hset_status_t hset_destroy(hset_t* self);
 
+hset_status_t hset_copy(const hset_t* self, hset_t* copy);
+
 ///
 /// CORE FUNCTIONS
 ///
@@ -96,13 +100,40 @@ bool hset_is_empty(const hset_t* self);
 /// @return HSET_ERROR_NULL if self is NULL, HSET_OK otherwise
 hset_status_t hset_clear(hset_t* self);
 
+/// @brief checks if two hsets contain the same elements
+/// @return false if the hsets cannot be compared or have different elements
+bool hset_equals(const hset_t* a, const hset_t* b);
+
 ///
 /// SET OPERATIONS
 ///
 
+/// @brief initalizes result as a set containing all elements contained in at least one of the other sets
+/// @param a the first set
+/// @param b the second set
+/// @param result an UNINITIALIZED hset. passing an initialized hset will lose data / leak memory
+/// @return HSET if everything worked, otherwise an error value corresponding to the problem
 hset_status_t hset_union(const hset_t* a, const hset_t* b, hset_t* result);
+
+/// @brief initalizes result as a set containing all elements contained in both of the other sets
+/// @param a the first set
+/// @param b the second set
+/// @param result an UNINITIALIZED hset. passing an initialized hset will lose data / leak memory
+/// @return HSET if everything worked, otherwise an error value corresponding to the problem
 hset_status_t hset_intersection(const hset_t* a, const hset_t* b, hset_t* result);
+
+/// @brief initializes result as a set containing all elements contained in a, but not in b.
+/// @param a the set to include
+/// @param b the set do exclude
+/// @param result an UNINITIALIZED hset. passing an initialized hset will lose data / leak memory
+/// @return HSET if everything worked, otherwise an error value corresponding to the problem
 hset_status_t hset_difference(const hset_t* a, const hset_t* b, hset_t* result);
+
+/// @brief initializes result as a set containing all elements contained in either a or b, but not both
+/// @param a the first set
+/// @param b the second set
+/// @param result an UNINITIALIZED hset. passing an initialized hset will lose data / leak memory
+/// @return HSET if everything worked, otherwise an error value corresponding to the problem
 hset_status_t hset_symmetric_difference(const hset_t* a, const hset_t* b, hset_t* result);
 
 /// @brief checks if a is a subset of (or equal to) b. If a and b have different item sizes or comparision functions,
@@ -120,5 +151,42 @@ bool hset_is_subset_of(const hset_t* a, const hset_t* b);
 /// @return true if every item of b is contained in a, false if b has items that a does not have or if 
 ///     a and b are not comparable
 bool hset_is_superset_of(const hset_t* a, const hset_t* b);
+
+///
+/// INTEGRATION
+///
+
+typedef struct vec_t_ vec_t;
+
+/// @brief intitializes destination as a vector containing all elements of self (order cannot be guaranteed)
+/// @param self the hset to copy
+/// @param destination the vec_t to write to (must be uninitialized)
+/// @return 
+hset_status_t hset_to_vec(const hset_t* self, vec_t* destination);
+
+/// @brief adds all items of source to self. Duplicates in source are ignored.
+/// @param self the hset to add to
+/// @param source the vec with items to add
+/// @return 
+hset_status_t hset_add_all(hset_t* self, vec_t* source);
+
+/// @brief removes all items of source from self. If an item in source is not contained in self (or if it was a duplicate)
+///     it has no effect
+/// @param self the hset to remove from
+/// @param source the vec with items to remove
+/// @return 
+hset_status_t hset_remove_all(hset_t* self, vec_t* source);
+
+/// @brief checks if all items in source are also contained in self
+/// @param self the hset to check
+/// @param source the vec with the items to look for
+/// @return false if self and source aren't compatible or if at least one item in source is not contained in self
+bool hset_contains_all(hset_t* self, vec_t* source);
+
+/// @brief checks if at least one item in source is also contained in self
+/// @param self the hset to check
+/// @param source the vec with the items to look for
+/// @return false if self and source aren't compatible or if no item in source is contained in self
+bool hset_contains_any(hset_t* self, vec_t* source);
 
 #endif // HSET_H

@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdlib.h>
 
 #include "../../inc/hset/hset.h"
 
@@ -58,3 +59,23 @@ hset_status_t hset_destroy(hset_t* self) {
     return HSET_OK;
 }
 
+hset_status_t hset_copy(const hset_t* self, hset_t* copy) {
+    if (self == NULL || copy == NULL) {
+        return HSET_ERROR_NULL;
+    }
+
+    copy->size = self->size;
+    copy->capacity = self->capacity;
+    copy->item_size = self->item_size;
+    copy->boosted_size = self->boosted_size;
+    copy->comparison = self->comparison;
+
+    copy->table = calloc(copy->capacity, copy->boosted_size);
+    if (copy->table == NULL) {
+        return HSET_ERROR_NULL;
+    }
+
+    memcpy(copy->table, self->table, copy->capacity * copy->boosted_size);
+
+    return HSET_OK;
+}

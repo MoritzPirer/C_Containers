@@ -92,7 +92,7 @@ vec_status_t vec_get_intersection(vec_t* left, vec_t* right, vec_ordering_t vec_
     }
 
     int factor;
-    if (vec_is_sorted_desc(*left, vec_ordering) && vec_is_sorted_asc(*right, vec_ordering)) {
+    if (vec_is_sorted_asc(*left, vec_ordering) && vec_is_sorted_asc(*right, vec_ordering)) {
         factor = 1;
     }
     else if (vec_is_sorted_desc(*left, vec_ordering) && vec_is_sorted_desc(*right, vec_ordering)) {
