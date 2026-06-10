@@ -42,5 +42,5 @@ void *vec_data(vec_t* self) {
         return NULL;
     }
 
-    return self->m_data;
+    return self->array;
 }

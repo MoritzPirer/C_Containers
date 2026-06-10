@@ -22,12 +22,12 @@ vec_status_t vec_init(vec_t *self, size_t initial_size, size_t element_size) {
         return VEC_ERROR_INVALID;
     }
 
-    self->size_used = initial_size;
-    self->capacity_allocated = max(initial_size, VEC_MIN_SIZE);
+    self->size = initial_size;
+    self->capacity = max(initial_size, VEC_MIN_SIZE);
     self->item_size = element_size;
-    self->m_data = calloc(self->capacity_allocated, element_size);
+    self->array = calloc(self->capacity, element_size);
 
-    if (self->m_data == NULL) {
+    if (self->array == NULL) {
         return VEC_ERROR_ALLOCATION;
     }
 
@@ -39,10 +39,10 @@ vec_status_t vec_destroy(vec_t *self) {
         return VEC_ERROR_NULL;
     }
 
-    free(self->m_data);
-    self->m_data = NULL;
-    self->capacity_allocated = 0;
-    self->size_used = 0;
+    free(self->array);
+    self->array = NULL;
+    self->capacity = 0;
+    self->size = 0;
 
     return VEC_OK;
 }
@@ -57,12 +57,12 @@ vec_status_t vec_swap(vec_t *self, vec_t *other) {
     }
 
     swapValues(&(self->item_size), &(other->item_size));
-    swapValues(&(self->capacity_allocated), &(other->capacity_allocated));
-    swapValues(&(self->size_used), &(other->size_used));
+    swapValues(&(self->capacity), &(other->capacity));
+    swapValues(&(self->size), &(other->size));
 
-    void *temp = self->m_data;
-    self->m_data = other->m_data;
-    other->m_data = temp;
+    void *temp = self->array;
+    self->array = other->array;
+    other->array = temp;
 
     return VEC_OK;
 }
@@ -72,17 +72,17 @@ vec_status_t vec_copy(vec_t *original, vec_t *copy) {
         return VEC_ERROR_NULL;
     }
 
-    size_t data_amount_bytes = original->capacity_allocated * original->item_size;
+    size_t data_amount_bytes = original->capacity * original->item_size;
 
-    copy->m_data = malloc(data_amount_bytes);
-    if (copy->m_data == NULL) {
+    copy->array = malloc(data_amount_bytes);
+    if (copy->array == NULL) {
         return VEC_ERROR_ALLOCATION;
     }
 
-    memcpy(copy->m_data, original->m_data, data_amount_bytes);
+    memcpy(copy->array, original->array, data_amount_bytes);
 
-    copy->size_used = original->size_used;
-    copy->capacity_allocated = original->size_used;
+    copy->size = original->size;
+    copy->capacity = original->size;
     copy->item_size = original->item_size;
 
     return VEC_OK;
@@ -94,8 +94,8 @@ vec_status_t vec_append(vec_t *self, vec_t *other) {
     }
 
     // increase capacity if needed
-    size_t needed_element_capacity = self->size_used + other->size_used;
-    if (self->capacity_allocated < needed_element_capacity) {
+    size_t needed_element_capacity = self->size + other->size;
+    if (self->capacity < needed_element_capacity) {
         vec_status_t grow_result = internal_vecSetSizeTo(self, needed_element_capacity);
         if (grow_result != VEC_OK) {
             return grow_result;
@@ -103,11 +103,11 @@ vec_status_t vec_append(vec_t *self, vec_t *other) {
     }
 
     memcpy(
-        internal_vecNThElement(self, self->size_used),
+        internal_vecNThElement(self, self->size),
         internal_vecNThElement(other, 0),
-        other->size_used * other->item_size);
+        other->size * other->item_size);
 
-    self->size_used += other->size_used;
+    self->size += other->size;
 
     return VEC_OK;
 }

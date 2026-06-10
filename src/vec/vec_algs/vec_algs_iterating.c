@@ -13,7 +13,7 @@
 #include "../../../inc/vec/vec_algs.h"
 
 bool vec_any(vec_t self, vec_condition_t condition, const void *data) {
-    for (size_t index = 0; index < self.size_used; index++) {
+    for (size_t index = 0; index < self.size; index++) {
         if (condition(internal_vecNThElement(&self, index), data) == true) {
             return true;
         }
@@ -23,7 +23,7 @@ bool vec_any(vec_t self, vec_condition_t condition, const void *data) {
 }
 
 bool vec_all(vec_t self, vec_condition_t condition, const void *data) {
-    for (size_t index = 0; index < self.size_used; index++) {
+    for (size_t index = 0; index < self.size; index++) {
         if (condition(internal_vecNThElement(&self, index), data) == false) {
             return false;
         }
@@ -33,7 +33,7 @@ bool vec_all(vec_t self, vec_condition_t condition, const void *data) {
 }
 
 bool vec_none(vec_t self, vec_condition_t condition, const void *data) {
-    for (size_t index = 0; index < self.size_used; index++) {
+    for (size_t index = 0; index < self.size; index++) {
         if (condition(internal_vecNThElement(&self, index), data) == true) {
             return false;
         }
@@ -44,15 +44,15 @@ bool vec_none(vec_t self, vec_condition_t condition, const void *data) {
 
 void vec_reverse(vec_t* self)
 {
-    for (size_t index = 0; index < self->size_used / 2; index++) {
-        size_t swap_index = self->size_used - index - 1;
+    for (size_t index = 0; index < self->size / 2; index++) {
+        size_t swap_index = self->size - index - 1;
         char buffer[self->item_size];
         memcpy(buffer, internal_vecNThElement(self, index), self->item_size);
         memcpy(
             internal_vecNThElement(self, index),
             internal_vecNThElement(self, swap_index),
             self->item_size);
-        memcpy(internal_vecNThElement(self, swap_index), buffer, self->size_used);
+        memcpy(internal_vecNThElement(self, swap_index), buffer, self->size);
     }
 }
 
@@ -65,11 +65,11 @@ vec_status_t vec_filter(vec_t* self, vec_condition_t condition, vec_t* filtered,
         return VEC_ERROR_ALLOCATION;
     }
 
-    if (vec_reserve(filtered, self->size_used) != VEC_OK) {
+    if (vec_reserve(filtered, self->size) != VEC_OK) {
         return VEC_ERROR_ALLOCATION;
     }
 
-    for (size_t index = 0; index < self->size_used; index++) {
+    for (size_t index = 0; index < self->size; index++) {
         if (condition(internal_vecNThElement(self, index), data) == false) {
             continue;
         }
@@ -88,7 +88,7 @@ vec_status_t vec_transform(vec_t* self, vec_transformation_t transfomration, con
         return VEC_ERROR_NULL;
     }
 
-    for (size_t index = 0; index < self->size_used; index++) {
+    for (size_t index = 0; index < self->size; index++) {
         transfomration(internal_vecNThElement(self, index), data);
     }
 

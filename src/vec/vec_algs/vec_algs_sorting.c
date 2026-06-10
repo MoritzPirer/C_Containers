@@ -16,19 +16,19 @@ vec_status_t vec_sort(vec_t* self, vec_ordering_t vec_ordering) {
         return VEC_ERROR_NULL;
     }
 
-    qsort(self->m_data, self->size_used, self->item_size, vec_ordering);
+    qsort(self->array, self->size, self->item_size, vec_ordering);
 
     return VEC_OK;
 }
 
 bool vec_is_sorted(vec_t self, vec_ordering_t vec_ordering, bool is_ascending) {
-    if (self.size_used <= 1) { // sorted by definition
+    if (self.size <= 1) { // sorted by definition
         return true;
     }
 
     int factor = (is_ascending ? 1 : -1); // inverts comparision for descending sorting
 
-    for (size_t index = 1; index < self.size_used; index++) {
+    for (size_t index = 1; index < self.size; index++) {
         if (vec_ordering( internal_vecNThElement(&self, index - 1), internal_vecNThElement(&self, index))
             * factor > 0) {
             return false;

@@ -12,13 +12,13 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-#define VEC_MIN_SIZE 8
+#define VEC_MIN_SIZE 4
 
 typedef struct vec_t_ {
-    size_t size_used;
-    size_t capacity_allocated;
+    size_t size;
+    size_t capacity;
     size_t item_size;
-    void *m_data;
+    void *array;
 } vec_t;
 
 typedef enum vec_status_t_ {
@@ -34,7 +34,9 @@ typedef enum vec_status_t_ {
 /// OWNERSHIP
 ///
 
+/// @brief prints metadata and contents of the vec. For debugging / development process only
 void vec_debug(vec_t* self);
+
 /// @brief initialize the given vec_t object
 /// @param self the vec to initialize
 /// @param initial_size how many elements the vec has upon creation (0 for an emty vec)

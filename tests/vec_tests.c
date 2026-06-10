@@ -33,9 +33,9 @@ void vec_destroy_initialized(void) {
 
     vec_destroy(&vec);
 
-    ASSERT_PTR_EQ("Data pointer should be NULL after destroy", NULL, vec.m_data);
-    ASSERT_INT_EQ("Allocated capacity should be 0 after destroy", 0, vec.capacity_allocated);
-    ASSERT_INT_EQ("Size used should be 0 after destroy", 0, vec.size_used);
+    ASSERT_PTR_EQ("Data pointer should be NULL after destroy", NULL, vec.array);
+    ASSERT_INT_EQ("Allocated capacity should be 0 after destroy", 0, vec.capacity);
+    ASSERT_INT_EQ("Size used should be 0 after destroy", 0, vec.size);
 }
 
 void vec_destroy_NULL(void) {
@@ -49,15 +49,15 @@ void vec_destroy_double(void) {
 
     vec_destroy(&vec);
 
-    ASSERT_PTR_EQ("Data pointer should be NULL after first destroy", NULL, vec.m_data);
-    ASSERT_INT_EQ("Allocated capacity should be 0 after first destroy", 0, vec.capacity_allocated);
-    ASSERT_INT_EQ("Size used should be 0 after first destroy", 0, vec.size_used);
+    ASSERT_PTR_EQ("Data pointer should be NULL after first destroy", NULL, vec.array);
+    ASSERT_INT_EQ("Allocated capacity should be 0 after first destroy", 0, vec.capacity);
+    ASSERT_INT_EQ("Size used should be 0 after first destroy", 0, vec.size);
 
     vec_destroy(&vec); // test double free protection
 
-    ASSERT_PTR_EQ("Data pointer should stay NULL after double destroy", NULL, vec.m_data);
-    ASSERT_INT_EQ("Allocated capacity should stay 0 after double destroy", 0, vec.capacity_allocated);
-    ASSERT_INT_EQ("Size used should stay 0 after double destroy", 0, vec.size_used);
+    ASSERT_PTR_EQ("Data pointer should stay NULL after double destroy", NULL, vec.array);
+    ASSERT_INT_EQ("Allocated capacity should stay 0 after double destroy", 0, vec.capacity);
+    ASSERT_INT_EQ("Size used should stay 0 after double destroy", 0, vec.size);
 }
 
 void vec_init_elementSize_0(void) {
@@ -78,8 +78,8 @@ void vec_init_size_0(void) {
     vec_init(&d, 0, sizeof(int));
 
     ASSERT_INT_EQ("Item size should match given element size", sizeof(int), d.item_size);
-    ASSERT_INT_EQ("Capacity allocated should match baseline VEC_MIN_SIZE", VEC_MIN_SIZE, d.capacity_allocated);
-    ASSERT_INT_EQ("Size used should be exactly 0", 0, d.size_used);
+    ASSERT_INT_EQ("Capacity allocated should match baseline VEC_MIN_SIZE", VEC_MIN_SIZE, d.capacity);
+    ASSERT_INT_EQ("Size used should be exactly 0", 0, d.size);
 }
 
 void vec_init_size_1(void) {
@@ -87,8 +87,8 @@ void vec_init_size_1(void) {
     vec_init(&d, 1, sizeof(int));
 
     ASSERT_INT_EQ("Item size should match given element size", sizeof(int), d.item_size);
-    ASSERT_INT_EQ("Capacity allocated should match baseline VEC_MIN_SIZE", VEC_MIN_SIZE, d.capacity_allocated);
-    ASSERT_INT_EQ("Size used should be exactly 1", 1, d.size_used);
+    ASSERT_INT_EQ("Capacity allocated should match baseline VEC_MIN_SIZE", VEC_MIN_SIZE, d.capacity);
+    ASSERT_INT_EQ("Size used should be exactly 1", 1, d.size);
 }
 
 void vec_init_size_pow2(void) {
@@ -97,8 +97,8 @@ void vec_init_size_pow2(void) {
     vec_init(&d, size, sizeof(int));
 
     ASSERT_INT_EQ("Item size should match given element size", sizeof(int), d.item_size);
-    ASSERT_INT_EQ("Capacity allocated should equal the requested power of 2 size", size, d.capacity_allocated);
-    ASSERT_INT_EQ("Size used should equal requested size", size, d.size_used);
+    ASSERT_INT_EQ("Capacity allocated should equal the requested power of 2 size", size, d.capacity);
+    ASSERT_INT_EQ("Size used should equal requested size", size, d.size);
 }
 
 void vec_init_size_XL(void) {
@@ -107,8 +107,8 @@ void vec_init_size_XL(void) {
     vec_init(&d, size, sizeof(int));
 
     ASSERT_INT_EQ("Item size should match given element size", sizeof(int), d.item_size);
-    ASSERT_TRUE("Capacity allocated should be greater than or equal to large requested size", d.capacity_allocated >= size);
-    ASSERT_INT_EQ("Size used should match large requested size", size, d.size_used);
+    ASSERT_TRUE("Capacity allocated should be greater than or equal to large requested size", d.capacity >= size);
+    ASSERT_INT_EQ("Size used should match large requested size", size, d.size);
 }
 
 void vec_init_size_XXXL(void) {
@@ -118,7 +118,7 @@ void vec_init_size_XXXL(void) {
 
     // If it mistakenly returned success, data block validation must catch it
     if (res == VEC_OK) {
-        ASSERT_TRUE("If init succeeds with size -1, data pointer must not be NULL", d.m_data != NULL);
+        ASSERT_TRUE("If init succeeds with size -1, data pointer must not be NULL", d.array != NULL);
     } else {
         ASSERT_TRUE("Init failed gracefully with size -1", 1);
     }

@@ -47,7 +47,9 @@ typedef enum hset_status_t_ {
 /// OWNERSHIP
 ///
 
+/// @brief prints metadata and content of the hset, intended for debugging / development process only
 void hset_debug(hset_t* self);
+
 /// @brief initialize the given hset_t object
 /// @param self the hset to initialize
 /// @param initial_size how many elements should be usable right away

@@ -2,8 +2,6 @@
 #include "hset_internal.h"
 #include <stdint.h>
 
-#define UCHAR_TO_VOID_PTR(i) (void*)(uintptr_t)(i)
-
 bool hset_is_compatible_with(const hset_t* a, const hset_t* b) {
     if (a == NULL || b == NULL) {
         return false;
@@ -51,7 +49,7 @@ hset_status_t hset_union(const hset_t* a, const hset_t* b, hset_t* result) {
             continue;
         }
 
-        status = hset_add(result, UCHAR_TO_VOID_PTR(entry + sizeof(hset_item_state_t)));
+        status = hset_add(result, HSET_PAYLOAD(entry));
         if (status != HSET_OK) {
             return status;
         }
@@ -84,11 +82,11 @@ hset_status_t hset_intersection(const hset_t* a, const hset_t* b, hset_t* result
             continue;
         }
 
-        if (!hset_contains(b, entry + sizeof(hset_item_state_t))) {
+        if (!hset_contains(b, HSET_PAYLOAD(entry))) {
             continue;
         }
 
-        status = hset_add(result, entry + sizeof(hset_item_state_t));
+        status = hset_add(result, HSET_PAYLOAD(entry));
         if (status != HSET_OK) {
             return status;
         }
@@ -121,18 +119,17 @@ hset_status_t hset_difference(const hset_t* a, const hset_t* b, hset_t* result) 
             continue;
         }
 
-        if (hset_contains(b, entry + sizeof(hset_item_state_t))) {
+        if (hset_contains(b, HSET_PAYLOAD(entry))) {
             continue;
         }
 
-        status = hset_add(result, entry + sizeof(hset_item_state_t));
+        status = hset_add(result, HSET_PAYLOAD(entry));
         if (status != HSET_OK) {
             return status;
         }
     }
 
     return HSET_OK;
-   
 }
 
 hset_status_t hset_symmetric_difference(const hset_t* a, const hset_t* b, hset_t* result) {
@@ -155,11 +152,11 @@ hset_status_t hset_symmetric_difference(const hset_t* a, const hset_t* b, hset_t
             continue;
         }
 
-        if (hset_contains(a, UCHAR_TO_VOID_PTR(entry + sizeof(hset_item_state_t)))) {
+        if (hset_contains(a, HSET_PAYLOAD(entry))) {
             continue;
         }
 
-        hset_status_t status = hset_add(result, UCHAR_TO_VOID_PTR(entry + sizeof(hset_item_state_t)));
+        hset_status_t status = hset_add(result, HSET_PAYLOAD(entry));
         if (status != HSET_OK) {
             return status;
         }
@@ -186,7 +183,7 @@ bool hset_is_subset_of(const hset_t* a, const hset_t* b) {
             continue;
         }
 
-        if (!hset_contains(b, UCHAR_TO_VOID_PTR(entry + sizeof(hset_item_state_t)))) {
+        if (!hset_contains(b, HSET_PAYLOAD(entry))) {
             return false;
         }
     }

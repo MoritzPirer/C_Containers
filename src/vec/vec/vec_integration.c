@@ -9,7 +9,7 @@ vec_status_t vec_to_hset(const vec_t* self, hset_t* destination,
         return VEC_ERROR_NULL;
     }
 
-    if (hset_init(destination, self->size_used, self->item_size, hset_comparison) != HSET_OK) {
+    if (hset_init(destination, self->size, self->item_size, hset_comparison) != HSET_OK) {
         return VEC_ERROR_ALLOCATION;
     }
 

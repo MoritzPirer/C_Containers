@@ -12,11 +12,11 @@
 #include "../../../inc/vec/vec_algs.h"
 
 bool vec_is_unique(vec_t self, vec_ordering_t vec_ordering) {
-    if (self.size_used <= 1) {
+    if (self.size <= 1) {
         return true; // unique by default
     }
 
-    for (size_t index = 1; index < self.size_used; index++) {
+    for (size_t index = 1; index < self.size; index++) {
         if (vec_ordering(
             internal_vecNThElement(&self, index - 1),
             internal_vecNThElement(&self, index)) == 0)
@@ -37,7 +37,7 @@ vec_status_t vec_get_unique(vec_t* self, vec_ordering_t vec_ordering, vec_t* uni
         return VEC_ERROR_INVALID;
     }
 
-    if (self->size_used <= 1) {
+    if (self->size <= 1) {
         vec_copy(self, unique);
         return VEC_OK;
     }
@@ -47,7 +47,7 @@ vec_status_t vec_get_unique(vec_t* self, vec_ordering_t vec_ordering, vec_t* uni
         return result;
     }
 
-    result = vec_reserve(unique, self->size_used);
+    result = vec_reserve(unique, self->size);
     if (result != VEC_OK) {
         return result;
     }
@@ -57,7 +57,7 @@ vec_status_t vec_get_unique(vec_t* self, vec_ordering_t vec_ordering, vec_t* uni
         return result;
     }
 
-    for (size_t index = 1; index < self->size_used; index++) {
+    for (size_t index = 1; index < self->size; index++) {
         if (vec_ordering(
                 internal_vecNThElement(self, index - 1),
                 internal_vecNThElement(self, index)) == 0)
@@ -77,7 +77,7 @@ vec_status_t vec_get_unique(vec_t* self, vec_ordering_t vec_ordering, vec_t* uni
 size_t skipDuplicates(vec_t* self, size_t index, vec_ordering_t ordering) {
     size_t next = index + 1;
 
-    while (next < self->size_used &&
+    while (next < self->size &&
         ordering( internal_vecNThElement(self, index), internal_vecNThElement(self, next)) == 0) {
         index = next;
         next++;
@@ -107,7 +107,7 @@ vec_status_t vec_get_intersection(vec_t* left, vec_t* right, vec_ordering_t vec_
         return result;
     }
 
-    result = vec_reserve(intersection, max(left->size_used, right->size_used));
+    result = vec_reserve(intersection, max(left->size, right->size));
     if (result != VEC_OK) {
         return result;
     }
@@ -115,7 +115,7 @@ vec_status_t vec_get_intersection(vec_t* left, vec_t* right, vec_ordering_t vec_
     size_t left_index = 0;
     size_t right_index = 0;
 
-    while (left_index < left->size_used && right_index < right->size_used) {
+    while (left_index < left->size && right_index < right->size) {
         int ordering = vec_ordering(
             internal_vecNThElement(left, left_index),
             internal_vecNThElement(right, right_index));
@@ -158,7 +158,7 @@ vec_status_t vec_get_union(vec_t* left, vec_t* right, vec_ordering_t vec_orderin
         return result;
     }
 
-    result = vec_reserve(union_elements, left->size_used + right->size_used);
+    result = vec_reserve(union_elements, left->size + right->size);
     if (result != VEC_OK) {
         return result;
     }
@@ -166,7 +166,7 @@ vec_status_t vec_get_union(vec_t* left, vec_t* right, vec_ordering_t vec_orderin
     size_t left_index = 0;
     size_t right_index = 0;
 
-    while (left_index < left->size_used && right_index < right->size_used) {
+    while (left_index < left->size && right_index < right->size) {
         int ordering = vec_ordering(
             internal_vecNThElement(left, left_index),
             internal_vecNThElement(right, right_index));
@@ -188,12 +188,12 @@ vec_status_t vec_get_union(vec_t* left, vec_t* right, vec_ordering_t vec_orderin
     }
 
     // Add remaining
-    while (left_index < left->size_used) {
+    while (left_index < left->size) {
         vec_push_back(union_elements, internal_vecNThElement(left, left_index));
         left_index = skipDuplicates(left, left_index, vec_ordering);
     }
 
-    while (right_index < right->size_used) {
+    while (right_index < right->size) {
         vec_push_back(union_elements, internal_vecNThElement(right, right_index));
         right_index = skipDuplicates(right, right_index, vec_ordering);
     }
@@ -202,11 +202,11 @@ vec_status_t vec_get_union(vec_t* left, vec_t* right, vec_ordering_t vec_orderin
 }
 
 bool vec_equals(vec_t left, vec_t right, vec_ordering_t vec_ordering) {
-    if (left.size_used != right.size_used) {
+    if (left.size != right.size) {
         return false;
     }
 
-    for (size_t index = 0; index < left.size_used; index++) {
+    for (size_t index = 0; index < left.size; index++) {
         if (vec_ordering(
             internal_vecNThElement(&left, index),
             internal_vecNThElement(&right, index)) != 0)

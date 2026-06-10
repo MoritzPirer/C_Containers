@@ -285,7 +285,6 @@ static bool test_condition_equals(const void* element, const void* data) {
 static bool test_condition_is_even(const void* element, const void* data) {
     (void)data; // Unused
     if (!element) return false;
-    printf("element is %d\n", *(const int*) element);
     return (*(const int*)element) % 2 == 0;
 }
 
@@ -415,20 +414,16 @@ void test_hset_filter() {
     hset_t filtered;
     hset_init(&hset, 5, sizeof(int), NULL);
 
-    hset_debug(&hset);
     int elements[] = {1, 2, 3, 4, 5, 6};
     for (int i = 0; i < 6; i++) {
         hset_add(&hset, &elements[i]);
     }
 
-    hset_debug(&hset);
     ASSERT_TRUE("Filter with NULL self returns error", hset_filter(NULL, test_condition_is_even, &filtered, NULL) == HSET_ERROR_NULL);
     ASSERT_TRUE("Filter with NULL destination returns error", hset_filter(&hset, test_condition_is_even, NULL, NULL) == HSET_ERROR_NULL);
 
     ASSERT_TRUE("Valid filter call returns HSET_OK", hset_filter(&hset, test_condition_is_even, &filtered, NULL) == HSET_OK);
 
-    hset_debug(&hset);
-    hset_debug(&filtered);
     ASSERT_TRUE("Filtered set should have size 3", hset_size(&filtered) == 3);
     ASSERT_TRUE("Filtered set contains 2", hset_contains(&filtered, &elements[1]));
     ASSERT_TRUE("Filtered set contains 4", hset_contains(&filtered, &elements[3]));

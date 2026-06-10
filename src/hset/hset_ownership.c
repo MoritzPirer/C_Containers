@@ -20,6 +20,10 @@ bool hset_default_comparison(const void* a, const void* b, size_t item_size) {
 }
 
 void hset_debug(hset_t* self) {
+    if (self == NULL) {
+        return;
+    }
+    
     printf("=========\n");
     printf("size: %zu\n", self->size);
     printf("capacity: %zu\n", self->capacity);

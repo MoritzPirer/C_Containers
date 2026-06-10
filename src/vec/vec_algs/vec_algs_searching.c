@@ -14,7 +14,7 @@ vec_status_t vec_find_first(vec_t* self, vec_condition_t condition, size_t* inde
         return VEC_ERROR_NULL;
     }
 
-    for (size_t index = 0; index < self->size_used; index++) {
+    for (size_t index = 0; index < self->size; index++) {
         if (condition(internal_vecNThElement(self, index), data) == true) {
             *index_buffer = index;
             return VEC_OK;
@@ -29,8 +29,8 @@ vec_status_t vec_find_last(vec_t* self, vec_condition_t condition, size_t* index
         return VEC_ERROR_NULL;
     }
 
-    for (size_t i = 0; i < self->size_used; i++) {
-        size_t index = self->size_used - i - 1; // covers some edge cases better because of underflow
+    for (size_t i = 0; i < self->size; i++) {
+        size_t index = self->size - i - 1; // covers some edge cases better because of underflow
         if (condition(internal_vecNThElement(self, index), data) == true) {
             *index_buffer = index;
             return VEC_OK;
@@ -50,12 +50,12 @@ vec_status_t vec_binary_search(vec_t* self, vec_ordering_t vector_ordering, size
         return VEC_ERROR_NULL;
     }
 
-    if (self->size_used == 0) {
+    if (self->size == 0) {
         return VEC_NOT_FOUND;
     }
 
     size_t left = 0;
-    size_t right = self->size_used - 1;
+    size_t right = self->size - 1;
 
     while (left <= right) {
         size_t middle = (left + right) / 2;
