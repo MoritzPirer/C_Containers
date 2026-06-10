@@ -19,8 +19,8 @@ The struct members should not be accessed directly. Always use the apropriate fu
 
 The vec does not provide thread safety. It is up to you to lock accesses where apropriate.
 
-## MEMORY
-Create a new vec object using `vec_t variable_name`. Do not initialize it manually. Instead, use `vec_init(vec_t* self, size_t initial_size, size_t element_size)` this sets up the vec to have `initial_size` elements of size `element_size` (It is recommended you use `sizeof(DATA_TYPE)` as `element_size`). Some functions in `vec_algs` require an uninitialized `vec_t` and initialize it for you.
+## OWNERSHIP
+Create a new vec object using `vec_t variable_name`. Do not initialize it manually. Instead, use `vec_init(vec_t* self, size_t initial_size, size_t element_size)` this sets up the vec to have `initial_size` elements of size `element_size` (It is recommended you use `sizeof(DATA_TYPE)` as `element_size`). Note that setting the `initial_size` parameter to a value > 0 means that the vec will be initialized with that number of zeroed elements. This is mainly intended to avoid repeated reallocation if the vector is immediately populated with `vec_set`. Some functions in `vec_algs` require an uninitialized `vec_t` and initialize it for you.
 Unless specifically requested, it is undefined behavior to pass an uninitialized `vec_t` to a function.
 
 You can release the `vec_t`'s resources using `vec_destroy(vec_t*)`. calling this on the same `vec_t` multiple times is harmless. Passing a `vec_t` to a function after it has been destroyed is equivalent to passing an uninitialized one (i.e. okay only when explicitly expected).
@@ -74,3 +74,78 @@ if (res == VEC_OK) {
 
 ## SETLIKE OPERATONS
 These functions require sorted darrays to maintain linear runtimes.
+
+
+
+# VEC
+vec is a library written in C17 that provides a dynamically resizing array. It provides many methods that C++'s `std::vector<T>` provides. All core functions are provided in `vec.h`. The header file `vec_algs.h` declares some commonly used function for searching, content testing, etc.
+This Readme provides some usage notes in addition to the information provided in the comments of the header files.
+
+## GENERAL
+Most functions return a `vec_status_t` enum value. Possible return values are:
+- `VEC_OK`: the operation succeded
+- `VEC_ERROR_ALLOCATION`: a creating a new vec or resizing an existing one failed. Note that resizing may happen implicitly whenever items are added or removed from the vec.
+- `VEC_ERROR_BOUNDS`: A given index was out of range of the vec
+- `VEC_ERROR_NULL`: A pointer passed to the function was NULL when it shouldn't have been
+- `VEC_ERROR_INVALID`: A parameter had a logically invalid value
+- `VEC_NOT_FOUND`: (used by find operations in `vec_algs`) no matching element was found
+
+The members of the `vec_t` struct should never be accessed directly, rather always use an appropriate function call
+The operations do not provide thread safety. It is up to you to lock accesses where appropriate.
+
+## OWNERSHIP
+Create a new vec with `vec_t variable_name`. Initialize with `vec_init`, never by hand.
+- `initial_capacity` specifies with what capacity the vec is created. When known, this can be set to the number of elements the set will contain to reduce reallocation. 
+- `element_size` should always be set with `sizeof(TYPE)`, it defines how large each element is.
+
+Release the vec's resources with `vec_destroy`. This is save to call multiple times on the same vec
+
+Some functions explicitly expect an uninitialized vec, all others expect it to be initialized already. A vec on which `vec_destroy` has been called alreadyy can be used as if it were uninitialized. Passing an uninitialized vec where an initialized one is expected is undefined behavior, passing an initialized one where an uninitialized one is expected will leak memory.
+
+```c
+vec_t vec;
+if (vec_init(&vec, 4, sizeof(int)) != VEC_OK) {
+	//handle failure
+}
+
+// vec is now usable
+
+vec_destroy(&vec);
+```
+
+Create a deep copy of a vec with `vec_copy`. (Shallow-)copying the struct itself is not recommended as metadata (including the data itself) can become outdated. Copying a pointer to a `vec_t` is generally safe.
+
+Swap two vecs with `vec_swap`.
+
+## SIZE & CAPACITY
+
+- `vec_reserve` increases the capacity of the vec to at least the specified amount, such that it can hold at least that many elements before having to resize again
+- `vec_resize` increases or decreases the size of the vec to exactly the specified amount. Sizing up sets new elements to 0. Sizing down loses elements that don't fit anymore
+- `vec_shrink` shrinks the capacity to match the size
+- `vec_size` and `vec_capacity` return the current size and capacity respectively
+- `vec_is_empty` returns true if the current size is zero
+
+## STRUCTURE
+
+All functions in this section receive a pointer to a buffer location from which they read or to which they write.
+- `vec_push_back` adds the element to the end of the vec
+- `vec_pop_back` removes the last element of the vec (fails if the vec is empty)
+- `vec_push_front` adds the element to the start of the vec
+- `vec_pop_front` removes the first element of the vec (fails if the vec is empty)
+- `vec_insert` inserts the element at the specified index
+
+## ERASING
+The fundamental function for erasing is `vec_erase_from_to` which expects a start and end index between which to delete (including both end points). The following functions default one or both of the indices:
+- `vec_erase_from` deletes from the index to the end of the vec (inclusive)
+- `vec_erase_to` deletes from the start to that index (inclusive)
+- `vec_erase_at` deletes the specified index
+- `vec_erase_all` and `vec_clear` erase the entire vec
+
+## ACCESS
+Similar to the structure functions, these `vec_get` and `vec_set` use a buffer to read / write the element
+`vec_data` returns a raw pointer to the data. This pointer should not be used after any adding / removing actions.
+
+## INTEGRATION
+This section covers integration with other containers in the library.
+
+`vec_to_hset` creates an hset that contains all (unique) values of the vec.

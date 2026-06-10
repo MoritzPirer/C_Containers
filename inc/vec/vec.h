@@ -18,7 +18,7 @@ typedef struct vec_t_ {
     size_t size;
     size_t capacity;
     size_t item_size;
-    void *array;
+    void* array;
 } vec_t;
 
 typedef enum vec_status_t_ {
@@ -39,12 +39,12 @@ void vec_debug(vec_t* self);
 
 /// @brief initialize the given vec_t object
 /// @param self the vec to initialize
-/// @param initial_size how many elements the vec has upon creation (0 for an emty vec)
+/// @param initial_capacity the internal capacity to use internally. Avoids reallocation for populating the set
 /// @param element_size how large a single element is
 /// @return VEC_OK if everything is fine, VEC_ERROR_ALLOCATION if the resizing failed,
 ///     VEC_ERROR_INVALID if element_size is 0,
 ///     or VEC_ERROR_NULL if the given vec was NULL
-vec_status_t vec_init(vec_t* self, size_t initial_size, size_t element_size);
+vec_status_t vec_init(vec_t* self, size_t initial_capacity, size_t element_size);
 
 /// @brief destroy the given vec_t. Using the self after this function
 ///     results in undefined behavior
@@ -65,7 +65,7 @@ vec_status_t vec_swap(vec_t* self, vec_t* other);
 /// @return VEC_ERROR_NULL if original or copy was NULL,
 ///     VEC_ERROR_ALLOCATION if allocation failed,
 ///     VEC_OK otherwise
-vec_status_t vec_copy(vec_t* original, vec_t* copy);
+vec_status_t vec_copy(const vec_t* original, vec_t* copy);
 
 /// @brief Copies all elements of other to the end of self. other is not modified and stays a
 ///     valid vec. Caller is responsible for ensuring self and other store the same datatype
@@ -74,7 +74,7 @@ vec_status_t vec_copy(vec_t* original, vec_t* copy);
 /// @return VEC_ERROR_NULL if self or other was NULL,
 ///     VEC_ERROR_ALLOCATION if resizing failed,
 ///     VEC_OK otherwise
-vec_status_t vec_append(vec_t* self, vec_t* other);
+vec_status_t vec_append(vec_t* self, const vec_t* other);
 
 ///
 /// SIZE & CAPACITY
@@ -124,7 +124,7 @@ vec_status_t vec_resize(vec_t* self, size_t new_size);
 ///     the function call returns
 /// @return VEC_OK if everything is fine or VEC_ERROR_ALLOCATION if the resizing failed
 ///     or VEC_ERROR_NULL if vec or element was NULL
-vec_status_t vec_push_back(vec_t* self, void *source);
+vec_status_t vec_push_back(vec_t* self, const void* source);
 
 /// @brief removes the last element from the vec and writes it to the location
 ///     pointed to by element. Shrinks the vec if it becomes empty enough
@@ -135,7 +135,7 @@ vec_status_t vec_push_back(vec_t* self, void *source);
 ///     VEC_ERROR_NULL if vec or buffer are NULL,
 ///     VEC_ERROR_ALLOC if shrinking failed,
 ///     VEC_OK otherwise
-vec_status_t vec_pop_back(vec_t* self, void *destination);
+vec_status_t vec_pop_back(vec_t* self, void* destination);
 
 /// @brief adds the element pointed to by element to the front of
 ///     the given vec, resizing if needed
@@ -145,7 +145,7 @@ vec_status_t vec_pop_back(vec_t* self, void *destination);
 /// @return VEC_ERROR_NULL if self or element is NULL,
 ///     VEC_ERROR_ALLOCATION if resizing the vec failed,
 ///     VEC_OK otherwise
-vec_status_t vec_push_front(vec_t* self, void *source);
+vec_status_t vec_push_front(vec_t* self, const void* source);
 
 /// @brief removes the first element from the vec and writes it to the location
 ///     pointed to by element.
@@ -156,7 +156,7 @@ vec_status_t vec_push_front(vec_t* self, void *source);
 ///     VEC_ERROR_BOUNDS if the index is out of range,
 ///     VEC_ERROR_ALLOCATION if resizing the vec failed,
 ///     VEC_OK otherwise
-vec_status_t vec_pop_front(vec_t* self, void *destination);
+vec_status_t vec_pop_front(vec_t* self, void* destination);
 
 /// @brief insert the given element at the given index, pushing all elements with index >= index back
 /// @param self the vec to insert into
@@ -167,7 +167,7 @@ vec_status_t vec_pop_front(vec_t* self, void *destination);
 ///     VEC_ERROR_BOUNDS if the index is out of range,
 ///     VEC_ERROR_ALLOCATION if resizing the vec failed,
 ///     VEC_OK otherwise
-vec_status_t vec_insert(vec_t* self, size_t index, void *element);
+vec_status_t vec_insert(vec_t* self, size_t index, const void* element);
 
 ///
 /// ERASE
@@ -232,7 +232,7 @@ vec_status_t vec_clear(vec_t* self);
 ///     guarantee that buffer is valid until the function call returns
 /// @return VEC_OK if everything is fine, VEC_ERROR_NULL if vec or buffer is NULL
 ///     or VEC_ERROR_BOUNDS if index > vec_size(vec)
-vec_status_t vec_get(const vec_t* self, size_t index, void *buffer);
+vec_status_t vec_get(const vec_t* self, size_t index, void* buffer);
 
 /// @brief Set the element at position index to the value pointed to by buffer
 /// @param self the vec to write to
@@ -241,13 +241,13 @@ vec_status_t vec_get(const vec_t* self, size_t index, void *buffer);
 ///     guarantee that buffer is valid until the function call returns
 /// @return VEC_OK if everything is fine, VEC_ERROR_NULL if vec or buffer is NULL
 ///     or VEC_ERROR_BOUNDS if index > vec_size(vec)
-vec_status_t vec_set(vec_t* self, size_t index, const void *buffer);
+vec_status_t vec_set(vec_t* self, size_t index, const void* buffer);
 
 /// @brief returns a raw pointer to the vecs heap memory. Pointer may become invalid if used
 ///     after any operation that adds or removes elements
 /// @param self the vec who's data shoud be accessed
 /// @return a pointer to the heap data or NULL if self was NULL
-void *vec_data(vec_t* self);
+void* vec_data(vec_t* self);
 
 ///
 /// INTEGRATION

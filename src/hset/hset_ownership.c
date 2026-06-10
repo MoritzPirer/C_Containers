@@ -23,7 +23,7 @@ void hset_debug(hset_t* self) {
     if (self == NULL) {
         return;
     }
-    
+
     printf("=========\n");
     printf("size: %zu\n", self->size);
     printf("capacity: %zu\n", self->capacity);
@@ -48,7 +48,7 @@ void hset_debug(hset_t* self) {
     printf("=========\n");
 }
 
-hset_status_t hset_init(hset_t* self, size_t initial_size, size_t element_size, hset_comparison_t comparison) {
+hset_status_t hset_init(hset_t* self, size_t initial_capacity, size_t element_size, hset_comparison_t comparison) {
     if (self == NULL) {
         return HSET_ERROR_NULL;
     }
@@ -66,7 +66,7 @@ hset_status_t hset_init(hset_t* self, size_t initial_size, size_t element_size, 
     }
 
     self->size = 0;
-    self->capacity = initial_size > HSET_MIN_SIZE ? initial_size : HSET_MIN_SIZE;
+    self->capacity = initial_capacity > HSET_MIN_SIZE ? initial_capacity : HSET_MIN_SIZE;
     
     self->table = calloc(self->capacity, self->boosted_size);
     if (self->table == NULL) {

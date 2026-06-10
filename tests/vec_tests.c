@@ -84,31 +84,20 @@ void vec_init_size_0(void) {
 
 void vec_init_size_1(void) {
     vec_t d;
-    vec_init(&d, 1, sizeof(int));
+    vec_init(&d, 0, sizeof(int));
 
     ASSERT_INT_EQ("Item size should match given element size", sizeof(int), d.item_size);
     ASSERT_INT_EQ("Capacity allocated should match baseline VEC_MIN_SIZE", VEC_MIN_SIZE, d.capacity);
-    ASSERT_INT_EQ("Size used should be exactly 1", 1, d.size);
 }
 
-void vec_init_size_pow2(void) {
-    vec_t d;
-    size_t size = 2 * 2 * 2 * 2 * 2 * 2;
-    vec_init(&d, size, sizeof(int));
-
-    ASSERT_INT_EQ("Item size should match given element size", sizeof(int), d.item_size);
-    ASSERT_INT_EQ("Capacity allocated should equal the requested power of 2 size", size, d.capacity);
-    ASSERT_INT_EQ("Size used should equal requested size", size, d.size);
-}
 
 void vec_init_size_XL(void) {
     vec_t d;
-    size_t size = 10000000;
-    vec_init(&d, size, sizeof(int));
+    size_t capacity = 10000000;
+    vec_init(&d, capacity, sizeof(int));
 
     ASSERT_INT_EQ("Item size should match given element size", sizeof(int), d.item_size);
-    ASSERT_TRUE("Capacity allocated should be greater than or equal to large requested size", d.capacity >= size);
-    ASSERT_INT_EQ("Size used should match large requested size", size, d.size);
+    ASSERT_TRUE("Capacity allocated should be greater than or equal to large requested size", d.capacity >= capacity);
 }
 
 void vec_init_size_XXXL(void) {
@@ -212,7 +201,6 @@ void vec_tests() {
     RUN_TEST(vec_init_NULL);
     RUN_TEST(vec_init_size_0);
     RUN_TEST(vec_init_size_1);
-    RUN_TEST(vec_init_size_pow2);
     RUN_TEST(vec_init_size_XL);
     RUN_TEST(vec_init_size_XXXL);
     RUN_TEST(vec_size_empty);

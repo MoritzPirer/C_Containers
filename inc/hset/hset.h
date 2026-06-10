@@ -52,13 +52,13 @@ void hset_debug(hset_t* self);
 
 /// @brief initialize the given hset_t object
 /// @param self the hset to initialize
-/// @param initial_size how many elements should be usable right away
+/// @param initial_capacity the internal capacity to use internally. Avoids reallocation for populating the set
 /// @param element_size the size of a single element
 /// @param comparison a function that compares two elements and returns true if they are equal. Pass NULL to
 ///     default to comparing the bits of the items (may not be ideal for objects with pointers)
 /// @return HSET_OK if everything is fine, HSET_ERROR_ALLOC if the memory allocation failed,
 ///     HSET_ERROR_INVALID if element size is 0, HSET_ERROR_NULL if self is NULL
-hset_status_t hset_init(hset_t* self, size_t initial_size, size_t element_size, hset_comparison_t comparison);
+hset_status_t hset_init(hset_t* self, size_t initial_capacity, size_t element_size, hset_comparison_t comparison);
 
 /// @brief destroy the hset. using it after this function is undefined behaviour
 /// @param self the hset to destroy
@@ -75,19 +75,19 @@ hset_status_t hset_copy(const hset_t* self, hset_t* copy);
 /// @param self the set to add to
 /// @param source the item to add
 /// @return HSET_ERROR_ALLOC if resizing failed, HSET_ERROR_NULL if self or source were NULL, HSET_OK otherwise
-hset_status_t hset_add(hset_t* self, void* source);
+hset_status_t hset_add(hset_t* self, const void* source);
 
 /// @brief remove the given item from the hset. No effect if the item not contained
 /// @param self the set to remove from
 /// @param source the item to remvoe
 /// @return HSET_ERROR_ALLOC if resizing failed, HSET_ERROR_NULL if self or source were NULL, HSET_OK otherwise
-hset_status_t hset_remove(hset_t* self, void* source);
+hset_status_t hset_remove(hset_t* self, const void* source);
 
 /// @brief check if the set contains the given item
 /// @param self the set to check
 /// @param item the item to look for
 /// @return true if the item is contained, false otherwise
-bool hset_contains(const hset_t* self, void* item);
+bool hset_contains(const hset_t* self, const void* item);
 
 /// @param self the set to check. Is set is NULL, -1 is returned
 /// @return the number of items in the set.

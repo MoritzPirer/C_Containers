@@ -13,7 +13,7 @@
 
 #include "../vec_internal.h"
 
-vec_status_t vec_init(vec_t *self, size_t initial_size, size_t element_size) {
+vec_status_t vec_init(vec_t *self, size_t initial_capacity, size_t element_size) {
     if (self == NULL) {
         return VEC_ERROR_NULL;
     }
@@ -22,8 +22,8 @@ vec_status_t vec_init(vec_t *self, size_t initial_size, size_t element_size) {
         return VEC_ERROR_INVALID;
     }
 
-    self->size = initial_size;
-    self->capacity = max(initial_size, VEC_MIN_SIZE);
+    self->size = 0;
+    self->capacity = max(initial_capacity, VEC_MIN_SIZE);
     self->item_size = element_size;
     self->array = calloc(self->capacity, element_size);
 
@@ -67,7 +67,7 @@ vec_status_t vec_swap(vec_t *self, vec_t *other) {
     return VEC_OK;
 }
 
-vec_status_t vec_copy(vec_t *original, vec_t *copy) {
+vec_status_t vec_copy(const vec_t *original, vec_t *copy) {
     if (original == NULL || copy == NULL) {
         return VEC_ERROR_NULL;
     }
@@ -88,7 +88,7 @@ vec_status_t vec_copy(vec_t *original, vec_t *copy) {
     return VEC_OK;
 }
 
-vec_status_t vec_append(vec_t *self, vec_t *other) {
+vec_status_t vec_append(vec_t *self, const vec_t *other) {
     if (self == NULL || other == NULL) {
         return VEC_ERROR_NULL;
     }

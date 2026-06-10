@@ -28,7 +28,7 @@ void vec_debug(vec_t* self) {
 
     printf("=========\n");
 }
-vec_status_t vec_push_back(vec_t* self, void* element) {
+vec_status_t vec_push_back(vec_t* self, const void* element) {
     if (self == NULL || element == NULL) {
         return VEC_ERROR_NULL;
     }
@@ -62,7 +62,7 @@ vec_status_t vec_pop_back(vec_t* self, void* element) {
     return result;
 }
 
-vec_status_t vec_push_front(vec_t* self, void* element) {
+vec_status_t vec_push_front(vec_t* self, const void* element) {
     return vec_insert(self, 0, element);
 }
 
@@ -90,7 +90,7 @@ vec_status_t vec_pop_front(vec_t* self, void* element) {
     return result;
 }
 
-vec_status_t vec_insert(vec_t* self, size_t index, void* element) {
+vec_status_t vec_insert(vec_t* self, size_t index, const void* element) {
     if (self == NULL) {
         return VEC_ERROR_NULL;
     }

@@ -10,7 +10,7 @@
 /// @param value a pointer to the item to hash
 /// @param num_bytes the length of the item to hash
 /// @return the fnv-1a hash of the item
-size_t hset_hash(void* value, size_t num_bytes) {
+size_t hset_hash(const void* value, size_t num_bytes) {
     size_t hash = 1469598103934665603ULL; 
     for (size_t i = 0; i < num_bytes; i++) {
         hash ^= ((unsigned char*) value)[i];
@@ -89,7 +89,7 @@ hset_status_t hset_shrink_if_needed(hset_t* self) {
     return hset_rehash(self, old_capacity);
 }
 
-hset_status_t hset_add(hset_t* self, void* source) {
+hset_status_t hset_add(hset_t* self, const void* source) {
     if (self == NULL || source == NULL) {
         return HSET_ERROR_NULL;
     }
@@ -124,7 +124,7 @@ hset_status_t hset_add(hset_t* self, void* source) {
     return HSET_OK;
 }
 
-hset_status_t hset_remove(hset_t* self, void* source) {
+hset_status_t hset_remove(hset_t* self, const void* source) {
     if (self == NULL || source == NULL) {
         return HSET_ERROR_NULL;
     }
@@ -157,7 +157,7 @@ hset_status_t hset_remove(hset_t* self, void* source) {
     return HSET_OK;
 }
 
-bool hset_contains(const hset_t* self, void* item) {
+bool hset_contains(const hset_t* self, const void* item) {
     if (self == NULL || item == NULL) {
         return false;
     }
