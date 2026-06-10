@@ -3,7 +3,7 @@
 #include "../../../inc/hset/hset.h"
 
 vec_status_t vec_to_hset(const vec_t* self, hset_t* destination,
-    bool (*hset_comparison)(void* a, void* b, size_t item_size)) {
+    bool (*hset_comparison)(const void* a, const void* b, size_t item_size)) {
 
     if (self == NULL || destination == NULL) {
         return VEC_ERROR_NULL;
@@ -13,5 +13,10 @@ vec_status_t vec_to_hset(const vec_t* self, hset_t* destination,
         return VEC_ERROR_ALLOCATION;
     }
 
-    return hset_add_all(destination, self);
+    hset_status_t result = hset_add_all(destination, self);
+    if (result == HSET_ERROR_ALLOCATION) {
+        return VEC_ERROR_ALLOCATION;
+    } 
+
+    return VEC_OK;
 }

@@ -1,13 +1,13 @@
 #include "../../inc/hset/hset.h"
 #include "hset_internal.h"
 #include "../../inc/vec/vec.h"
-
+#include <stdio.h>
 hset_status_t hset_to_vec(const hset_t* self, vec_t* destination) {
     if (self == NULL || destination == NULL) {
         return HSET_ERROR_NULL;
     }
 
-    vec_status_t init_status = vec_init(destination, self->size, self->item_size);
+    vec_status_t init_status = vec_init(destination, 0, self->item_size);
     if (init_status == VEC_ERROR_ALLOCATION) {
         return HSET_ERROR_ALLOCATION;
     }
@@ -21,7 +21,7 @@ hset_status_t hset_to_vec(const hset_t* self, vec_t* destination) {
             continue;
         }
 
-        vec_status_t status = vec_push_back(destination, entry);
+        vec_status_t status = vec_push_back(destination, HSET_PAYLOAD(entry));
         if (status == VEC_ERROR_ALLOCATION) {
             return HSET_ERROR_ALLOCATION;
         }
@@ -30,7 +30,7 @@ hset_status_t hset_to_vec(const hset_t* self, vec_t* destination) {
     return HSET_OK;
 }
 
-hset_status_t hset_add_all(hset_t* self, vec_t* source) {
+hset_status_t hset_add_all(hset_t* self, const vec_t* source) {
     if (self == NULL || source == NULL) {
         return HSET_ERROR_NULL;
     }
@@ -42,7 +42,9 @@ hset_status_t hset_add_all(hset_t* self, vec_t* source) {
     char element[self->item_size];
     for (size_t i = 0; i < vec_size(source); i++) {
         vec_get(source, i, element);
+
         hset_status_t result = hset_add(self, element);
+
         if (result != HSET_OK) {
             return result;
         }
@@ -51,7 +53,7 @@ hset_status_t hset_add_all(hset_t* self, vec_t* source) {
     return HSET_OK;
 }
 
-hset_status_t hset_remove_all(hset_t* self, vec_t* source) {
+hset_status_t hset_remove_all(hset_t* self, const vec_t* source) {
     if (self == NULL || source == NULL) {
         return HSET_ERROR_NULL;
     }
@@ -64,6 +66,7 @@ hset_status_t hset_remove_all(hset_t* self, vec_t* source) {
     for (size_t i = 0; i < vec_size(source); i++) {
         vec_get(source, i, element);
         hset_status_t result = hset_remove(self, element);
+
         if (result != HSET_OK) {
             return result;
         }
@@ -72,7 +75,7 @@ hset_status_t hset_remove_all(hset_t* self, vec_t* source) {
     return HSET_OK;
 }
 
-bool hset_contains_all(hset_t* self, vec_t* source) {
+bool hset_contains_all(const hset_t* self, const vec_t* source) {
     if (self == NULL || source == NULL) {
         return false;
     }
@@ -84,6 +87,7 @@ bool hset_contains_all(hset_t* self, vec_t* source) {
     char element[self->item_size];
     for (size_t i = 0; i < vec_size(source); i++) {
         vec_get(source, i, element);
+
         if (!hset_contains(self, element)) {
             return false;
         }
@@ -92,7 +96,7 @@ bool hset_contains_all(hset_t* self, vec_t* source) {
     return true;
 }
 
-bool hset_contains_any(hset_t* self, vec_t* source) {
+bool hset_contains_any(const hset_t* self, const vec_t* source) {
     if (self == NULL || source == NULL) {
         return false;
     }
@@ -104,6 +108,7 @@ bool hset_contains_any(hset_t* self, vec_t* source) {
     char element[self->item_size];
     for (size_t i = 0; i < vec_size(source); i++) {
         vec_get(source, i, element);
+
         if (hset_contains(self, element)) {
             return true;
         }

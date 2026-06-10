@@ -17,7 +17,7 @@
 /// @brief a function that compares two items of the type stored in the hash set; return
 ///     true if they are equal, false otherwise
 /// @param item_size the size of the item stored in the table
-typedef bool (*hset_comparison_t)(void* a, void* b, size_t item_size);
+typedef bool (*hset_comparison_t)(const void* a, const void* b, size_t item_size);
 
 /// @brief takes a pointer to an element of an hset. Should return true if the element
 ///     matches a criteria and false otherwise. data can optionally be used for additional data (e.g passing along a numerical value)
@@ -47,6 +47,7 @@ typedef enum hset_status_t_ {
 /// OWNERSHIP
 ///
 
+void hset_debug(hset_t* self);
 /// @brief initialize the given hset_t object
 /// @param self the hset to initialize
 /// @param initial_size how many elements should be usable right away
@@ -167,26 +168,26 @@ hset_status_t hset_to_vec(const hset_t* self, vec_t* destination);
 /// @param self the hset to add to
 /// @param source the vec with items to add
 /// @return 
-hset_status_t hset_add_all(hset_t* self, vec_t* source);
+hset_status_t hset_add_all(hset_t* self, const vec_t* source);
 
 /// @brief removes all items of source from self. If an item in source is not contained in self (or if it was a duplicate)
 ///     it has no effect
 /// @param self the hset to remove from
 /// @param source the vec with items to remove
 /// @return 
-hset_status_t hset_remove_all(hset_t* self, vec_t* source);
+hset_status_t hset_remove_all(hset_t* self, const vec_t* source);
 
 /// @brief checks if all items in source are also contained in self
 /// @param self the hset to check
 /// @param source the vec with the items to look for
 /// @return false if self and source aren't compatible or if at least one item in source is not contained in self
-bool hset_contains_all(hset_t* self, vec_t* source);
+bool hset_contains_all(const hset_t* self, const vec_t* source);
 
 /// @brief checks if at least one item in source is also contained in self
 /// @param self the hset to check
 /// @param source the vec with the items to look for
 /// @return false if self and source aren't compatible or if no item in source is contained in self
-bool hset_contains_any(hset_t* self, vec_t* source);
+bool hset_contains_any(const hset_t* self, const vec_t* source);
 
 ///
 /// Content Testing

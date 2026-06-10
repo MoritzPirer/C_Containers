@@ -1,31 +1,31 @@
 # VEC
 
-vec is a library written in C17 that provides an automatically resizing array. It provides many of the functionalities that C++'s vector provides. All core vec functions are declared in `inc/vec.h.
+vec is a library written in C17 that provides an automatically resizing array. It provides many of the functionalities that C++'s vector provides. All core vec functions are declared in `vec.h`.
 
-The accompanying header file `inc/vec_algs.h` provides some useful algorithms for common operations such as searching, sorting or iterating.
+The accompanying header file `vec_algs.h` provides some useful algorithms for common operations such as searching, sorting or iterating.
 
 This Readme provides some usage notes. The more detailed information is in the header files.
 
 ## GENERAL
-Most functions return a vec_status_t enum value. Possible return values are:
-- VEC_OK: the operation succeded
-- VEC_ERROR_ALLOCATION: a malloc or realloc call failed
-- VEC_ERROR_NULL: at least one argument was NULL when it shouldn't have been
-- VEC_ERROR_BOUNDS: A given index was out of range of the vec
-- VEC_ERROR_INVALID: An input was given in a way that the library cannot accept
-- VEC_NOT_FOUND: (used by find operations in vec_algs) no matching element was found
+Most functions return a `vec_status_t` enum value. Possible return values are:
+- `VEC_OK`: the operation succeded
+- `VEC_ERROR_ALLOCATION`: a malloc or realloc call failed
+- `VEC_ERROR_NULL`: at least one argument was NULL when it shouldn't have been
+- `VEC_ERROR_BOUNDS`: A given index was out of range of the vec
+- `VEC_ERROR_INVALID`: An input was given in a way that the library cannot accept
+- `VEC_NOT_FOUND`: (used by find operations in `vec_algs`) no matching element was found
 
 The struct members should not be accessed directly. Always use the apropriate function call.
 
 The vec does not provide thread safety. It is up to you to lock accesses where apropriate.
 
 ## MEMORY
-Create a new vec object using `vec_t variable_name`. Do not initialize it manually. Instead, use `vec_init(vec_t* self, size_t initial_size, size_t element_size)` this sets up the vec to have initial_size elements of size element_size (It is recommended you use sizeof(DATA_TYPE) as element_size). Some functions in vec_algs require an uninitialized vec_t and initialize it for you.
-Unless specifically requested, it is undefined behavior to pass an uninitialized vec_t to a function.
+Create a new vec object using `vec_t variable_name`. Do not initialize it manually. Instead, use `vec_init(vec_t* self, size_t initial_size, size_t element_size)` this sets up the vec to have `initial_size` elements of size `element_size` (It is recommended you use `sizeof(DATA_TYPE)` as `element_size`). Some functions in `vec_algs` require an uninitialized `vec_t` and initialize it for you.
+Unless specifically requested, it is undefined behavior to pass an uninitialized `vec_t` to a function.
 
-You can release the vec_t's resources using `vec_destroy(Darry*)`. calling this on the same vec_t multiple times is harmless. Passing a vec_t to a function after it has been destroyed is equivalent to passing an uninitialized one (i.e. okay only when explicitly expected).
+You can release the `vec_t`'s resources using `vec_destroy(vec_t*)`. calling this on the same `vec_t` multiple times is harmless. Passing a `vec_t` to a function after it has been destroyed is equivalent to passing an uninitialized one (i.e. okay only when explicitly expected).
 
-Copying the vec_t struct creates a shallow copy, i.e. the elements are shared. Be careful with this as it could result in stale metadata causing undefined behavior. You can create a deep copy (i.e. same values, but seperate memory) usind `vec_copy()`.
+Copying the `vec_t` struct creates a shallow copy, i.e. the elements are shared. Be careful with this as it could result in stale metadata causing undefined behavior. You can create a deep copy (i.e. same values, but seperate memory) usind `vec_copy()`.
 
 ## SIZE & CAPACITY
 Size always refers to the number of elements in use. Capacity alway refers to the number of elements already allocated for.
@@ -38,9 +38,9 @@ Similarly, for `vec_pop_back()` and `vec_pop_front()`, you need to provide a poi
 
 ## ERASING
 `vec_erase_from_to()` erases within the given indecies (including both indices themselves). The other functions of the erase family are aliases that fix the start and / or the end of the erase:
-- `vec_erase_from(start)` is equivalent to `vec_erase_from_to(start, [LAST ELEMENT'S INDEX])
-- `vec_erase_to(end)` is equivalent to `vec_erase_from_to(0, end)
-- `vec_erase_all()` and `vec_clear()` are equivalent to `vec_erase_from_to(0, [LAST ELEMENT'S INDEX])
+- `vec_erase_from(start)` is equivalent to `vec_erase_from_to(start, [LAST ELEMENT'S INDEX]`)
+- `vec_erase_to(end)` is equivalent to `vec_erase_from_to(0, end)`
+- `vec_erase_all()` and `vec_clear()` are equivalent to `vec_erase_from_to(0, [LAST ELEMENT'S INDEX]`)
 - `vec_erase_at(index)`is equivalent to `vec_erase_from_to(index, index)`
 
 ## ACCESS
@@ -50,7 +50,7 @@ These allow you to read or write single elements of the darray. Like the push an
 
 
 ## SEARCHING
-find_first example usage:
+`find_first` example usage:
 
 ```c
 bool condition(const void* element, const void* data) {

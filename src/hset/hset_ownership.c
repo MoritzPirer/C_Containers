@@ -1,9 +1,10 @@
 #include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "hset_internal.h"
 
-bool hset_default_comparison(void* a, void* b, size_t item_size) {
+bool hset_default_comparison(const void* a, const void* b, size_t item_size) {
     unsigned char a_bits[item_size];
     unsigned char b_bits[item_size];
     memcpy(a_bits, a, item_size);
@@ -16,6 +17,31 @@ bool hset_default_comparison(void* a, void* b, size_t item_size) {
     }
     
     return true;
+}
+
+void hset_debug(hset_t* self) {
+    printf("=========\n");
+    printf("size: %zu\n", self->size);
+    printf("capacity: %zu\n", self->capacity);
+    printf("item size: %zu\n", self->item_size);
+    
+    for (size_t index = 0; index < self->capacity; index++) {
+        unsigned char entry[self->boosted_size];
+        hset_copy_from_nth_index(entry, self, index);
+
+        hset_item_state_t item_state = *((hset_item_state_t*) entry); 
+        if (item_state == HSET_EMPTY) {
+            printf("[NIL]\n");
+            continue;
+        }
+        if (item_state == HSET_DELETED) {
+            printf("[DEL] %d\n", *(int*) (entry + sizeof(hset_status_t)));
+        }
+
+        printf("[USE] %d\n", *(int*) (entry + sizeof(hset_status_t)));
+
+    }
+    printf("=========\n");
 }
 
 hset_status_t hset_init(hset_t* self, size_t initial_size, size_t element_size, hset_comparison_t comparison) {

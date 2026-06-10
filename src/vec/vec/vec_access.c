@@ -9,7 +9,7 @@
 
 #include "../vec_internal.h"
 
-vec_status_t vec_get(vec_t* self, size_t index, void *buffer) {
+vec_status_t vec_get(const vec_t* self, size_t index, void *buffer) {
     if (self == NULL || buffer == NULL) {
         return VEC_ERROR_NULL;
     }

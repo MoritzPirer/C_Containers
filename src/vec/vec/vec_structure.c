@@ -11,7 +11,18 @@
 
 #include "../vec_internal.h"
 
-vec_status_t vec_push_back(vec_t* self, void *element) {
+void vec_debug(vec_t* self) {
+    printf("====\n");
+    printf("size: %zu\n", self->size_used);
+    printf("capacity: %zu\n", self->capacity_allocated);
+    printf("item size: %zu\n", self->item_size);
+
+    for (size_t i = 0; i < self->size_used; i++) {
+        printf("vec[%zu] = %d\n", i, *(int*) internal_vecNThElement(self, i));
+    }
+    printf("====\n");
+}
+vec_status_t vec_push_back(vec_t* self, void* element) {
     if (self == NULL || element == NULL) {
         return VEC_ERROR_NULL;
     }
@@ -22,13 +33,12 @@ vec_status_t vec_push_back(vec_t* self, void *element) {
     }
 
     memcpy(internal_vecNThElement(self, self->size_used), element, self->item_size);
-
     self->size_used++;
 
     return VEC_OK;
 }
 
-vec_status_t vec_pop_back(vec_t* self, void *element) {
+vec_status_t vec_pop_back(vec_t* self, void* element) {
     if (self == NULL || element == NULL) {
         return VEC_ERROR_NULL;
     }
@@ -46,11 +56,11 @@ vec_status_t vec_pop_back(vec_t* self, void *element) {
     return result;
 }
 
-vec_status_t vec_push_front(vec_t* self, void *element) {
+vec_status_t vec_push_front(vec_t* self, void* element) {
     return vec_insert(self, 0, element);
 }
 
-vec_status_t vec_pop_front(vec_t* self, void *element) {
+vec_status_t vec_pop_front(vec_t* self, void* element) {
     if (self == NULL || element == NULL) {
         return VEC_ERROR_NULL;
     }
@@ -66,7 +76,7 @@ vec_status_t vec_pop_front(vec_t* self, void *element) {
         return VEC_OK;
     }
 
-    size_t bytes_to_copy = self->size_used * self->item_size;
+    size_t bytes_to_copy = self->size_used*  self->item_size;
     internal_moveBytes(self, 1, 0, bytes_to_copy);
 
     vec_status_t result = internal_vecShrinkIfNeeded(self);
@@ -74,7 +84,7 @@ vec_status_t vec_pop_front(vec_t* self, void *element) {
     return result;
 }
 
-vec_status_t vec_insert(vec_t* self, size_t index, void *element) {
+vec_status_t vec_insert(vec_t* self, size_t index, void* element) {
     if (self == NULL) {
         return VEC_ERROR_NULL;
     }

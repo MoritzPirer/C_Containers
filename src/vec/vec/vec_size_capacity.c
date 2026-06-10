@@ -42,7 +42,7 @@ vec_status_t vec_shrink(vec_t* self) {
     return result;
 }
 
-size_t vec_size(vec_t* self) {
+size_t vec_size(const vec_t* self) {
     if (self == NULL) {
         return (size_t) -1;
     }
@@ -50,7 +50,7 @@ size_t vec_size(vec_t* self) {
     return self->size_used;
 }
 
-size_t vec_capacity(vec_t* self) {
+size_t vec_capacity(const vec_t* self) {
     if (self == NULL) {
         return (size_t) -1;
     }
@@ -58,7 +58,7 @@ size_t vec_capacity(vec_t* self) {
     return self->capacity_allocated;
 }
 
-bool vec_is_empty(vec_t* self) {
+bool vec_is_empty(const vec_t* self) {
     if (self == NULL) {
         return true;
     }

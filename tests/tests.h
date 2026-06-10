@@ -43,7 +43,7 @@ extern int tests_failed;
     int failed_before = tests_failed; \
     test_func(); \
     if (tests_failed == failed_before) { \
-        printf("  [PASS] %s\n", #test_func); \
+        printf(ANSI_COLOR_GREEN"  [PASS] %s%s\n", #test_func, ANSI_COLOR_RESET); \
     } \
 } while(0)
 

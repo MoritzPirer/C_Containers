@@ -34,9 +34,10 @@ typedef enum vec_status_t_ {
 /// OWNERSHIP
 ///
 
+void vec_debug(vec_t* self);
 /// @brief initialize the given vec_t object
 /// @param self the vec to initialize
-/// @param initial_size how many elements should be usable right away
+/// @param initial_size how many elements the vec has upon creation (0 for an emty vec)
 /// @param element_size how large a single element is
 /// @return VEC_OK if everything is fine, VEC_ERROR_ALLOCATION if the resizing failed,
 ///     VEC_ERROR_INVALID if element_size is 0,
@@ -94,15 +95,15 @@ vec_status_t vec_shrink(vec_t* self);
 /// @brief return the amount of currently used elements
 /// @param self the vec to check
 /// @return the number of used elements
-size_t vec_size(vec_t* self);
+size_t vec_size(const vec_t* self);
 
 /// @brief return the number of elements there is space reserved for
 /// @param self the vec to check
 /// @return the number of elements space is allocated for
-size_t vec_capacity(vec_t* self);
+size_t vec_capacity(const vec_t* self);
 
 /// @return true if the given vec is empty, false otherwise
-bool vec_is_empty(vec_t* self);
+bool vec_is_empty(const vec_t* self);
 
 /// @brief resize the vec to hold exactly new_size elements. Sizing up zeros new memory.
 ///     sizing down loses elements that don't fit into the new size.
@@ -229,7 +230,7 @@ vec_status_t vec_clear(vec_t* self);
 ///     guarantee that buffer is valid until the function call returns
 /// @return VEC_OK if everything is fine, VEC_ERROR_NULL if vec or buffer is NULL
 ///     or VEC_ERROR_BOUNDS if index > vec_size(vec)
-vec_status_t vec_get(vec_t* self, size_t index, void *buffer);
+vec_status_t vec_get(const vec_t* self, size_t index, void *buffer);
 
 /// @brief Set the element at position index to the value pointed to by buffer
 /// @param self the vec to write to
@@ -258,6 +259,6 @@ typedef struct hset_t_ hset_t;
 /// @param hset_comparision a function that compares two elements for equality
 /// @return 
 vec_status_t vec_to_hset(const vec_t* self, hset_t* destination,
-    bool (*hset_comparison)(void* a, void* b, size_t item_size));
+    bool (*hset_comparison)(const void* a, const void* b, size_t item_size));
 
 #endif // VEC_H

@@ -25,7 +25,7 @@ void swapValues(size_t* a, size_t* b);
 /// @param self the vec to access
 /// @param index the index to access in the vec
 /// @return a pointer to the n-th element
-void *internal_vecNThElement(vec_t* self, size_t index);
+void *internal_vecNThElement(const vec_t* self, size_t index);
 
 /// @brief set the size of the vec to new_element_count.
 ///     If the new size is less than the amount of elements in use, they are lost.
@@ -45,7 +45,7 @@ vec_status_t internal_vecGrow(vec_t* self);
 vec_status_t internal_vecShrinkIfNeeded(vec_t* self);
 
 /// @return true if index is valid for self, false otherwise
-bool internal_vecIsValidIndex(vec_t* self, size_t index);
+bool internal_vecIsValidIndex(const vec_t* self, size_t index);
 
 void internal_moveBytes(vec_t* self, size_t read_index, size_t write_index, size_t bytes_to_copy);
 #endif // VEC_INTERNAL_H

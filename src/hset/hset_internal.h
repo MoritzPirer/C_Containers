@@ -8,3 +8,8 @@ typedef enum hset_item_state_t {
 } hset_item_state_t;
 
 void hset_copy_from_nth_index(void* destination, const hset_t* source, size_t index);
+
+void hset_copy_to_nth_index(hset_t* destination, const void* source, size_t index); 
+
+#define HSET_PAYLOAD(x) x + sizeof(hset_item_state_t)
+#define HSET_STATE(x) *(hset_item_state_t*) x

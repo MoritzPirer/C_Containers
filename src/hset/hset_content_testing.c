@@ -19,12 +19,12 @@ bool hset_any(hset_t* self, hset_condition_t condition, const void* data) {
     for (size_t index = 0; index < self->capacity; index++) {
         hset_copy_from_nth_index(entry, self, index);
 
-        hset_item_state_t item_state = *((hset_item_state_t*) entry); 
+        hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state == HSET_EMPTY) {
             continue;
         }
 
-        if (condition(entry, data)) {
+        if (condition(HSET_PAYLOAD(entry), data)) {
             return true;
         }
     }
@@ -41,12 +41,12 @@ bool hset_all(hset_t* self, hset_condition_t condition, const void* data) {
     for (size_t index = 0; index < self->capacity; index++) {
         hset_copy_from_nth_index(entry, self, index);
 
-        hset_item_state_t item_state = *((hset_item_state_t*) entry); 
+        hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state == HSET_EMPTY) {
             continue;
         }
 
-        if (!condition(entry, data)) {
+        if (!condition(HSET_PAYLOAD(entry), data)) {
             return false;
         }
     }
@@ -63,12 +63,12 @@ bool hset_none(hset_t* self, hset_condition_t condition, const void* data) {
     for (size_t index = 0; index < self->capacity; index++) {
         hset_copy_from_nth_index(entry, self, index);
 
-        hset_item_state_t item_state = *((hset_item_state_t*) entry); 
+        hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state == HSET_EMPTY) {
             continue;
         }
 
-        if (condition(entry, data)) {
+        if (condition(HSET_PAYLOAD(entry), data)) {
             return false;
         }
     }
@@ -89,13 +89,13 @@ hset_status_t hset_filter(hset_t* self, hset_condition_t condition, hset_t* filt
     for (size_t index = 0; index < self->capacity; index++) {
         hset_copy_from_nth_index(entry, self, index);
 
-        hset_item_state_t item_state = *((hset_item_state_t*) entry); 
+        hset_item_state_t item_state = HSET_STATE(entry);
         if (item_state == HSET_EMPTY) {
             continue;
         }
 
-        if (condition(entry, data)) {
-            hset_status_t result = hset_add(filtered, entry);
+        if (condition(HSET_PAYLOAD(entry), data)) {
+            hset_status_t result = hset_add(filtered, HSET_PAYLOAD(entry));
             if (result != HSET_OK) {
                 return result;
             }

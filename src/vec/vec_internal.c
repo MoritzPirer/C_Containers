@@ -17,7 +17,7 @@ void swapValues(size_t* a, size_t* b) {
     *b = temp;
 }
 
-void *internal_vecNThElement(vec_t* self, size_t index) {
+void* internal_vecNThElement(const vec_t* self, size_t index) {
     return (void *)((char *)self->m_data + (index * self->item_size));
 }
 
@@ -54,7 +54,7 @@ vec_status_t internal_vecShrinkIfNeeded(vec_t* self) {
     return VEC_OK;
 }
 
-bool internal_vecIsValidIndex(vec_t* self, size_t index) {
+bool internal_vecIsValidIndex(const vec_t* self, size_t index) {
     return (index >= 0 && index < self->size_used);
 }
 
