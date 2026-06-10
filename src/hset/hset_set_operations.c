@@ -20,6 +20,7 @@ bool hset_is_compatible_with(const hset_t* a, const hset_t* b) {
     if (a->comparison != b->comparison) {
         return false;
     }
+
     if (a->comparison == NULL || b->comparison == NULL) {
         return false;
     }
@@ -45,7 +46,7 @@ hset_status_t hset_union(const hset_t* a, const hset_t* b, hset_t* result) {
         unsigned char entry[b->boosted_size];
         hset_copy_from_nth_index(entry, b, index);
 
-        hset_item_state_t item_state = *((hset_item_state_t*) entry); 
+        hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state == HSET_EMPTY) {
             continue;
         }
@@ -78,7 +79,7 @@ hset_status_t hset_intersection(const hset_t* a, const hset_t* b, hset_t* result
         unsigned char entry[a->boosted_size];
         hset_copy_from_nth_index(entry, a, index);
 
-        hset_item_state_t item_state = *((hset_item_state_t*) entry); 
+        hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state == HSET_EMPTY) {
             continue;
         }
@@ -115,7 +116,7 @@ hset_status_t hset_difference(const hset_t* a, const hset_t* b, hset_t* result) 
         unsigned char entry[a->boosted_size];
         hset_copy_from_nth_index(entry, a, index);
 
-        hset_item_state_t item_state = *((hset_item_state_t*) entry); 
+        hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state == HSET_EMPTY) {
             continue;
         }
@@ -149,7 +150,7 @@ hset_status_t hset_symmetric_difference(const hset_t* a, const hset_t* b, hset_t
         unsigned char entry[b->boosted_size];
         hset_copy_from_nth_index(entry, b, index);
 
-        hset_item_state_t item_state = *((hset_item_state_t*) entry); 
+        hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state == HSET_EMPTY) {
             continue;
         }
@@ -180,7 +181,7 @@ bool hset_is_subset_of(const hset_t* a, const hset_t* b) {
         unsigned char entry[a->boosted_size];
         hset_copy_from_nth_index(entry, a, index);
 
-        hset_item_state_t item_state = *((hset_item_state_t*) entry); 
+        hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state != HSET_USED) {
             continue;
         }

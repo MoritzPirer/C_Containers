@@ -11,5 +11,5 @@ void hset_copy_from_nth_index(void* destination, const hset_t* source, size_t in
 
 void hset_copy_to_nth_index(hset_t* destination, const void* source, size_t index); 
 
-#define HSET_PAYLOAD(x) x + sizeof(hset_item_state_t)
-#define HSET_STATE(x) *(hset_item_state_t*) x
+#define HSET_PAYLOAD(entry) entry + sizeof(hset_item_state_t)
+#define HSET_STATE(entry) *(hset_item_state_t*) entry
