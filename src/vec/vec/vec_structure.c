@@ -26,6 +26,7 @@ void vec_debug(vec_t* self) {
         printf("vec[%zu] = %d\n", i, *(int*) internal_vecNThElement(self, i));
     }
 
+    printf("iterator version: %zu\n", self->iterator_version);
     printf("=========\n");
 }
 vec_status_t vec_push_back(vec_t* self, const void* element) {
@@ -40,6 +41,8 @@ vec_status_t vec_push_back(vec_t* self, const void* element) {
 
     memcpy(internal_vecNThElement(self, self->size), element, self->item_size);
     self->size++;
+
+    self->iterator_version++;
 
     return VEC_OK;
 }
@@ -58,6 +61,7 @@ vec_status_t vec_pop_back(vec_t* self, void* element) {
     self->size--;
 
     vec_status_t result = internal_vecShrinkIfNeeded(self);
+    self->iterator_version++;
 
     return result;
 }
@@ -86,6 +90,7 @@ vec_status_t vec_pop_front(vec_t* self, void* element) {
     internal_moveBytes(self, 1, 0, bytes_to_copy);
 
     vec_status_t result = internal_vecShrinkIfNeeded(self);
+    self->iterator_version++;
 
     return result;
 }
@@ -112,6 +117,7 @@ vec_status_t vec_insert(vec_t* self, size_t index, const void* element) {
     memcpy(internal_vecNThElement(self, index), element, self->item_size);
 
     self->size++;
+    self->iterator_version++;
 
     return VEC_OK;
 }

@@ -149,3 +149,21 @@ Similar to the structure functions, these `vec_get` and `vec_set` use a buffer t
 This section covers integration with other containers in the library.
 
 `vec_to_hset` creates an hset that contains all (unique) values of the vec.
+
+## ITERATOR
+The header `vec_iter.h` provides an iterator. Initalize it with `vec_iter_init`. The iterator does not need to be destroyed (i.e. there is no `vec_iter_destroy`). The iterator is invalidated by any methods in `vec.h` and `vec_algs.g` that...
+- change the size
+- change the capacity
+- change the order of elements
+... of the vector being iterated. If that happens, the iterator functions will return `VEC_ITER_INVALID`. Specifically, all of these functions will invalidate the iterator:
+- `vec_erase_from_to`, `vec_erase_from`, `vec_erase_to`, `vec_erase_at`, `vec_erase_all`, `vec_clear`
+- `vec_swap` (both are invalidated) `vec_append` (only the one being appended to, not the one being appended)
+- `vec_reserve`, `vec_shrink`, `vec_resize`
+- `vec_push_back`, `vec_pop_back`, `vec_push_front`, `vec_pop_front`, `vec_insert`
+- `vec_reverse`, `vec_sort`
+
+If the iterator is on one of the ends, and would be moved out of bounds by the method, it will not move and return `VEC_ITER_END` instead.
+
+Read from / write to the current position of the iterator with `vec_iter_get` and `vec_iter_set` respectively. Use `vec_iter_has_next` and `vec_iter_has_previous` to check if the iterator can move in that direction.
+
+move the iterator with `vec_iter_next` and `vec_iter_next` these take a `void*` to write the element the iterator *lands on* to. If that element is not needed, you can savely pass NULL to disregard.

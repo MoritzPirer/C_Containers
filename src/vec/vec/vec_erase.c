@@ -36,6 +36,7 @@ vec_status_t vec_erase_from_to(vec_t* self, size_t start, size_t end) {
     self->size -= (end - start + 1);
 
     vec_status_t result = internal_vecShrinkIfNeeded(self);
+    self->iterator_version++;
 
     return result;
 }

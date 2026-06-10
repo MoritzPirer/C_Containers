@@ -54,6 +54,8 @@ void vec_reverse(vec_t* self)
             self->item_size);
         memcpy(internal_vecNThElement(self, swap_index), buffer, self->size);
     }
+
+    self->iterator_version++;
 }
 
 vec_status_t vec_filter(vec_t* self, vec_condition_t condition, vec_t* filtered, const void *data) {

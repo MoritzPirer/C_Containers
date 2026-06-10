@@ -19,6 +19,8 @@ typedef struct vec_t_ {
     size_t capacity;
     size_t item_size;
     void* array;
+
+    size_t iterator_version;
 } vec_t;
 
 typedef enum vec_status_t_ {

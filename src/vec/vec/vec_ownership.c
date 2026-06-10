@@ -26,6 +26,7 @@ vec_status_t vec_init(vec_t *self, size_t initial_capacity, size_t element_size)
     self->capacity = max(initial_capacity, VEC_MIN_SIZE);
     self->item_size = element_size;
     self->array = calloc(self->capacity, element_size);
+    self->iterator_version++;
 
     if (self->array == NULL) {
         return VEC_ERROR_ALLOCATION;
@@ -43,6 +44,7 @@ vec_status_t vec_destroy(vec_t *self) {
     self->array = NULL;
     self->capacity = 0;
     self->size = 0;
+    self->iterator_version = 0;
 
     return VEC_OK;
 }
@@ -59,6 +61,9 @@ vec_status_t vec_swap(vec_t *self, vec_t *other) {
     swapValues(&(self->item_size), &(other->item_size));
     swapValues(&(self->capacity), &(other->capacity));
     swapValues(&(self->size), &(other->size));
+
+    self->iterator_version++;
+    other->iterator_version++;
 
     void *temp = self->array;
     self->array = other->array;
@@ -84,6 +89,7 @@ vec_status_t vec_copy(const vec_t *original, vec_t *copy) {
     copy->size = original->size;
     copy->capacity = original->size;
     copy->item_size = original->item_size;
+    copy->iterator_version = original->iterator_version;
 
     return VEC_OK;
 }
@@ -105,9 +111,11 @@ vec_status_t vec_append(vec_t *self, const vec_t *other) {
     memcpy(
         internal_vecNThElement(self, self->size),
         internal_vecNThElement(other, 0),
-        other->size * other->item_size);
+        other->size * other->item_size
+    );
 
     self->size += other->size;
+    self->iterator_version++;
 
     return VEC_OK;
 }

@@ -24,6 +24,7 @@ vec_status_t vec_reserve(vec_t* self, size_t elements_to_reserve) {
     }
 
     vec_status_t result = internal_vecSetSizeTo(self, new_size);
+    self->iterator_version++;
 
     return result;
 }
@@ -38,6 +39,7 @@ vec_status_t vec_shrink(vec_t* self) {
     }
 
     vec_status_t result = internal_vecSetSizeTo(self, self->size);
+    self->iterator_version++;
 
     return result;
 }
@@ -62,6 +64,7 @@ bool vec_is_empty(const vec_t* self) {
     if (self == NULL) {
         return true;
     }
+
     return self->size == 0;
 }
 
@@ -86,6 +89,8 @@ vec_status_t vec_resize(vec_t* self, size_t new_size) {
         self->size = new_size;
         memset(internal_vecNThElement(self, old_size), 0, (new_size - old_size) * self->item_size);
     }
+    
+    self->iterator_version++;
 
     return VEC_OK;
 }

@@ -17,6 +17,7 @@ vec_status_t vec_sort(vec_t* self, vec_ordering_t vec_ordering) {
     }
 
     qsort(self->array, self->size, self->item_size, vec_ordering);
+    self->iterator_version++;
 
     return VEC_OK;
 }

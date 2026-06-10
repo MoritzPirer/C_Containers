@@ -11,6 +11,7 @@
 #include "../vec_internal.h"
 #include "../../../inc/vec/vec_algs.h"
 
+/// TODO REWRITE!!!! self as pointer
 bool vec_is_unique(vec_t self, vec_ordering_t vec_ordering) {
     if (self.size <= 1) {
         return true; // unique by default
@@ -28,6 +29,7 @@ bool vec_is_unique(vec_t self, vec_ordering_t vec_ordering) {
     return true;
 }
 
+// TODO CONST
 vec_status_t vec_get_unique(vec_t* self, vec_ordering_t vec_ordering, vec_t* unique) {
     if (self == NULL || unique == NULL) {
         return VEC_ERROR_NULL;
@@ -86,6 +88,7 @@ size_t skipDuplicates(vec_t* self, size_t index, vec_ordering_t ordering) {
     return index + 1;
 }
 
+// TODO const
 vec_status_t vec_get_intersection(vec_t* left, vec_t* right, vec_ordering_t vec_ordering, vec_t* intersection) {
     if (left == NULL || right == NULL || intersection == NULL) {
         return VEC_ERROR_NULL;
