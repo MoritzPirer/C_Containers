@@ -5,6 +5,7 @@ int tests_failed = 0;
 
 void vec_tests();
 void vec_algs_tests();
+void vec_iter_tests();
 void hset_tests();
 
 int main(void) {
@@ -12,6 +13,7 @@ int main(void) {
 
     vec_tests();
     vec_algs_tests();
+    vec_iter_tests();
     hset_tests();
 
     printf("==================================\n");
