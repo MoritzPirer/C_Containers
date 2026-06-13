@@ -2,7 +2,7 @@
 
 #include "../../../inc/vec/vec_iter.h"
 
-static inline bool _vec_iter_is_valid(vec_iter_t* iter) {
+static inline bool _vec_iter_is_valid(const vec_iter_t* iter) {
     return iter->iterator_version == iter->vec->iterator_version;
 }
 
@@ -35,7 +35,7 @@ vec_status_t vec_iter_init_last(vec_t* vec, vec_iter_t* iter) {
     return vec_iter_init(vec, iter, vec->size - 1);
 }
 
-bool vec_iter_has_next(vec_iter_t* iter) {
+bool vec_iter_has_next(const vec_iter_t* iter) {
     if (iter == NULL) {
         return false;
     }
@@ -51,7 +51,7 @@ bool vec_iter_has_next(vec_iter_t* iter) {
     return (iter->current_index < iter->vec->size - 1);
 }
 
-bool vec_iter_has_previous(vec_iter_t* iter) {
+bool vec_iter_has_previous(const vec_iter_t* iter) {
     if (iter == NULL) {
         return false;
     }
@@ -63,7 +63,7 @@ bool vec_iter_has_previous(vec_iter_t* iter) {
     return (iter->current_index > 0);
 }
 
-vec_iter_status_t vec_iter_get(vec_iter_t* iter, void* destination) {
+vec_iter_status_t vec_iter_get(const vec_iter_t* iter, void* destination) {
     if (iter == NULL || destination == NULL) {
         return VEC_ITER_NULL;
     }
