@@ -87,6 +87,10 @@ vec_iter_status_t vec_iter_next(vec_iter_t* iter);
 ///     VEC_ITER_END if the iterator was already on the end, VEC_ITER_OK if the operation succeeded
 vec_iter_status_t vec_iter_previous(vec_iter_t* iter);
 
+///
+/// Modifying
+///
+
 /// @brief sets the element the iterator is on to the value at source. Equivalent to calling vec_set with the iterator's index
 ///     if vec_iter_remove was called, this function will fail until the iterator is moved (with vec_iter_next
 ///     or vec_itter_previous)

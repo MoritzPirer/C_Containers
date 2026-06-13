@@ -151,19 +151,43 @@ This section covers integration with other containers in the library.
 `vec_to_hset` creates an hset that contains all (unique) values of the vec.
 
 ## ITERATOR
-The header `vec_iter.h` provides an iterator. Initalize it with `vec_iter_init`. The iterator does not need to be destroyed (i.e. there is no `vec_iter_destroy`). The iterator is invalidated by any methods in `vec.h` and `vec_algs.g` that...
-- change the size
-- change the capacity
-- change the order of elements
-... of the vector being iterated. If that happens, the iterator functions will return `VEC_ITER_INVALID`. Specifically, all of these functions will invalidate the iterator:
-- `vec_erase_from_to`, `vec_erase_from`, `vec_erase_to`, `vec_erase_at`, `vec_erase_all`, `vec_clear`
-- `vec_swap` (both are invalidated) `vec_add_all` (only the one being added to, not the one being added)
-- `vec_reserve`, `vec_shrink`, `vec_resize`
-- `vec_push_back`, `vec_pop_back`, `vec_push_front`, `vec_pop_front`, `vec_insert`
-- `vec_reverse`, `vec_sort`
+The header `vec_iter.h` provides a bidirectional iterator over a vec.
 
-If the iterator is on one of the ends, and would be moved out of bounds by the method, it will not move and return `VEC_ITER_END` instead.
+### LIFECYCLE
+Intitialize an iterator on the first element with `vec_iter_init_first` or on the last element with `vec_iter_init_last`. You can also specify the index to initialize on with `vec_iter_init`. Note that it is not possible to initialize an iterator on an empty vec. It is not necessary to destroy the iterator (i.e. there is no `vec_iter_destroy`).
 
-Read from / write to the current position of the iterator with `vec_iter_get` and `vec_iter_set` respectively. Use `vec_iter_has_next` and `vec_iter_has_previous` to check if the iterator can move in that direction.
+The iterator is invalidated when:
+- the number of elements changes (with the exception of that iterator calling `vec_iter_insert` or `vec_iter_remove`). Adding or removing elements through another iterator or the vector directly will invalidate the iterator.
+- the order of elements change (specifically `vec_reverse` and `vec_sort`
 
-move the iterator with `vec_iter_next` and `vec_iter_next` these take a `void*` to write the element the iterator *lands on* to. If that element is not needed, you can savely pass NULL to disregard.
+### LOOKAHEAD
+Use `vec_iter_has_next` and `vec_iter_has_previous` to check if the iterator can move in that direction.
+
+### READING
+Use `vec_iter_get`to read the value of the current element. Note that calling `vec_iter_remove` blocks this method until the iterator is moved.
+
+### MOVING
+Move the iterator with `vec_iter_next` and `vec_iter_previous`. If the iterator cannot in that direction (because it is already on the last or first element, respectively), it will not move and return `VEC_ITER_END`.
+
+### MODIFYING
+Change the value of the current element with `vec_iter_set`.
+
+Remove the element the iterator is on with `vec_iter_remove`. After that, the iterator will be in a "ghost state". From this ghost state, Lookahead and movement functions act as if the removed element is still there. `vec_iter_remove`, `vec_iter_set` and `vec_iter_get` will fail in the ghost state. Moving the iterator exits the ghost state.
+
+Insert a value with `vec_iter_insert`. The value is inserted before the iterator (i.e. if called with the iterator at index n, the new value will be at index n, and the iterator will now be at n+1 to observe the same element as before). It is not recommended to insert when iterating backward
+
+### EXAMPLE
+
+```c
+// assume vec is a non-empty vec_t
+vec_iter_t iter;
+vec_iter_init_first(&vec, &iter);
+
+do {
+	int temp = 0;
+	vec_iter_get(&iter, &temp);
+	
+	// process value in temp
+
+} while (vec_iter_next(&iter) == VEC_OK);
+```
