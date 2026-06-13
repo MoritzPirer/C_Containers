@@ -121,6 +121,7 @@ hset_status_t hset_add(hset_t* self, const void* source) {
     }
 
     self->size++;
+    self->iterator_version++;
     return HSET_OK;
 }
 
@@ -151,10 +152,9 @@ hset_status_t hset_remove(hset_t* self, const void* source) {
     }
 
     self->size--;
+    self->iterator_version++;
 
-    hset_shrink_if_needed(self);
-
-    return HSET_OK;
+    return hset_shrink_if_needed(self);
 }
 
 bool hset_contains(const hset_t* self, const void* item) {
@@ -207,6 +207,7 @@ hset_status_t hset_clear(hset_t* self) {
 
     memset(self->table, 0, self->boosted_size * self->capacity);
     self->size = 0;
+    self->iterator_version++;
 
     return HSET_OK;
 }

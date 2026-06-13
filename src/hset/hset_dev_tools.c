@@ -2,7 +2,7 @@
 #include "../../inc/hset/hset.h"
 #include "hset_internal.h"
 
-void hset_debug(hset_t* self) {
+void hset_debug(const hset_t* self) {
     if (self == NULL) {
         return;
     }

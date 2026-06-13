@@ -27,11 +27,12 @@ typedef bool (*hset_condition_t)(const void* element, const void* data);
 
 typedef struct hset_t_ {
     void* table;
-    size_t size; // items in set
-    size_t capacity; // table size
-    size_t item_size; // size of item
-    size_t boosted_size; // sizeof item + metadata
+    size_t size;                    // items in set
+    size_t capacity;                // table size
+    size_t item_size;               // size of item
+    size_t boosted_size;            // sizeof item + metadata
     hset_comparison_t comparison;
+    size_t iterator_version;        // for iterator invalidation
 } hset_t;
 
 typedef enum hset_status_t_ {
@@ -193,7 +194,7 @@ hset_status_t hset_filter(const hset_t* self, hset_condition_t condition, hset_t
 ///
 
 /// @brief prints metadata and content of the hset, intended for debugging / development process only
-void hset_debug(hset_t* self);
+void hset_debug(const hset_t* self);
 
 
 #endif // HSET_H
