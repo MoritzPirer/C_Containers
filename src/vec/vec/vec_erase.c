@@ -15,11 +15,11 @@ vec_status_t vec_erase_from_to(vec_t* self, size_t start, size_t end) {
         return VEC_ERROR_NULL;
     }
 
-    if (!internal_vecIsValidIndex(self, start)) {
+    if (!_vec_is_valid_index(self, start)) {
         return VEC_ERROR_BOUNDS;
     }
 
-    if (!internal_vecIsValidIndex(self, end)) {
+    if (!_vec_is_valid_index(self, end)) {
         return VEC_ERROR_BOUNDS;
     }
 
@@ -30,12 +30,12 @@ vec_status_t vec_erase_from_to(vec_t* self, size_t start, size_t end) {
     size_t num_elements_behind_erase = self->size - end;
     if (num_elements_behind_erase > 0) { // if erase is at end, no overwrite is needed
         size_t bytes_to_copy = num_elements_behind_erase * self->item_size;
-        internal_moveBytes(self, end + 1, start, bytes_to_copy);
+        _vec_move_bytes(self, end + 1, start, bytes_to_copy);
     }
 
     self->size -= (end - start + 1);
 
-    vec_status_t result = internal_vecShrinkIfNeeded(self);
+    vec_status_t result = _vec_shrink_if_needed(self);
     self->iterator_version++;
 
     return result;
@@ -56,14 +56,10 @@ vec_status_t vec_erase_at(vec_t* self, size_t index) {
     return vec_erase_from_to(self, index, index);
 }
 
-vec_status_t vec_erase_all(vec_t* self) {
+vec_status_t vec_clear(vec_t* self) {
     if (self == NULL) {
         return VEC_ERROR_NULL;
     }
 
     return vec_erase_from_to(self, 0, self->size - 1);
-}
-
-vec_status_t vec_clear(vec_t* self) {
-    return vec_erase_all(self);
 }

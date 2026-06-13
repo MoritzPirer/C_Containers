@@ -57,7 +57,7 @@ int vec_default_ordering(const void* a, const void* b);
 ///     VEC_NOT_FOUND if key was not found
 ///     VEC_OK if key was found (only then is the value at index_buffer valid)
 /// @complexity O(n)
-vec_status_t vec_find_first(vec_t* self, vec_condition_t condition,
+vec_status_t vec_find_first(const vec_t* self, vec_condition_t condition,
                          size_t* index_buffer, const void* data);
 
 /// @brief find the index of the last element for which condition returns true
@@ -71,7 +71,7 @@ vec_status_t vec_find_first(vec_t* self, vec_condition_t condition,
 ///     VEC_NOT_FOUND if key was not found
 ///     VEC_OK if key was found (only then is the value at index_buffer valid)
 /// @complexity O(n)
-vec_status_t vec_find_last(vec_t* self, vec_condition_t condition,
+vec_status_t vec_find_last(const vec_t* self, vec_condition_t condition,
                          size_t* index_buffer, const void* data);
 
 /// @brief checks if the vec contains at least one item for which condition returns true
@@ -80,7 +80,7 @@ vec_status_t vec_find_last(vec_t* self, vec_condition_t condition,
 /// @param data any additional data for the condition function. Can pass NULL if not needed
 /// @return true if self contains an element for chich condition returns true, false otherwise
 /// @complexity O(n)
-bool vec_contains(vec_t self, vec_condition_t condition, const void* data);
+bool vec_contains(const vec_t* self, vec_condition_t condition, const void* data);
 
 /// @brief performs a binary search to find the index of key. Caller is responsible for
 ///     ensuring that the vec has no duplicates and is sorted in ascending order. Otherwise, the
@@ -95,11 +95,11 @@ bool vec_contains(vec_t self, vec_condition_t condition, const void* data);
 ///     VEC_NOT_FOUND if key was not found
 ///     VEC_OK if key was found (only then is the value at index_buffer valid)
 /// @complexity O(log(n))
-vec_status_t vec_binary_search(vec_t* self, vec_ordering_t vec_ordering,
+vec_status_t vec_binary_search(const vec_t* self, vec_ordering_t vec_ordering,
                             size_t* index_buffer, const void* key);
 
 ///
-/// ITERATING
+/// PREDICATES
 ///
 
 /// @brief check if condition is true for at least one element of the vec
@@ -107,18 +107,16 @@ vec_status_t vec_binary_search(vec_t* self, vec_ordering_t vec_ordering,
 /// @param condition the condition to apply to each element
 /// @param data any additional data needed by condition (can pass NULL if not needed)
 /// @return true if condition is true for at least one element, false otherwise
-/// @param self the vec to reverse
 /// @complexity O(n)
-bool vec_any(vec_t self, vec_condition_t condition, const void* data);
+bool vec_any(const vec_t* self, vec_condition_t condition, const void* data);
 
 /// @brief check if condition is true for all elements of the vec
 /// @param self the vec to check
 /// @param condition the condition to apply to each element
 /// @param data any additional data needed by condition (can pass NULL if not needed)
 /// @return true if condition is true for every element, false otherwise
-/// @param self the vec to reverse
 /// @complexity O(n)
-bool vec_all(vec_t self, vec_condition_t condition, const void* data);
+bool vec_all(const vec_t* self, vec_condition_t condition, const void* data);
 
 /// @brief check if condition is false for all elements of the vec
 /// @param self the vec to check
@@ -126,7 +124,7 @@ bool vec_all(vec_t self, vec_condition_t condition, const void* data);
 /// @param data any additional data needed by condition (can pass NULL if not needed)
 /// @return true if condition is false for every element, false otherwise
 /// @complexity O(n)
-bool vec_none(vec_t self, vec_condition_t condition, const void* data);
+bool vec_none(const vec_t* self, vec_condition_t condition, const void* data);
 
 /// @brief reverses the elements of the vec in-place
 /// @param self the vec to reverse
@@ -142,7 +140,7 @@ void vec_reverse(vec_t* self);
 ///     VEC_ERROR_ALLOCATION if creating or resizing filtered failed,
 ///     VEC_OK if everything worked (only then is filtered valid)
 /// @complexity O(n)
-vec_status_t vec_filter(vec_t* self, vec_condition_t condition,
+vec_status_t vec_filter(const vec_t* self, vec_condition_t condition,
                        vec_t* filtered, const void* data);
 
 /// @brief applies the given transformation function to each element of the vec.
@@ -211,7 +209,7 @@ vec_status_t vec_range_to(vec_t* self, size_t stop);
 /// @param vec_ordering a function that can compare two elements of the vec's datatype
 /// @return true if all elements are unique, false if there is at least one duplicate value
 /// @complexity O(n)
-bool vec_is_unique(vec_t self, vec_ordering_t vec_ordering);
+bool vec_is_unique(const vec_t* self, vec_ordering_t vec_ordering);
 
 /// @brief create a new vec consisting of only the unique elements of self. Caller is responsible
 ///     for ensuring self is sorted (ascending or descending), otherwise behavior is undefined
@@ -223,7 +221,7 @@ bool vec_is_unique(vec_t self, vec_ordering_t vec_ordering);
 ///     VEC_ERROR_ALLOCATION if creating the new vec failed,
 ///     VEC_OK if everything went fine (only then is unique valid)
 /// @complexity O(n)
-vec_status_t vec_get_unique(vec_t* self, vec_ordering_t vec_ordering, vec_t* unique);
+vec_status_t vec_get_unique(const vec_t* self, vec_ordering_t vec_ordering, vec_t* unique);
 
 /// @brief create a new vec consisting of the elements that both left and right contain.
 ///     Caller is responsible for ensuring both are sorted (either both ascending or both descending)
@@ -236,7 +234,7 @@ vec_status_t vec_get_unique(vec_t* self, vec_ordering_t vec_ordering, vec_t* uni
 ///     VEC_ERROR_ALLOCATION if creating the new vec failed,
 ///     VEC_OK if everything went fine (only then is intersection valid)
 /// @complexity O(n + m)
-vec_status_t vec_get_intersection(vec_t* left, vec_t* right,
+vec_status_t vec_get_intersection(const vec_t* left, const vec_t* right,
                                 vec_ordering_t vec_ordering, vec_t* intersection);
 
 /// @brief create a new vec consisting of the elements contained by left and / or right.
@@ -250,7 +248,7 @@ vec_status_t vec_get_intersection(vec_t* left, vec_t* right,
 ///     VEC_ERROR_ALLOCATION if creating the new vec failed,
 ///     VEC_OK if everything went fine (only then is union_elements valid)
 /// @complexity O(n + m)
-vec_status_t vec_get_union(vec_t* left, vec_t* right,
+vec_status_t vec_get_union(const vec_t* left, const vec_t* right,
                          vec_ordering_t vec_ordering, vec_t* union_elements);
 
 ///
@@ -270,7 +268,7 @@ vec_status_t vec_sort(vec_t* self, vec_ordering_t vec_ordering);
 ///     or 0 if they are equal
 /// @return true if the vec is sorted, false otherwise
 /// @complexity O(n)
-bool vec_is_sorted_asc(vec_t self, vec_ordering_t vec_ordering);
+bool vec_is_sorted_asc(const vec_t* self, vec_ordering_t vec_ordering);
 
 /// @brief checks if self is sorted in descending order (each element is <= the previous element)
 /// @param self the vec to check
@@ -279,7 +277,7 @@ bool vec_is_sorted_asc(vec_t self, vec_ordering_t vec_ordering);
 ///     or 0 if they are equal
 /// @return true if the vec is sorted, false otherwise
 /// @complexity O(n)
-bool vec_is_sorted_desc(vec_t self, vec_ordering_t vec_ordering);
+bool vec_is_sorted_desc(const vec_t* self, vec_ordering_t vec_ordering);
 
 /// @brief checks if two vecs holding the same dataytpe are equal with regard to vec_ordering
 /// @param left one of the vecs to compare
@@ -288,6 +286,6 @@ bool vec_is_sorted_desc(vec_t self, vec_ordering_t vec_ordering);
 ///     should return 0 for equal elements
 /// @return true if the vecs are equal, false otherwise
 /// @complexity O(n)
-bool vec_equals(vec_t left, vec_t right, vec_ordering_t vec_ordering);
+bool vec_equals(const vec_t* left, const vec_t* right, vec_ordering_t vec_ordering);
 
 #endif // VEC_ALGS_H

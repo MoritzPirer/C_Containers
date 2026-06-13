@@ -14,7 +14,7 @@ hset_status_t hset_to_vec(const hset_t* self, vec_t* destination) {
 
     for (size_t index = 0; index < self->capacity; index++) {
         unsigned char entry[self->boosted_size];
-        hset_copy_from_nth_index(entry, self, index);
+        _hset_copy_from_nth_index(entry, self, index);
 
         hset_item_state_t item_state = *((hset_item_state_t*) entry); 
         if (item_state == HSET_EMPTY) {

@@ -13,6 +13,6 @@ typedef enum hset_item_state_t {
     HSET_DELETED = 2,
 } hset_item_state_t;
 
-void hset_copy_from_nth_index(void* destination, const hset_t* source, size_t index);
+void _hset_copy_from_nth_index(void* destination, const hset_t* source, size_t index);
 
-void hset_copy_to_nth_index(hset_t* destination, const void* source, size_t index); 
+void _hset_copy_to_nth_index(hset_t* destination, const void* source, size_t index); 

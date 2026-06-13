@@ -10,14 +10,14 @@ bool hset_default_condition(const void* element, const void* data) {
     return (*(size_t* )element == *(size_t* )data);
 }
 
-bool hset_any(hset_t* self, hset_condition_t condition, const void* data) {
+bool hset_any(const hset_t* self, hset_condition_t condition, const void* data) {
     if (self == NULL) {
         return false;
     }
 
     unsigned char entry[self->boosted_size];
     for (size_t index = 0; index < self->capacity; index++) {
-        hset_copy_from_nth_index(entry, self, index);
+        _hset_copy_from_nth_index(entry, self, index);
 
         hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state == HSET_EMPTY) {
@@ -32,14 +32,14 @@ bool hset_any(hset_t* self, hset_condition_t condition, const void* data) {
     return false;
 } 
 
-bool hset_all(hset_t* self, hset_condition_t condition, const void* data) {
+bool hset_all(const hset_t* self, hset_condition_t condition, const void* data) {
     if (self == NULL) {
         return false;
     }
 
     unsigned char entry[self->boosted_size];
     for (size_t index = 0; index < self->capacity; index++) {
-        hset_copy_from_nth_index(entry, self, index);
+        _hset_copy_from_nth_index(entry, self, index);
 
         hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state == HSET_EMPTY) {
@@ -54,14 +54,14 @@ bool hset_all(hset_t* self, hset_condition_t condition, const void* data) {
     return true;
 }
 
-bool hset_none(hset_t* self, hset_condition_t condition, const void* data) {
+bool hset_none(const hset_t* self, hset_condition_t condition, const void* data) {
     if (self == NULL) {
         return false;
     }
 
     unsigned char entry[self->boosted_size];
     for (size_t index = 0; index < self->capacity; index++) {
-        hset_copy_from_nth_index(entry, self, index);
+        _hset_copy_from_nth_index(entry, self, index);
 
         hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state == HSET_EMPTY) {
@@ -76,7 +76,7 @@ bool hset_none(hset_t* self, hset_condition_t condition, const void* data) {
     return true;
 }
  
-hset_status_t hset_filter(hset_t* self, hset_condition_t condition, hset_t* filtered, const void* data) {
+hset_status_t hset_filter(const hset_t* self, hset_condition_t condition, hset_t* filtered, const void* data) {
     if (self == NULL || filtered == NULL) {
         return HSET_ERROR_NULL;
     }
@@ -87,7 +87,7 @@ hset_status_t hset_filter(hset_t* self, hset_condition_t condition, hset_t* filt
 
     unsigned char entry[self->boosted_size];
     for (size_t index = 0; index < self->capacity; index++) {
-        hset_copy_from_nth_index(entry, self, index);
+        _hset_copy_from_nth_index(entry, self, index);
 
         hset_item_state_t item_state = HSET_STATE(entry);
         if (item_state == HSET_EMPTY) {

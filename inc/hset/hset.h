@@ -12,8 +12,6 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-
-
 /// @brief a function that compares two items of the type stored in the hash set; return
 ///     true if they are equal, false otherwise
 /// @param item_size the size of the item stored in the table
@@ -46,9 +44,6 @@ typedef enum hset_status_t_ {
 ///
 /// OWNERSHIP
 ///
-
-/// @brief prints metadata and content of the hset, intended for debugging / development process only
-void hset_debug(hset_t* self);
 
 /// @brief initialize the given hset_t object
 /// @param self the hset to initialize
@@ -154,42 +149,6 @@ bool hset_is_subset_of(const hset_t* a, const hset_t* b);
 ///     a and b are not comparable
 bool hset_is_superset_of(const hset_t* a, const hset_t* b);
 
-///
-/// INTEGRATION
-///
-
-typedef struct vec_t_ vec_t;
-
-/// @brief intitializes destination as a vector containing all elements of self (order cannot be guaranteed)
-/// @param self the hset to copy
-/// @param destination the vec_t to write to (must be uninitialized)
-/// @return 
-hset_status_t hset_to_vec(const hset_t* self, vec_t* destination);
-
-/// @brief adds all items of source to self. Duplicates in source are ignored.
-/// @param self the hset to add to
-/// @param source the vec with items to add
-/// @return 
-hset_status_t hset_add_all(hset_t* self, const vec_t* source);
-
-/// @brief removes all items of source from self. If an item in source is not contained in self (or if it was a duplicate)
-///     it has no effect
-/// @param self the hset to remove from
-/// @param source the vec with items to remove
-/// @return 
-hset_status_t hset_remove_all(hset_t* self, const vec_t* source);
-
-/// @brief checks if all items in source are also contained in self
-/// @param self the hset to check
-/// @param source the vec with the items to look for
-/// @return false if self and source aren't compatible or if at least one item in source is not contained in self
-bool hset_contains_all(const hset_t* self, const vec_t* source);
-
-/// @brief checks if at least one item in source is also contained in self
-/// @param self the hset to check
-/// @param source the vec with the items to look for
-/// @return false if self and source aren't compatible or if no item in source is contained in self
-bool hset_contains_any(const hset_t* self, const vec_t* source);
 
 ///
 /// Content Testing
@@ -204,21 +163,21 @@ bool hset_default_condition(const void* element, const void* data);
 /// @param condition the condition to apply to each element
 /// @param data any additional data needed by condition (can pass NULL if not needed)
 /// @return true if condition is true for at least one element, false otherwise
-bool hset_any(hset_t* self, hset_condition_t condition, const void* data);
+bool hset_any(const hset_t* self, hset_condition_t condition, const void* data);
 
 /// @brief check if condition is true for all elements of the hset
 /// @param self the hset to check
 /// @param condition the condition to apply to each element
 /// @param data any additional data needed by condition (can pass NULL if not needed)
 /// @return true if condition is true for every element, false otherwise
-bool hset_all(hset_t* self, hset_condition_t condition, const void* data);
+bool hset_all(const hset_t* self, hset_condition_t condition, const void* data);
 
 /// @brief check if condition is false for all elements of the hset
 /// @param self the hset to check
 /// @param condition the condition to apply to each element
 /// @param data any additional data needed by condition (can pass NULL if not needed)
 /// @return true if condition is false for every element, false otherwise
-bool hset_none(hset_t* self, hset_condition_t condition, const void* data);
+bool hset_none(const hset_t* self, hset_condition_t condition, const void* data);
 
 /// @brief initializes filtered as a new hset containing all elements of self for which condition returned true
 /// @param self the hset to filter 
@@ -227,6 +186,14 @@ bool hset_none(hset_t* self, hset_condition_t condition, const void* data);
 /// @param data any optional data needed by the condition function, may be NULL if not needed
 /// @return HSET_OK if everything worked, HSET_ERROR_NULL if self or filtered were NULL, HSET_ERROR_ALLOCATION
 ///     if new memory could not be allocated for filtered
-hset_status_t hset_filter(hset_t* self, hset_condition_t condition, hset_t* filtered, const void* data);
+hset_status_t hset_filter(const hset_t* self, hset_condition_t condition, hset_t* filtered, const void* data);
+
+///
+/// DEV TOOLS
+///
+
+/// @brief prints metadata and content of the hset, intended for debugging / development process only
+void hset_debug(hset_t* self);
+
 
 #endif // HSET_H

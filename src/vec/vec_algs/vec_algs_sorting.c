@@ -22,15 +22,18 @@ vec_status_t vec_sort(vec_t* self, vec_ordering_t vec_ordering) {
     return VEC_OK;
 }
 
-bool vec_is_sorted(vec_t self, vec_ordering_t vec_ordering, bool is_ascending) {
-    if (self.size <= 1) { // sorted by definition
+bool vec_is_sorted(const vec_t* self, vec_ordering_t vec_ordering, bool is_ascending) {
+    if (self == NULL) {
+        return false;
+    }
+    if (self->size <= 1) { // sorted by definition
         return true;
     }
 
     int factor = (is_ascending ? 1 : -1); // inverts comparision for descending sorting
 
-    for (size_t index = 1; index < self.size; index++) {
-        if (vec_ordering( internal_vecNThElement(&self, index - 1), internal_vecNThElement(&self, index))
+    for (size_t index = 1; index < self->size; index++) {
+        if (vec_ordering( _vec_nth_element(self, index - 1), _vec_nth_element(self, index))
             * factor > 0) {
             return false;
         }
@@ -39,10 +42,10 @@ bool vec_is_sorted(vec_t self, vec_ordering_t vec_ordering, bool is_ascending) {
     return true;
 }
 
-bool vec_is_sorted_asc(vec_t self, vec_ordering_t vec_ordering) {
+bool vec_is_sorted_asc(const vec_t* self, vec_ordering_t vec_ordering) {
     return vec_is_sorted(self, vec_ordering, true);
 }
 
-bool vec_is_sorted_desc(vec_t self, vec_ordering_t vec_ordering) {
+bool vec_is_sorted_desc(const vec_t* self, vec_ordering_t vec_ordering) {
     return vec_is_sorted(self, vec_ordering, false);
 }

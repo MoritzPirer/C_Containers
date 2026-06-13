@@ -9,13 +9,13 @@
 #include "../vec_internal.h"
 #include "../../../inc/vec/vec_algs.h"
 
-vec_status_t vec_find_first(vec_t* self, vec_condition_t condition, size_t* index_buffer, const void *data) {
+vec_status_t vec_find_first(const vec_t* self, vec_condition_t condition, size_t* index_buffer, const void *data) {
     if (self == NULL || index_buffer == NULL) {
         return VEC_ERROR_NULL;
     }
 
     for (size_t index = 0; index < self->size; index++) {
-        if (condition(internal_vecNThElement(self, index), data) == true) {
+        if (condition(_vec_nth_element(self, index), data) == true) {
             *index_buffer = index;
             return VEC_OK;
         }
@@ -24,14 +24,14 @@ vec_status_t vec_find_first(vec_t* self, vec_condition_t condition, size_t* inde
     return VEC_NOT_FOUND;
 }
 
-vec_status_t vec_find_last(vec_t* self, vec_condition_t condition, size_t* index_buffer, const void *data) {
+vec_status_t vec_find_last(const vec_t* self, vec_condition_t condition, size_t* index_buffer, const void *data) {
     if (self == NULL || index_buffer == NULL) {
         return VEC_ERROR_NULL;
     }
 
     for (size_t i = 0; i < self->size; i++) {
         size_t index = self->size - i - 1; // covers some edge cases better because of underflow
-        if (condition(internal_vecNThElement(self, index), data) == true) {
+        if (condition(_vec_nth_element(self, index), data) == true) {
             *index_buffer = index;
             return VEC_OK;
         }
@@ -40,12 +40,12 @@ vec_status_t vec_find_last(vec_t* self, vec_condition_t condition, size_t* index
     return VEC_NOT_FOUND;
 }
 
-bool vec_contains(vec_t self, vec_condition_t condition, const void *data) {
+bool vec_contains(const vec_t* self, vec_condition_t condition, const void *data) {
     size_t dummy;
-    return vec_find_first(&self, condition, &dummy, data) == VEC_OK;
+    return vec_find_first(self, condition, &dummy, data) == VEC_OK;
 }
 
-vec_status_t vec_binary_search(vec_t* self, vec_ordering_t vector_ordering, size_t* index_buffer, const void *key) {
+vec_status_t vec_binary_search(const vec_t* self, vec_ordering_t vector_ordering, size_t* index_buffer, const void *key) {
     if (self == NULL || index_buffer == NULL || key == NULL) {
         return VEC_ERROR_NULL;
     }

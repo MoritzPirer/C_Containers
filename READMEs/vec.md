@@ -157,7 +157,7 @@ The header `vec_iter.h` provides an iterator. Initalize it with `vec_iter_init`.
 - change the order of elements
 ... of the vector being iterated. If that happens, the iterator functions will return `VEC_ITER_INVALID`. Specifically, all of these functions will invalidate the iterator:
 - `vec_erase_from_to`, `vec_erase_from`, `vec_erase_to`, `vec_erase_at`, `vec_erase_all`, `vec_clear`
-- `vec_swap` (both are invalidated) `vec_append` (only the one being appended to, not the one being appended)
+- `vec_swap` (both are invalidated) `vec_add_all` (only the one being added to, not the one being added)
 - `vec_reserve`, `vec_shrink`, `vec_resize`
 - `vec_push_back`, `vec_pop_back`, `vec_push_front`, `vec_pop_front`, `vec_insert`
 - `vec_reverse`, `vec_sort`

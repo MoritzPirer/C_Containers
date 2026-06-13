@@ -42,7 +42,7 @@ hset_status_t hset_union(const hset_t* a, const hset_t* b, hset_t* result) {
 
     for (size_t index = 0; index < b->capacity; index++) {
         unsigned char entry[b->boosted_size];
-        hset_copy_from_nth_index(entry, b, index);
+        _hset_copy_from_nth_index(entry, b, index);
 
         hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state == HSET_EMPTY) {
@@ -75,7 +75,7 @@ hset_status_t hset_intersection(const hset_t* a, const hset_t* b, hset_t* result
 
     for (size_t index = 0; index < a->capacity; index++) {
         unsigned char entry[a->boosted_size];
-        hset_copy_from_nth_index(entry, a, index);
+        _hset_copy_from_nth_index(entry, a, index);
 
         hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state == HSET_EMPTY) {
@@ -112,7 +112,7 @@ hset_status_t hset_difference(const hset_t* a, const hset_t* b, hset_t* result) 
 
     for (size_t index = 0; index < a->capacity; index++) {
         unsigned char entry[a->boosted_size];
-        hset_copy_from_nth_index(entry, a, index);
+        _hset_copy_from_nth_index(entry, a, index);
 
         hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state == HSET_EMPTY) {
@@ -145,7 +145,7 @@ hset_status_t hset_symmetric_difference(const hset_t* a, const hset_t* b, hset_t
 
     for (size_t index = 0; index < b->capacity; index++) {
         unsigned char entry[b->boosted_size];
-        hset_copy_from_nth_index(entry, b, index);
+        _hset_copy_from_nth_index(entry, b, index);
 
         hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state == HSET_EMPTY) {
@@ -176,7 +176,7 @@ bool hset_is_subset_of(const hset_t* a, const hset_t* b) {
 
     for (size_t index = 0; index < a->capacity; index++) {
         unsigned char entry[a->boosted_size];
-        hset_copy_from_nth_index(entry, a, index);
+        _hset_copy_from_nth_index(entry, a, index);
 
         hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state != HSET_USED) {

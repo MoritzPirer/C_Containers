@@ -80,7 +80,7 @@ void vec_iter_invalidation() {
     vec_t vecs[19];
     vec_iter_t iters[19];
 
-    for (int i = 0; i < 19; i++) {
+    for (int i = 1; i < 19; i++) {
         vec_init(&vecs[i], 0, sizeof(int));
 
         int vals[] = {1, 2, 3};
@@ -92,14 +92,13 @@ void vec_iter_invalidation() {
     }
 
     // all these functiuons should invalidate the corresponding iterator
-    vec_erase_from_to(&vecs[0], 0, 1);
-    vec_erase_from(&vecs[1], 1);
-    vec_erase_to(&vecs[2], 1);
-    vec_erase_at(&vecs[3], 1);
-    vec_erase_all(&vecs[4]);
+    vec_erase_from_to(&vecs[1], 0, 1);
+    vec_erase_from(&vecs[2], 1);
+    vec_erase_to(&vecs[3], 1);
+    vec_erase_at(&vecs[4], 1);
     vec_clear(&vecs[5]);
     vec_swap(&vecs[6], &vecs[7]);
-    vec_append(&vecs[8], &vecs[9]);
+    vec_add_all(&vecs[8], &vecs[9]);
     vec_reverse(&vecs[9]);
     vec_shrink(&vecs[10]);
     vec_resize(&vecs[11], 8);
@@ -112,8 +111,9 @@ void vec_iter_invalidation() {
     vec_reverse(&vecs[17]);
     vec_sort(&vecs[18], vec_default_ordering);
 
-    for (int i = 0; i < 19; i++) {
+    for (int i = 1; i < 19; i++) {
         ASSERT_TRUE("iter should be invalidated", vec_iter_next(&iters[i], NULL) == VEC_ITER_INVALID);
+        vec_destroy(&vecs[i]);
     }
 }
 

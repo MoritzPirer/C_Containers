@@ -34,7 +34,7 @@ hset_status_t hset_rehash(hset_t* self, size_t old_capacity) {
 
     for (size_t index = 0; index < old_capacity; index++) {
         unsigned char entry[self->boosted_size];
-        hset_copy_from_nth_index(entry, self, index);
+        _hset_copy_from_nth_index(entry, self, index);
 
         hset_item_state_t item_state = HSET_STATE(entry); 
         if (item_state != HSET_USED) { 
@@ -104,7 +104,7 @@ hset_status_t hset_add(hset_t* self, const void* source) {
         size_t hashed_index = (hash + offset) % self->capacity;
 
         unsigned char entry[self->boosted_size];
-        hset_copy_from_nth_index(entry, self, hashed_index);
+        _hset_copy_from_nth_index(entry, self, hashed_index);
 
         hset_item_state_t item_state = HSET_STATE(entry); 
 
@@ -112,7 +112,7 @@ hset_status_t hset_add(hset_t* self, const void* source) {
             // free or deleted slot -> can be used
             entry[0] = HSET_USED;
             memcpy(HSET_PAYLOAD(entry), source, self->item_size);
-            hset_copy_to_nth_index(self, entry, hashed_index);
+            _hset_copy_to_nth_index(self, entry, hashed_index);
             break;
         }
         else if (self->comparison(source, HSET_PAYLOAD(entry), self->item_size)) {
@@ -134,7 +134,7 @@ hset_status_t hset_remove(hset_t* self, const void* source) {
         size_t hashed_index = (hash + offset) % self->capacity;
 
         unsigned char entry[self->boosted_size];
-        hset_copy_from_nth_index(entry, self, hashed_index);
+        _hset_copy_from_nth_index(entry, self, hashed_index);
 
         hset_item_state_t item_state = HSET_STATE(entry); 
 
@@ -145,7 +145,7 @@ hset_status_t hset_remove(hset_t* self, const void* source) {
 
         if (self->comparison(source, &entry[sizeof(hset_item_state_t)], self->item_size)) {
             entry[0] = HSET_DELETED;
-            hset_copy_to_nth_index(self, entry, hashed_index);
+            _hset_copy_to_nth_index(self, entry, hashed_index);
             break;
         }
     }
@@ -168,7 +168,7 @@ bool hset_contains(const hset_t* self, const void* item) {
         size_t hashed_index = (hash + offset) % self->capacity; 
 
         unsigned char entry[self->boosted_size];
-        hset_copy_from_nth_index(entry, self, hashed_index);
+        _hset_copy_from_nth_index(entry, self, hashed_index);
         hset_item_state_t item_state = HSET_STATE(entry);
         
         // not contained

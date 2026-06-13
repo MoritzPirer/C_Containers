@@ -1,6 +1,6 @@
 
-#include "../vec_internal.h"
-#include "../../../inc/hset/hset.h"
+#include "../../../inc/vec/vec_integration.h"
+#include "../../../inc/hset/hset_integration.h"
 
 vec_status_t vec_to_hset(const vec_t* self, hset_t* destination,
     bool (*hset_comparison)(const void* a, const void* b, size_t item_size)) {

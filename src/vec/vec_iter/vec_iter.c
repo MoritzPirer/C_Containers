@@ -105,18 +105,14 @@ bool vec_iter_has_next(vec_iter_t* iter) {
     return (iter->current_index < iter->vec->size - 1);
 }
 
-#include <stdio.h>
 bool vec_iter_has_previous(vec_iter_t* iter) {
     if (iter == NULL) {
-        printf("1");
         return false;
     }
     
     if (!vec_iter_is_valid(iter)) {
-        printf("2");
         return false;
     }
 
-        printf("3");
     return (iter->current_index > 0);
 }

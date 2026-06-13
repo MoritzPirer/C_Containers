@@ -173,7 +173,7 @@ void vec_algs_is_sorted_asc_simple(void) {
         vec_push_back(&d, &i);
     }
 
-    ASSERT_TRUE("Sequential loop increments must resolve as sorted ascending", vec_is_sorted_asc(d, vec_default_ordering));
+    ASSERT_TRUE("Sequential loop increments must resolve as sorted ascending", vec_is_sorted_asc(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -182,7 +182,7 @@ void vec_algs_is_sorted_empty(void) {
     vec_t d;
     vec_init(&d, 0, sizeof(size_t));
 
-    ASSERT_TRUE("Empty structure collection evaluates to vacuously sorted", vec_is_sorted_asc(d, vec_default_ordering));
+    ASSERT_TRUE("Empty structure collection evaluates to vacuously sorted", vec_is_sorted_asc(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -195,7 +195,7 @@ void vec_algs_is_sorted_asc_all_same(void) {
         vec_push_back(&d, &val);
     }
 
-    ASSERT_TRUE("A uniform constant series should qualify as sorted ascending", vec_is_sorted_asc(d, vec_default_ordering));
+    ASSERT_TRUE("A uniform constant series should qualify as sorted ascending", vec_is_sorted_asc(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -208,7 +208,7 @@ void vec_algs_is_sorted_asc_false(void) {
         vec_push_back(&d, &i);
     }
 
-    ASSERT_FALSE("Strict descending input profile must fail ascending verification checks", vec_is_sorted_asc(d, vec_default_ordering));
+    ASSERT_FALSE("Strict descending input profile must fail ascending verification checks", vec_is_sorted_asc(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -221,7 +221,7 @@ void vec_algs_is_sorted_desc_simple(void) {
         vec_push_back(&d, &i);
     }
 
-    ASSERT_TRUE("Iterative array step decrements should track cleanly as sorted descending", vec_is_sorted_desc(d, vec_default_ordering));
+    ASSERT_TRUE("Iterative array step decrements should track cleanly as sorted descending", vec_is_sorted_desc(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -234,7 +234,7 @@ void vec_algs_is_sorted_desc_all_same(void) {
         vec_push_back(&d, &val);
     }
 
-    ASSERT_TRUE("A uniform constant series should qualify as sorted descending", vec_is_sorted_desc(d, vec_default_ordering));
+    ASSERT_TRUE("A uniform constant series should qualify as sorted descending", vec_is_sorted_desc(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -247,7 +247,7 @@ void vec_algs_is_sorted_desc_false(void) {
         vec_push_back(&d, &i);
     }
 
-    ASSERT_FALSE("Standard ascending sequences must fail descending validation sweeps", vec_is_sorted_desc(d, vec_default_ordering));
+    ASSERT_FALSE("Standard ascending sequences must fail descending validation sweeps", vec_is_sorted_desc(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -763,7 +763,7 @@ void vec_algs_is_unique_simple(void) {
         vec_push_back(&d, &i);
     }
 
-    ASSERT_TRUE("Unique sequential series must evaluate positively under verification sweeps", vec_is_unique(d, vec_default_ordering));
+    ASSERT_TRUE("Unique sequential series must evaluate positively under verification sweeps", vec_is_unique(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -778,7 +778,7 @@ void vec_algs_is_unique_false(void) {
     size_t i = 9;
     vec_push_back(&d, &i);
 
-    ASSERT_FALSE("Appending duplicate item states manually must break uniqueness status evaluations", vec_is_unique(d, vec_default_ordering));
+    ASSERT_FALSE("Appending duplicate item states manually must break uniqueness status evaluations", vec_is_unique(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -787,7 +787,7 @@ void vec_algs_is_unique_empty(void) {
     vec_t d;
     vec_init(&d, 0, sizeof(size_t));
 
-    ASSERT_TRUE("Blank array fields register as uniquely allocated collections by default", vec_is_unique(d, vec_default_ordering));
+    ASSERT_TRUE("Blank array fields register as uniquely allocated collections by default", vec_is_unique(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -801,7 +801,7 @@ void vec_algs_is_unique_all_same(void) {
         vec_push_back(&d, &a);
     }
 
-    ASSERT_FALSE("Homogeneous uniform content sets must fail uniqueness verification checks", vec_is_unique(d, vec_default_ordering));
+    ASSERT_FALSE("Homogeneous uniform content sets must fail uniqueness verification checks", vec_is_unique(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -818,7 +818,7 @@ void vec_algs_get_unique_simple(void) {
 
     vec_t e;
     ASSERT_INT_EQ("Deduplicating standard variable arrays into target outputs returns VEC_OK", VEC_OK, vec_get_unique(&d, vec_default_ordering, &e));
-    ASSERT_TRUE("Deduplicated array output metrics verify as uniquely populated structures", vec_is_unique(e, vec_default_ordering));
+    ASSERT_TRUE("Deduplicated array output metrics verify as uniquely populated structures", vec_is_unique(&e, vec_default_ordering));
 
     vec_destroy(&d);
     vec_destroy(&e);
@@ -835,7 +835,7 @@ void vec_algs_get_unique_all_same(void) {
 
     vec_t e;
     ASSERT_INT_EQ("Deduplicating continuous overlapping data blocks returns VEC_OK", VEC_OK, vec_get_unique(&d, vec_default_ordering, &e));
-    ASSERT_TRUE("Condensed duplicate collections are transformed down to distinct elements sets", vec_is_unique(e, vec_default_ordering));
+    ASSERT_TRUE("Condensed duplicate collections are transformed down to distinct elements sets", vec_is_unique(&e, vec_default_ordering));
 
     vec_destroy(&d);
     vec_destroy(&e);
@@ -851,7 +851,7 @@ void vec_algs_get_unique_already_unique(void) {
 
     vec_t e;
     ASSERT_INT_EQ("Isolating records over pre-sorted clear baseline arrays returns VEC_OK", VEC_OK, vec_get_unique(&d, vec_default_ordering, &e));
-    ASSERT_TRUE("Running deduplication routines across fine configurations sustains unique identity flags", vec_is_unique(e, vec_default_ordering));
+    ASSERT_TRUE("Running deduplication routines across fine configurations sustains unique identity flags", vec_is_unique(&e, vec_default_ordering));
 
     vec_destroy(&d);
     vec_destroy(&e);
@@ -862,7 +862,7 @@ void vec_algs_sort_empty(void) {
     vec_init(&d, 0, sizeof(int));
 
     ASSERT_INT_EQ("Sorting clear unallocated arrays returns VEC_OK", VEC_OK, vec_sort(&d, vec_default_ordering));
-    ASSERT_TRUE("Blank collections naturally pass sorting checks afterwards", vec_is_sorted_asc(d, vec_default_ordering));
+    ASSERT_TRUE("Blank collections naturally pass sorting checks afterwards", vec_is_sorted_asc(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -875,7 +875,7 @@ void vec_algs_sort_single(void) {
     vec_push_back(&d, &x);
 
     ASSERT_INT_EQ("Sorting micro layouts containing single elements returns VEC_OK", VEC_OK, vec_sort(&d, vec_default_ordering));
-    ASSERT_TRUE("Isolated items check out perfectly as sorted parameters", vec_is_sorted_asc(d, vec_default_ordering));
+    ASSERT_TRUE("Isolated items check out perfectly as sorted parameters", vec_is_sorted_asc(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -889,7 +889,7 @@ void vec_algs_sort_already_sorted(void) {
     }
 
     ASSERT_INT_EQ("Running sort passes against pre-ordered items returns VEC_OK", VEC_OK, vec_sort(&d, vec_default_ordering));
-    ASSERT_TRUE("Pre-sorted arrays must sustain chronological validity layout flags", vec_is_sorted_asc(d, vec_default_ordering));
+    ASSERT_TRUE("Pre-sorted arrays must sustain chronological validity layout flags", vec_is_sorted_asc(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -903,7 +903,7 @@ void vec_algs_sort_reverse(void) {
     }
 
     ASSERT_INT_EQ("Sorting back-to-front inverted array parameters returns VEC_OK", VEC_OK, vec_sort(&d, vec_default_ordering));
-    ASSERT_TRUE("Inverted layouts are correctly transformed up to ordered states", vec_is_sorted_asc(d, vec_default_ordering));
+    ASSERT_TRUE("Inverted layouts are correctly transformed up to ordered states", vec_is_sorted_asc(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -918,7 +918,7 @@ void vec_algs_sort_with_duplicates(void) {
     }
 
     ASSERT_INT_EQ("Sorting records mixed with overlapping duplicate entries returns VEC_OK", VEC_OK, vec_sort(&d, vec_default_ordering));
-    ASSERT_TRUE("Arrays layered with duplicates must resolve into contiguous ascending subsets", vec_is_sorted_asc(d, vec_default_ordering));
+    ASSERT_TRUE("Arrays layered with duplicates must resolve into contiguous ascending subsets", vec_is_sorted_asc(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -933,7 +933,7 @@ void vec_algs_sort_random_small(void) {
     }
 
     ASSERT_INT_EQ("Sorting completely scrambled random layouts returns VEC_OK", VEC_OK, vec_sort(&d, vec_default_ordering));
-    ASSERT_TRUE("Scrambled configurations must unify under strict ordering validation checks", vec_is_sorted_asc(d, vec_default_ordering));
+    ASSERT_TRUE("Scrambled configurations must unify under strict ordering validation checks", vec_is_sorted_asc(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }
@@ -948,7 +948,7 @@ void vec_algs_sort_all_equal(void) {
     }
 
     ASSERT_INT_EQ("Sorting homogeneous clusters of identical variables returns VEC_OK", VEC_OK, vec_sort(&d, vec_default_ordering));
-    ASSERT_TRUE("Constant structural components fulfill sorting requirements safely", vec_is_sorted_asc(d, vec_default_ordering));
+    ASSERT_TRUE("Constant structural components fulfill sorting requirements safely", vec_is_sorted_asc(&d, vec_default_ordering));
 
     vec_destroy(&d);
 }

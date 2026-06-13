@@ -150,7 +150,7 @@ void vec_size_afterErase(void) {
     vec_push_back(&d, &element);
     ASSERT_INT_EQ("Size must return to 3 after refills", 3, vec_size(&d));
 
-    vec_erase_all(&d);
+    vec_clear(&d);
     ASSERT_INT_EQ("Size must fall back to 0 after erase_all()", 0, vec_size(&d));
 }
 

@@ -1,4 +1,5 @@
 #include "../inc/hset/hset.h"
+#include "../inc/hset/hset_integration.h"
 #include "../inc/vec/vec.h"
 #include "tests.h"
 

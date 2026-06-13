@@ -13,7 +13,7 @@
 
 #include "../vec_internal.h"
 
-vec_status_t vec_init(vec_t *self, size_t initial_capacity, size_t element_size) {
+vec_status_t vec_init(vec_t* self, size_t initial_capacity, size_t element_size) {
     if (self == NULL) {
         return VEC_ERROR_NULL;
     }
@@ -35,7 +35,7 @@ vec_status_t vec_init(vec_t *self, size_t initial_capacity, size_t element_size)
     return VEC_OK;
 }
 
-vec_status_t vec_destroy(vec_t *self) {
+vec_status_t vec_destroy(vec_t* self) {
     if (self == NULL) {
         return VEC_ERROR_NULL;
     }
@@ -49,7 +49,7 @@ vec_status_t vec_destroy(vec_t *self) {
     return VEC_OK;
 }
 
-vec_status_t vec_swap(vec_t *self, vec_t *other) {
+vec_status_t vec_swap(vec_t* self, vec_t* other) {
     if (self == NULL || other == NULL) {
         return VEC_ERROR_NULL;
     }
@@ -58,26 +58,26 @@ vec_status_t vec_swap(vec_t *self, vec_t *other) {
         return VEC_OK; // swap with self
     }
 
-    swapValues(&(self->item_size), &(other->item_size));
-    swapValues(&(self->capacity), &(other->capacity));
-    swapValues(&(self->size), &(other->size));
+    swap_values(&(self->item_size), &(other->item_size));
+    swap_values(&(self->capacity), &(other->capacity));
+    swap_values(&(self->size), &(other->size));
 
     self->iterator_version++;
     other->iterator_version++;
 
-    void *temp = self->array;
+    void* temp = self->array;
     self->array = other->array;
     other->array = temp;
 
     return VEC_OK;
 }
 
-vec_status_t vec_copy(const vec_t *original, vec_t *copy) {
+vec_status_t vec_copy(const vec_t* original, vec_t* copy) {
     if (original == NULL || copy == NULL) {
         return VEC_ERROR_NULL;
     }
 
-    size_t data_amount_bytes = original->capacity * original->item_size;
+    size_t data_amount_bytes = original->capacity*  original->item_size;
 
     copy->array = malloc(data_amount_bytes);
     if (copy->array == NULL) {
@@ -94,7 +94,7 @@ vec_status_t vec_copy(const vec_t *original, vec_t *copy) {
     return VEC_OK;
 }
 
-vec_status_t vec_append(vec_t *self, const vec_t *other) {
+vec_status_t vec_add_all(vec_t* self, const vec_t* other) {
     if (self == NULL || other == NULL) {
         return VEC_ERROR_NULL;
     }
@@ -102,16 +102,16 @@ vec_status_t vec_append(vec_t *self, const vec_t *other) {
     // increase capacity if needed
     size_t needed_element_capacity = self->size + other->size;
     if (self->capacity < needed_element_capacity) {
-        vec_status_t grow_result = internal_vecSetSizeTo(self, needed_element_capacity);
+        vec_status_t grow_result = _vec_set_size_to(self, needed_element_capacity);
         if (grow_result != VEC_OK) {
             return grow_result;
         }
     }
 
     memcpy(
-        internal_vecNThElement(self, self->size),
-        internal_vecNThElement(other, 0),
-        other->size * other->item_size
+        _vec_nth_element(self, self->size),
+        _vec_nth_element(other, 0),
+        other->size*  other->item_size
     );
 
     self->size += other->size;
