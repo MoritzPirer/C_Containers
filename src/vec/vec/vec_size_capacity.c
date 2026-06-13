@@ -39,7 +39,6 @@ vec_status_t vec_shrink(vec_t* self) {
     }
 
     vec_status_t result = _vec_set_size_to(self, self->size);
-    self->iterator_version++;
 
     return result;
 }
@@ -73,7 +72,7 @@ vec_status_t vec_resize(vec_t* self, size_t new_size) {
         return VEC_ERROR_NULL;
     }
 
-    if (new_size == self->size) {
+    if (new_size <= self->size) {
         return VEC_OK;
     }
 
@@ -89,8 +88,6 @@ vec_status_t vec_resize(vec_t* self, size_t new_size) {
         self->size = new_size;
         memset(_vec_nth_element(self, old_size), 0, (new_size - old_size) * self->item_size);
     }
-    
-    self->iterator_version++;
 
     return VEC_OK;
 }

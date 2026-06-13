@@ -107,7 +107,7 @@ size_t vec_capacity(const vec_t* self);
 bool vec_is_empty(const vec_t* self);
 
 /// @brief resize the vec to hold exactly new_size elements. Sizing up zeros new memory.
-///     sizing down loses elements that don't fit into the new size.
+///     sizing down has no effect
 /// @param self the vec to resize
 /// @param new_size the size the vec should be set to
 /// @return
