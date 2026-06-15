@@ -48,4 +48,8 @@ hset_iter_status_t hset_iter_next(hset_iter_t* iter);
 ///     the entry was already deleted, HSET_ITER_OK if deletion was successful
 hset_iter_status_t hset_iter_remove(hset_iter_t* iter);
 
+///
+
+void hset_iter_debug(const hset_iter_t* iter);
+
 #endif // HSET_ITER_H

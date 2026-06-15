@@ -117,4 +117,8 @@ vec_iter_status_t vec_iter_remove(vec_iter_t* iter);
 ///     if the insertion caused a resizing that failed, VEC_ITER_OK otherwise
 vec_iter_status_t vec_iter_insert(vec_iter_t* iter, void* source);
 
+///
+
+void vec_iter_debug(const vec_iter_t* iter);
+
 #endif // VEC_ITER_H

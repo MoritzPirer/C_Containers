@@ -26,6 +26,7 @@ hset_status_t hset_iter_init(hset_t* hset, hset_iter_t* iter) {
     if (hset == NULL || iter == NULL) {
         return HSET_ERROR_NULL;
     }
+
     iter->hset = hset;
     iter->iterator_version = hset->iterator_version;
 
@@ -71,7 +72,10 @@ hset_iter_status_t hset_iter_get(const hset_iter_t* iter, void* destination) {
 
     if (HSET_STATE(entry) == HSET_USED) {
         memcpy(destination, HSET_PAYLOAD(entry), iter->hset->item_size);
+        return HSET_ITER_OK;
     }
+
+    return HSET_ITER_INVALID;
 }
 
 hset_iter_status_t hset_iter_next(hset_iter_t* iter) {
@@ -119,4 +123,20 @@ hset_iter_status_t hset_iter_remove(hset_iter_t* iter) {
     iter->hset->iterator_version++;
 
     return HSET_ITER_OK;
+}
+
+void hset_iter_debug(const hset_iter_t* iter) {
+    if (iter == NULL) {
+        return;
+    }
+
+    printf("=== Hset Iter Debug ===\n");
+    printf("hset_iter at %x\n", iter);
+    printf("at internal index %d\n", iter->current_index);
+    printf("iterator_version: %d\n", iter->iterator_version);
+
+    printf("iterating over following hset at %x\n", iter->hset);
+    hset_debug(iter->hset);
+
+    printf("=== Hset Iter ===\n");
 }

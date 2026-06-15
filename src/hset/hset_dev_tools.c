@@ -7,7 +7,7 @@ void hset_debug(const hset_t* self) {
         return;
     }
 
-    printf("=========\n");
+    printf("=== Hset Debug ===\n");
     printf("size: %zu\n", self->size);
     printf("capacity: %zu\n", self->capacity);
     printf("item size: %zu\n", self->item_size);
@@ -26,7 +26,8 @@ void hset_debug(const hset_t* self) {
         }
 
         printf("[USE] %d\n", *(int*) (entry + sizeof(hset_status_t)));
-
     }
-    printf("=========\n");
+
+    printf("iterator version: %d\n", self->iterator_version);
+    printf("=== Hset ===\n");
 }
