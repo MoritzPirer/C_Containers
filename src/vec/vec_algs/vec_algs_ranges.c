@@ -21,7 +21,7 @@ vec_status_t vec_range_from_to_step(vec_t* self, size_t start, size_t stop, int 
     }
 
     int abs_step = (step > -step ? step : -step);
-    size_t num_elements_in_range = (max(start, stop) - min(start, stop)) / abs_step + 1;
+    size_t num_elements_in_range = (MAX(start, stop) - MIN(start, stop)) / abs_step + 1;
 
     if (vec_init(self, 0, sizeof(size_t)) != VEC_OK) {
         return VEC_ERROR_ALLOCATION;

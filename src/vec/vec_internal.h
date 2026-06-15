@@ -12,12 +12,7 @@
 #include <stdbool.h>
 
 #include "../../inc/vec/vec.h"
-
-size_t max(size_t a, size_t b);
-
-size_t min(size_t a, size_t b);
-
-void swap_values(size_t* a, size_t* b);
+#include "../utility.h"
 
 /// @brief return a pointer to the n-th element of array. Only for internal use
 ///     because pointer can become stale if the array reallocates

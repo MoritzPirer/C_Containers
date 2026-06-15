@@ -23,10 +23,10 @@ vec_status_t vec_init(vec_t* self, size_t initial_capacity, size_t element_size)
     }
 
     self->size = 0;
-    self->capacity = max(initial_capacity, VEC_MIN_SIZE);
+    self->capacity = MAX(initial_capacity, VEC_MIN_CAPACITY);
     self->item_size = element_size;
     self->array = calloc(self->capacity, element_size);
-    self->iterator_version++;
+    self->iterator_version = 0;
 
     if (self->array == NULL) {
         return VEC_ERROR_ALLOCATION;
@@ -58,9 +58,9 @@ vec_status_t vec_swap(vec_t* self, vec_t* other) {
         return VEC_OK; // swap with self
     }
 
-    swap_values(&(self->item_size), &(other->item_size));
-    swap_values(&(self->capacity), &(other->capacity));
-    swap_values(&(self->size), &(other->size));
+    swap(&(self->item_size), &(other->item_size));
+    swap(&(self->capacity), &(other->capacity));
+    swap(&(self->size), &(other->size));
 
     self->iterator_version++;
     other->iterator_version++;
@@ -77,7 +77,7 @@ vec_status_t vec_copy(const vec_t* original, vec_t* copy) {
         return VEC_ERROR_NULL;
     }
 
-    size_t data_amount_bytes = original->capacity*  original->item_size;
+    size_t data_amount_bytes = original->capacity * original->item_size;
 
     copy->array = malloc(data_amount_bytes);
     if (copy->array == NULL) {
@@ -87,7 +87,7 @@ vec_status_t vec_copy(const vec_t* original, vec_t* copy) {
     memcpy(copy->array, original->array, data_amount_bytes);
 
     copy->size = original->size;
-    copy->capacity = original->size;
+    copy->capacity = original->capacity;
     copy->item_size = original->item_size;
     copy->iterator_version = original->iterator_version;
 

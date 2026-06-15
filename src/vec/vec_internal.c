@@ -3,20 +3,6 @@
 
 #include "vec_internal.h"
 
-size_t max(size_t a, size_t b) {
-    return (a > b ? a : b);
-}
-
-size_t min(size_t a, size_t b) {
-    return (a < b ? a : b);
-}
-
-void swap_values(size_t* a, size_t* b) {
-    size_t temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
 void* _vec_nth_element(const vec_t* self, size_t index) {
     return (void *)((char *)self->array + (index * self->item_size));
 }
@@ -32,7 +18,7 @@ vec_status_t _vec_set_size_to(vec_t* self, size_t new_element_count) {
     self->capacity = new_element_count;
 
     // reduce elements used when sizing down
-    self->size = min(self->size, new_element_count);
+    self->size = MIN(self->size, new_element_count);
 
     return VEC_OK;
 }

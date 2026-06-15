@@ -12,7 +12,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-#define VEC_MIN_SIZE 4
+#define VEC_MIN_CAPACITY 4
 
 typedef struct vec_t_ {
     size_t size;

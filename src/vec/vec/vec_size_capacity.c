@@ -18,7 +18,7 @@ vec_status_t vec_reserve(vec_t* self, size_t elements_to_reserve) {
         return VEC_OK;
     }
 
-    size_t new_size = max(self->capacity, 1);
+    size_t new_size = MAX(self->capacity, 1);
     while (new_size < elements_to_reserve) {
         new_size <<= 1;
     }

@@ -78,7 +78,7 @@ void vec_init_size_0(void) {
     vec_init(&d, 0, sizeof(int));
 
     ASSERT_INT_EQ("Item size should match given element size", sizeof(int), d.item_size);
-    ASSERT_INT_EQ("Capacity allocated should match baseline VEC_MIN_SIZE", VEC_MIN_SIZE, d.capacity);
+    ASSERT_INT_EQ("Capacity allocated should match baseline VEC_MIN_CAPACITY", VEC_MIN_CAPACITY, d.capacity);
     ASSERT_INT_EQ("Size used should be exactly 0", 0, d.size);
 }
 
@@ -87,7 +87,7 @@ void vec_init_size_1(void) {
     vec_init(&d, 0, sizeof(int));
 
     ASSERT_INT_EQ("Item size should match given element size", sizeof(int), d.item_size);
-    ASSERT_INT_EQ("Capacity allocated should match baseline VEC_MIN_SIZE", VEC_MIN_SIZE, d.capacity);
+    ASSERT_INT_EQ("Capacity allocated should match baseline VEC_MIN_CAPACITY", VEC_MIN_CAPACITY, d.capacity);
 }
 
 

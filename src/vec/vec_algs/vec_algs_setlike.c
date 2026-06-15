@@ -112,7 +112,7 @@ vec_status_t vec_get_intersection(const vec_t* left, const vec_t* right, vec_ord
         return result;
     }
 
-    result = vec_reserve(intersection, max(left->size, right->size));
+    result = vec_reserve(intersection, MAX(left->size, right->size));
     if (result != VEC_OK) {
         return result;
     }
