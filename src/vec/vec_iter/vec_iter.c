@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 
 #include "../../../inc/vec/vec_iter.h"
@@ -179,4 +180,24 @@ vec_iter_status_t vec_iter_insert(vec_iter_t* iter, void* source) {
     iter->iterator_version++;
 
     return VEC_ITER_OK;
+}
+
+void vec_iter_debug(const vec_iter_t* iter) {
+    if (iter == NULL) {
+        return;
+    }
+
+    printf("=== Vec Iter Debug ===\n");
+    printf("vec_iter at %p\n", iter);
+    printf("at index %zu\n", iter->current_index);
+    printf("iterator version: %zu\n", iter->iterator_version);
+
+    if (iter->is_on_deleted) {
+        printf("currently on a deleted element\n");
+    }
+
+    printf("iterating over following vec at %p:\n", iter->vec);
+    vec_debug(iter->vec);
+
+    printf("=== Vec Iter ===\n");
 }

@@ -50,6 +50,8 @@ hset_status_t hset_add_all(hset_t* self, const vec_t* source) {
         }
     }
 
+    self->iterator_version++;
+
     return HSET_OK;
 }
 
@@ -71,6 +73,8 @@ hset_status_t hset_remove_all(hset_t* self, const vec_t* source) {
             return result;
         }
     }
+
+    self->iterator_version++;
     
     return HSET_OK;
 }

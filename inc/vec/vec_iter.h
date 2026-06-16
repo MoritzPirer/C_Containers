@@ -51,12 +51,12 @@ vec_status_t vec_iter_init_last(vec_t* vec, vec_iter_t* iter);
 /// @brief checks if the iterator can move forward
 /// @param iter the iterator to check
 /// @return true if the iterator can move forward, false if it cannot (or it was invalidated)
-bool vec_iter_has_next(vec_iter_t* iter);
+bool vec_iter_has_next(const vec_iter_t* iter);
 
 /// @brief checks if the iterator can move backward
 /// @param iter the iterator to check
 /// @return true if the iterator can move backward, false if it cannot (or it was invalidated)
-bool vec_iter_has_previous(vec_iter_t* iter);
+bool vec_iter_has_previous(const vec_iter_t* iter);
 
 ///
 /// Reading 
@@ -69,7 +69,7 @@ bool vec_iter_has_previous(vec_iter_t* iter);
 /// @param destination where to write the element
 /// @return VEC_ITER_INVALID if the iterator was invalidated or vec_remove was called before,
 ///     VEC_ITER_NULL if iter or destination was NULL, VEC_ITER_OK if everything worked
-vec_iter_status_t vec_iter_get(vec_iter_t* iter, void* destination);
+vec_iter_status_t vec_iter_get(const vec_iter_t* iter, void* destination);
 
 ///
 /// Moving
@@ -116,5 +116,9 @@ vec_iter_status_t vec_iter_remove(vec_iter_t* iter);
 /// @return VEC_ITER_NULL if iter or source is NULL, VEC_ITER_INVALID if the iterator was invalidated, VEC_ITER_ALLOCATION
 ///     if the insertion caused a resizing that failed, VEC_ITER_OK otherwise
 vec_iter_status_t vec_iter_insert(vec_iter_t* iter, void* source);
+
+///
+
+void vec_iter_debug(const vec_iter_t* iter);
 
 #endif // VEC_ITER_H

@@ -7,8 +7,7 @@ void vec_debug(const vec_t* self) {
         return;
     }
 
-    printf("=========\n");
-    printf("====\n");
+    printf("=== Vec Debug ===\n");
     printf("size: %zu\n", self->size);
     printf("capacity: %zu\n", self->capacity);
     printf("item size: %zu\n", self->item_size);
@@ -18,5 +17,5 @@ void vec_debug(const vec_t* self) {
     }
 
     printf("iterator version: %zu\n", self->iterator_version);
-    printf("=========\n");
+    printf("=== Vec ===\n");
 }

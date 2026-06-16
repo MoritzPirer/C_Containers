@@ -81,7 +81,7 @@ void vec_iter_invalidation() {
     vec_t vecs[16];
     vec_iter_t iters[16];
 
-    for (int i = 1; i < 16; i++) {
+    for (int i = 0; i < 16; i++) {
         vec_init(&vecs[i], 0, sizeof(int));
 
         int vals[] = {1, 2, 3};

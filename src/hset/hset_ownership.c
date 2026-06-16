@@ -40,6 +40,7 @@ hset_status_t hset_init(hset_t* self, size_t initial_capacity, size_t element_si
     self->capacity = initial_capacity > HSET_MIN_SIZE ? initial_capacity : HSET_MIN_SIZE;
     
     self->table = calloc(self->capacity, self->boosted_size);
+    self->iterator_version = 0;
     if (self->table == NULL) {
         return HSET_ERROR_ALLOCATION;
     }
@@ -56,6 +57,7 @@ hset_status_t hset_destroy(hset_t* self) {
     self->table = NULL;
     self->capacity = 0;
     self->size = 0;
+    self->iterator_version = 0;
 
     return HSET_OK;
 }
@@ -70,6 +72,7 @@ hset_status_t hset_copy(const hset_t* self, hset_t* copy) {
     copy->item_size = self->item_size;
     copy->boosted_size = self->boosted_size;
     copy->comparison = self->comparison;
+    copy->iterator_version = self->iterator_version;
 
     copy->table = calloc(copy->capacity, copy->boosted_size);
     if (copy->table == NULL) {
