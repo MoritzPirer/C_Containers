@@ -28,6 +28,6 @@ void hset_debug(const hset_t* self) {
         printf("[USE] %d\n", *(int*) (entry + sizeof(hset_status_t)));
     }
 
-    printf("iterator version: %d\n", self->iterator_version);
+    printf("iterator version: %zu\n", self->iterator_version);
     printf("=== Hset ===\n");
 }

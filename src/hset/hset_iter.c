@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdio.h>
 
 #include "../../inc/hset/hset_iter.h"
 #include "hset_internal.h"
@@ -6,7 +7,7 @@
 /// @brief return the indext of the first non-empty entry after start, or start if already on the last entry
 size_t _hset_get_next_used_entry(const hset_t* hset, size_t start) {
     unsigned char entry[hset->boosted_size];
-    for (size_t index = start; index < hset->capacity; index++) {
+    for (size_t index = start + 1; index < hset->capacity; index++) {
         _hset_copy_from_nth_index(entry, hset, index);
 
         hset_item_state_t item_state = HSET_STATE(entry); 
@@ -115,7 +116,7 @@ hset_iter_status_t hset_iter_remove(hset_iter_t* iter) {
         return HSET_ITER_INVALID;
     }
 
-    memcpy(entry, HSET_DELETED, sizeof(hset_item_state_t));
+    HSET_STATE(entry) = HSET_DELETED;
     _hset_copy_to_nth_index(iter->hset, entry, iter->current_index);
 
     // invalidate all other iterators of this hset
@@ -131,11 +132,11 @@ void hset_iter_debug(const hset_iter_t* iter) {
     }
 
     printf("=== Hset Iter Debug ===\n");
-    printf("hset_iter at %x\n", iter);
-    printf("at internal index %d\n", iter->current_index);
-    printf("iterator_version: %d\n", iter->iterator_version);
+    printf("hset_iter at %p\n", iter);
+    printf("at internal index %zu\n", iter->current_index);
+    printf("iterator_version: %zu\n", iter->iterator_version);
 
-    printf("iterating over following hset at %x\n", iter->hset);
+    printf("iterating over following hset at %p\n", iter->hset);
     hset_debug(iter->hset);
 
     printf("=== Hset Iter ===\n");

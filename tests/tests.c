@@ -7,6 +7,7 @@ void vec_tests();
 void vec_algs_tests();
 void vec_iter_tests();
 void hset_tests();
+void hset_iter_tests();
 
 int main(void) {
     printf("=== STARTING ALL LIBRARY TESTS ===\n\n");
@@ -15,6 +16,7 @@ int main(void) {
     vec_algs_tests();
     vec_iter_tests();
     hset_tests();
+    hset_iter_tests();
 
     printf("==================================\n");
     printf("Total Tests Executed: %d\n", tests_run);
