@@ -104,3 +104,24 @@ This section covers functions that interact with other containers of this librar
 `hset_contains_all` returns true if all elements of the vec are contained in the set
 `hset_contains_any` returns true if at least one element of the vec is contained in the set
 
+## ITERATOR
+The header `vec_iter.h` provides forward iterator over a an hset.
+
+### LIFECYCLE
+Initialize an iterator with `hset_iter_init`. It is not possible to initialize an iterator on an empty hset. It is not necessary to destroy the iterator (i.e. there is no `hset_iter_destroy`). Note that the order in which the elements are accessed depends only on the internal storage layout and can not be predicted in a practical way.
+
+The iterator is invalidated whenever the number of elements changes. Note that attempting to insert an element that is already contained or removing one that is not contained does not invalidate.
+Removing an element through an iterator invalidates all other iterators of that hset, but not the one removing.
+
+### LOOKAHEAD
+Use `hset_iter_has_next` to check if the iterator can move in that direction.
+
+### READING
+Use `hset_iter_get` to read the value of the current element. Calling `hset_iter_remove` blocks this method until the iterator is moved.
+
+### MOVING
+Move the iterator with `hset_iter_next`. If the iterator is already on the last element, it will not move anr return `HSET_ITER_END`.
+
+### MODIFYING
+Remove the element the iterator is on with `hset_iter_remove`. Subsequent calls to `hset_iter_remove` or `hset_iter_get` will fail until the iterator is moved.
+It is not possible to insert elements through the iterator or set a new value as that would circumvent hashing and uniqueness constraints and break internal invariants of the hset.

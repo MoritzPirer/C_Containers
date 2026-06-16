@@ -158,7 +158,7 @@ Intitialize an iterator on the first element with `vec_iter_init_first` or on th
 
 The iterator is invalidated when:
 - the number of elements changes (with the exception of that iterator calling `vec_iter_insert` or `vec_iter_remove`). Adding or removing elements through another iterator or the vector directly will invalidate the iterator.
-- the order of elements change (specifically `vec_reverse` and `vec_sort`
+- the order of elements change (specifically `vec_reverse` and `vec_sort`)
 
 ### LOOKAHEAD
 Use `vec_iter_has_next` and `vec_iter_has_previous` to check if the iterator can move in that direction.
