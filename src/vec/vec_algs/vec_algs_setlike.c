@@ -11,7 +11,6 @@
 #include "../vec_internal.h"
 #include "../../../inc/vec/vec_algs.h"
 
-/// TODO REWRITE!!!! self as pointer
 bool vec_is_unique(const vec_t* self, vec_ordering_t vec_ordering) {
     if (self == NULL) {
         return false;

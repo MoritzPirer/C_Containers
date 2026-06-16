@@ -8,7 +8,7 @@ void* _vec_nth_element(const vec_t* self, size_t index) {
 }
 
 vec_status_t _vec_set_size_to(vec_t* self, size_t new_element_count) {
-    void *temp = realloc(self->array, new_element_count*  self->item_size);
+    void* temp = realloc(self->array, new_element_count * self->item_size);
 
     if (temp == NULL) {
         return VEC_ERROR_ALLOCATION;

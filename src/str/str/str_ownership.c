@@ -21,12 +21,16 @@ str_status_t str_init(str_t* self, size_t initial_capacity) {
 }
 
 str_status_t str_init_from(str_t* self, const char* source, size_t len) {
-    (void) self;
-    (void) source;
-    (void) len;
+    str_status_t result = str_init(self, len);
 
-    // like repeat but memcpy from source
-    return STR_ERROR_INVALID;
+    if (result != STR_OK) {
+        return result;
+    }
+
+    ///TODO: decide how to handle null byte
+    memcpy(self->array, source, len);
+
+    return STR_OK;
 }
 
 str_status_t str_init_repeat(str_t* self, char c, size_t count) {
