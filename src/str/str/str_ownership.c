@@ -10,7 +10,7 @@ str_status_t str_init(str_t* self, size_t initial_capacity) {
     }
 
     self->size = 0;
-    self->capacity = MAX(initial_capacity, STR_MIN_CAPACITY);
+    self->capacity = MAX(next_power_of_two(initial_capacity), STR_MIN_CAPACITY);
     self->array = calloc(self->capacity, 1);
 
     if (self->array == NULL) {
@@ -40,8 +40,11 @@ str_status_t str_init_repeat(str_t* self, char c, size_t count) {
         return result;
     }
 
-    memset(self->array, c, count),
     self->size = count;
+
+    if (count > 0) {
+        memset(self->array, c, count);
+    }
 
     return STR_OK;
 }

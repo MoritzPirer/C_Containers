@@ -13,6 +13,7 @@
 
 #include "../vec_internal.h"
 
+
 vec_status_t vec_init(vec_t* self, size_t initial_capacity, size_t element_size) {
     if (self == NULL) {
         return VEC_ERROR_NULL;

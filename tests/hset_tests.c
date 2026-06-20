@@ -470,5 +470,5 @@ void hset_tests() {
     RUN_TEST(test_hset_any_all_none);
     RUN_TEST(test_hset_filter);
 
-    printf("\n--- ALL TESTS COMPLETED SUCCESSFULLY ---\n");
+    printf("\n");
 }
