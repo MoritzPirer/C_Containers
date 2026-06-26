@@ -45,6 +45,7 @@ vec_status_t vec_erase_from(vec_t* self, size_t start) {
     if (self == NULL) {
         return VEC_ERROR_NULL;
     }
+
     return vec_erase_from_to(self, start, self->size - 1);
 }
 

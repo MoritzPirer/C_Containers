@@ -9,7 +9,7 @@ void swap(size_t* a, size_t* b) {
 size_t next_power_of_two(size_t n) {
     size_t m = 1;
 
-    while (m <= n) {
+    while (m < n) {
         m <<= 1;
     }
 
@@ -17,9 +17,10 @@ size_t next_power_of_two(size_t n) {
 }
 
 size_t previous_power_of_two(size_t n) {
-    if (n == 1) {
-        return 0;
+    if (n & (n - 1) == 0) {
+        return n;
     }
+
     size_t upper = 2UL;
     size_t lower = 1UL;
     
@@ -29,4 +30,8 @@ size_t previous_power_of_two(size_t n) {
     }
     
     return lower;
+}
+
+size_t is_power_of_two(size_t n) {
+    return n & (n - 1) == 0;
 }

@@ -89,10 +89,14 @@ size_t str_capacity(const str_t* self);
 ///     at least one character
 bool str_is_empty(const str_t* self);
 
-/// @brief TODO
+/// @brief grows the string to be able to hold at least elements_to_reserve characters without having to resize again
+/// @param self the string to shrink
+/// @return STR_ERROR_NULL if self was null, STR_ERROR_ALLOCATION if shrinking failed, STR_OK otherwise
 str_status_t str_reserve(str_t* self, size_t elements_to_reserve);
 
-/// @brief TODO
+/// @brief shrinks the internal capacity to be as big as the current size of the string
+/// @param self the string to shrink
+/// @return STR_ERROR_NULL if self was null, STR_ERROR_ALLOCATION if shrinking failed, STR_OK otherwise
 str_status_t str_shrink(str_t* self);
 
 ///
@@ -165,10 +169,25 @@ str_status_t str_insert_str(str_t* self, size_t index, const str_t* other);
 /// ERASE
 ///
 
-str_status_t str_erase_at(str_t* self, size_t index);
+/// @brief erases all elements from index start to index end, including both ends
+/// @param self the string to erase from
+/// @param start the first index to erase
+/// @param end the last index to erase.
+/// @return STR_ERROR_NULL if self is null, STR_ERROR_BOUNDS if start or end are out of range or if end is before start,
+///     STR_ERROR_ALLOCATION if shrinking as a result of the erasing failed, STR_OK otherwise
 str_status_t str_erase_from_to(str_t* self, size_t start, size_t end);
+
+/// @brief alias for str_erase_from_to with end defaulted to the last character in the string
 str_status_t str_erase_from(str_t* self, size_t start);
+
+/// @brief alias for str_erase_from_to with start defaulted to the first character in the string
 str_status_t str_erase_to(str_t* self, size_t end);
+
+/// @brief erases the character at index  index. Alias for str_erase_from_to with start and end defaulted to index
+str_status_t str_erase_at(str_t* self, size_t index);
+
+/// @brief erases the entire string. Alias for str_erase_from_to with start defaulted to
+///     the first and end defaulted to the last element of the string
 str_status_t str_clear(str_t* self);
 
 #endif // STR_H

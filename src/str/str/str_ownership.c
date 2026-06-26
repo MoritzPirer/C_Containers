@@ -27,7 +27,6 @@ str_status_t str_init_from(str_t* self, const char* source, size_t len) {
         return result;
     }
 
-    ///TODO: decide how to handle null byte
     memcpy(self->array, source, len);
 
     return STR_OK;
