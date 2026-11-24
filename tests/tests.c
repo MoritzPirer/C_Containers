@@ -3,12 +3,12 @@
 int tests_run = 0;
 int tests_failed = 0;
 
-void vec_tests();
-void vec_algs_tests();
-void vec_iter_tests();
-void hset_tests();
-void hset_iter_tests();
-void str_tests();
+void vec_tests(void);
+void vec_algs_tests(void);
+void vec_iter_tests(void);
+void hset_tests(void);
+void hset_iter_tests(void);
+void str_tests(void);
 
 int main(void) {
     printf("=== STARTING ALL LIBRARY TESTS ===\n\n");

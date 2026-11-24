@@ -23,7 +23,7 @@ void vec_iter_init_test(void) {
     vec_destroy(&vec);
 }
 
-void vec_iter_move_test() {
+void vec_iter_move_test(void) {
     vec_t vec;
     vec_iter_t iter;
     vec_init(&vec, 0, sizeof(int));
@@ -52,7 +52,7 @@ void vec_iter_move_test() {
     ASSERT_TRUE("should not have next", !vec_iter_has_next(&iter));
 }
 
-void vec_iter_get_set() {
+void vec_iter_get_set(void) {
     vec_t vec;
     vec_iter_t iter;
     vec_init(&vec, 0, sizeof(int));
@@ -77,7 +77,7 @@ void vec_iter_get_set() {
     ASSERT_TRUE("iterator should read new value", temp == 15);
 }
 
-void vec_iter_invalidation() {
+void vec_iter_invalidation(void) {
     vec_t vecs[16];
     vec_iter_t iters[16];
 
@@ -117,7 +117,7 @@ void vec_iter_invalidation() {
     }
 }
 
-void vec_iter_remove_insert() {
+void vec_iter_remove_insert(void) {
     vec_t vec;
     vec_iter_t iter;
     vec_init(&vec, 0, sizeof(int));
@@ -145,7 +145,7 @@ void vec_iter_remove_insert() {
     ASSERT_TRUE("remove should unblock after move", vec_iter_remove(&iter) == VEC_ITER_OK);
 }
 
-void vec_iter_tests() {
+void vec_iter_tests(void) {
     printf("--- RUNNING VECTOR ITERATOR TESTS ---\n");
 
     RUN_TEST(vec_iter_init_test);

@@ -953,7 +953,7 @@ void vec_algs_sort_all_equal(void) {
     vec_destroy(&d);
 }
 
-void vec_algs_tests() {
+void vec_algs_tests(void) {
     printf("--- RUNNING EXTENDED VECTOR TESTS ---\n");
 
     RUN_TEST(vec_algs_find_first_one_option);

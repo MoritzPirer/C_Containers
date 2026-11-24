@@ -8,7 +8,7 @@
 #define ASSERT_STATUS(msg, expected, actual) \
     ASSERT_TRUE(msg, (expected) == (actual))
 
-void hset_basic() {
+void hset_basic(void) {
     hset_t hset;
     hset_init(&hset, 8, sizeof(int), NULL);
 
@@ -29,7 +29,7 @@ void hset_basic() {
     hset_destroy(&hset);
 }
 
-void hset_grow() {
+void hset_grow(void) {
     hset_t hset;
     hset_init(&hset, 4, sizeof(int), NULL);
 
@@ -52,7 +52,7 @@ static bool custom_string_compare(const void* a, const void* b, size_t item_size
     return strcmp(*(const char**)a, *(const char**)b) == 0;
 }
 
-void hset_init_edge_cases() {
+void hset_init_edge_cases(void) {
     hset_t hset;
 
     ASSERT_STATUS("Init should fail with NULL self", 
@@ -67,12 +67,12 @@ void hset_init_edge_cases() {
     hset_destroy(&hset);
 }
 
-void hset_destroy_edge_cases() {
+void hset_destroy_edge_cases(void) {
     ASSERT_STATUS("Destroy should gracefully handle NULL pointer", 
         HSET_ERROR_NULL, hset_destroy(NULL));
 }
 
-void hset_copy_test() {
+void hset_copy_test(void) {
     hset_t source, copy;
     hset_init(&source, 4, sizeof(int), NULL);
     
@@ -89,7 +89,7 @@ void hset_copy_test() {
     hset_destroy(&copy);
 }
 
-void hset_add_remove_edge_cases() {
+void hset_add_remove_edge_cases(void) {
     hset_t hset;
     hset_init(&hset, 4, sizeof(int), NULL);
     int item = 100;
@@ -112,7 +112,7 @@ void hset_add_remove_edge_cases() {
     hset_destroy(&hset);
 }
 
-void hset_metadata_and_clear() {
+void hset_metadata_and_clear(void) {
     hset_t hset;
     
     ASSERT_TRUE("hset_size on NULL should be -1 (cast to size_t)", hset_size(NULL) == (size_t)-1);
@@ -139,7 +139,7 @@ void hset_metadata_and_clear() {
     hset_destroy(&hset);
 }
 
-void hset_equals_test() {
+void hset_equals_test(void) {
     hset_t a, b;
     hset_init(&a, 4, sizeof(int), NULL);
     hset_init(&b, 4, sizeof(int), NULL);
@@ -161,7 +161,7 @@ void hset_equals_test() {
     hset_destroy(&b);
 }
 
-void hset_union_test() {
+void hset_union_test(void) {
     hset_t a, b, result;
     hset_init(&a, 4, sizeof(int), NULL);
     hset_init(&b, 4, sizeof(int), NULL);
@@ -185,7 +185,7 @@ void hset_union_test() {
     hset_destroy(&result);
 }
 
-void hset_intersection_test() {
+void hset_intersection_test(void) {
     hset_t a, b, result;
     hset_init(&a, 4, sizeof(int), NULL);
     hset_init(&b, 4, sizeof(int), NULL);
@@ -205,7 +205,7 @@ void hset_intersection_test() {
     hset_destroy(&result);
 }
 
-void hset_difference_test() {
+void hset_difference_test(void) {
     hset_t a, b, result;
     hset_init(&a, 4, sizeof(int), NULL);
     hset_init(&b, 4, sizeof(int), NULL);
@@ -225,7 +225,7 @@ void hset_difference_test() {
     hset_destroy(&result);
 }
 
-void hset_symmetric_difference_test() {
+void hset_symmetric_difference_test(void) {
     hset_t a, b, result;
     hset_init(&a, 4, sizeof(int), NULL);
     hset_init(&b, 4, sizeof(int), NULL);
@@ -246,7 +246,7 @@ void hset_symmetric_difference_test() {
     hset_destroy(&result);
 }
 
-void hset_sub_superset() {
+void hset_sub_superset(void) {
     hset_t a, b;
     hset_init(&a, 4, sizeof(int), NULL);
     hset_init(&b, 4, sizeof(int), NULL);
@@ -289,7 +289,7 @@ static bool test_condition_is_even(const void* element, const void* data) {
     return (*(const int*)element) % 2 == 0;
 }
 
-void test_hset_to_vec() {
+void test_hset_to_vec(void) {
     hset_t hset;
     vec_t vec;
     hset_init(&hset, 4, sizeof(int), NULL);
@@ -310,7 +310,7 @@ void test_hset_to_vec() {
     hset_destroy(&hset);
 }
 
-void test_hset_add_all_and_remove_all() {
+void test_hset_add_all_and_remove_all(void) {
     hset_t hset;
     vec_t vec;
     hset_init(&hset, 4, sizeof(int), NULL);
@@ -342,7 +342,7 @@ void test_hset_add_all_and_remove_all() {
     hset_destroy(&hset);
 }
 
-void test_hset_contains_all_and_any() {
+void test_hset_contains_all_and_any(void) {
     hset_t hset;
     vec_t vec;
     hset_init(&hset, 4, sizeof(int), NULL);
@@ -373,7 +373,7 @@ void test_hset_contains_all_and_any() {
     hset_destroy(&hset);
 }
 
-void test_hset_any_all_none() {
+void test_hset_any_all_none(void) {
     hset_t hset;
     hset_init(&hset, 4, sizeof(int), NULL);
 
@@ -410,7 +410,7 @@ void test_hset_any_all_none() {
     hset_destroy(&hset);
 }
 
-void test_hset_filter() {
+void test_hset_filter(void) {
     hset_t hset;
     hset_t filtered;
     hset_init(&hset, 5, sizeof(int), NULL);
@@ -435,7 +435,7 @@ void test_hset_filter() {
     hset_destroy(&filtered);
 }
 
-void hset_vector_and_predicate_tests() {
+void hset_vector_and_predicate_tests(void) {
     printf("--- RUNNING VEC INTEROP TESTS ---\n");
     RUN_TEST(test_hset_to_vec);
     RUN_TEST(test_hset_add_all_and_remove_all);
@@ -448,7 +448,7 @@ void hset_vector_and_predicate_tests() {
     printf("\n");
 }
 
-void hset_tests() {
+void hset_tests(void) {
     printf("--- RUNNING HSET TESTS ---\n");
     RUN_TEST(hset_basic);
     RUN_TEST(hset_grow);

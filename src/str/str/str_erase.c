@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "../../../inc/str/str.h"
 #include "str_internal.h"
 #include "../../utility.h"

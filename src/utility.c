@@ -17,7 +17,7 @@ size_t next_power_of_two(size_t n) {
 }
 
 size_t previous_power_of_two(size_t n) {
-    if (n & (n - 1) == 0) {
+    if (is_power_of_two(n)) {
         return n;
     }
 
@@ -33,5 +33,5 @@ size_t previous_power_of_two(size_t n) {
 }
 
 size_t is_power_of_two(size_t n) {
-    return n & (n - 1) == 0;
+    return (n & (n - 1)) == 0;
 }

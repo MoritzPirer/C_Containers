@@ -1,8 +1,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "../../../inc/str/str.h"
-#include "../../utility.h"
+#include "src/str/str/str_internal.h"
+#include "inc/str/str.h"
+#include "src/utility.h"
 
 str_status_t _str_grow(str_t* self) {
     return _str_realloc(self, next_power_of_two(self->capacity));
@@ -55,9 +56,14 @@ str_status_t str_append_char(str_t* self, char c) {
     return STR_OK;
 }
 
+//TODO: handle self-appending
 str_status_t str_append_str(str_t* self, const str_t* other) {
     if (self == NULL || other == NULL) {
         return STR_ERROR_NULL;
+    }
+
+    if (other->size) {
+        return STR_OK;
     }
 
     if (self->size + other->size >= self->capacity) {

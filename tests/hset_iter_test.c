@@ -24,7 +24,7 @@ void hset_iter_init_test(void) {
     hset_destroy(&hset);
 }
 
-void hset_iter_move_test() {
+void hset_iter_move_test(void) {
     hset_t hset;
     hset_iter_t iter;
    hset_init(&hset, 0, sizeof(int), NULL);
@@ -50,7 +50,7 @@ void hset_iter_move_test() {
     hset_destroy(&hset);
 }
 
-void hset_iter_invalidation() {
+void hset_iter_invalidation(void) {
     const int N = 5;
     hset_t hsets[N];
     hset_iter_t iters[N];
@@ -88,7 +88,7 @@ void hset_iter_invalidation() {
     }
 }
 
-void hset_iter_remove_insert() {
+void hset_iter_remove_insert(void) {
     hset_t hset;
     hset_iter_t iter;
     hset_init(&hset, 0, sizeof(int), NULL);
@@ -111,7 +111,7 @@ void hset_iter_remove_insert() {
     ASSERT_TRUE("remove should unblock after move", hset_iter_remove(&iter) == HSET_ITER_OK);
 }
 
-void hset_iter_tests() {
+void hset_iter_tests(void) {
     printf("--- RUNNING HASH SET ITERATOR TESTS ---\n");
 
     RUN_TEST(hset_iter_init_test);

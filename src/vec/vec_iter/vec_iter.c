@@ -188,7 +188,7 @@ void vec_iter_debug(const vec_iter_t* iter) {
     }
 
     printf("=== Vec Iter Debug ===\n");
-    printf("vec_iter at %p\n", iter);
+    printf("vec_iter at %p\n", (void*) iter);
     printf("at index %zu\n", iter->current_index);
     printf("iterator version: %zu\n", iter->iterator_version);
 
@@ -196,7 +196,7 @@ void vec_iter_debug(const vec_iter_t* iter) {
         printf("currently on a deleted element\n");
     }
 
-    printf("iterating over following vec at %p:\n", iter->vec);
+    printf("iterating over following vec at %p:\n", (void*) iter->vec);
     vec_debug(iter->vec);
 
     printf("=== Vec Iter ===\n");

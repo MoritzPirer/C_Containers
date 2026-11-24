@@ -1,4 +1,7 @@
-#include "str_internal.h"
+#include <stdlib.h>
+
+#include "src/utility.h"
+#include "src/str/str/str_internal.h"
 
 str_status_t _str_realloc(str_t* self, size_t new_size) {
     void* temp = realloc(self->array, new_size);
