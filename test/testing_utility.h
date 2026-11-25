@@ -13,13 +13,16 @@ typedef struct test_t_ {
 
 #define MAX_TESTS_PER_FILE 50
 
+/// @brief call once per file, either at the top of the file or at the start of main.
 #define INIT_TEST_FILE() \
     static test_t tests[MAX_TESTS_PER_FILE]; \
     static unsigned int test_count = 0; 
 
+/// @brief declare a new test
 #define TEST(name) \
     static int name(void)
 
+/// @brief register a test to be executed. All tests declared with TEST(x) must be registered with REGISTER(x) or SKIP_REGISTER(X)
 #define REGISTER(name) \
     tests[test_count++] = (test_t){ \
         .test_function = &name, \
@@ -27,6 +30,7 @@ typedef struct test_t_ {
         .is_enabled = true \
     };
 
+/// @brief register a test to be skipped. All tests declared with TEST(x) must be registered with REGISTER(x) or SKIP_REGISTER(X)
 #define SKIP_REGISTER(name) \
     tests[test_count++] = (test_t){ \
         .test_function = &name, \
@@ -39,6 +43,7 @@ typedef struct test_t_ {
 #define ANSI_COLOR_RED      "\033[31m"
 #define ANSI_COLOR_RESET    "\033[0m"
 
+/// @brief runs all tests marked to be executed. Call once in main.
 #define RUN_TESTS() \
     printf("\n====================\n"); \
     printf("Testing file \"%s\"\n", __FILE__); \
@@ -72,8 +77,10 @@ typedef struct test_t_ {
     printf("====================\n"); \
     return 0;
 
-//#define FAIL(message)
 
+/// @brief assert that expression is true
+/// @param expression an expression to assert
+/// @param message a message to print if the assertion fails
 #define ASSERT_TRUE(expression, message) \
     do { \
         if (!(expression)) { \
@@ -82,6 +89,9 @@ typedef struct test_t_ {
         } \
     } while (0); \
 
+/// @brief assert that expression is false
+/// @param expression an expression to assert
+/// @param message a message to print if the assertion fails
 #define ASSERT_FALSE(expression, message) ASSERT_TRUE(!(expression), message)
 
 #define FORMAT_STRING(value) \
@@ -91,12 +101,17 @@ typedef struct test_t_ {
         long:           "%ld", \
         unsigned long:  "%lu", \
         double:         "%f", \
-        float:         "%f", \
+        float:          "%f", \
         char*:          "%s", \
         const char*:    "%s", \
+        bool:           "%d", \
         default:        "unknown: %p" \
     ))
 
+/// @brief assert that two values are equal
+/// @param expected what the value to be tested should be
+/// @param actual what the value to be tested is
+/// @param message a message to print if the assertion fails
 #define ASSERT_EQUAL(expected, actual, message) \
     do { \
         if (!(expected == actual)) { \
@@ -105,12 +120,16 @@ typedef struct test_t_ {
             printf(ANSI_COLOR_RED "\texpected '"); \
             printf(FORMAT_STRING(expected), expected); \
             printf("' but got '"); \
-            printf(FORMAT_STRING(actual), actual); \
+            printf(FORMAT_STRING(actual),  actual); \
             printf("'!\n" ANSI_COLOR_RESET); \
             return 1; \
         } \
     } while (0); 
 
+/// @brief assert that two strings are equal
+/// @param expected what the string to be tested should be
+/// @param actual what the string to be tested is
+/// @param message a message to print if the assertion fails
 #define ASSERT_STRING_EQUAL(expected, actual, message) \
     do { \
         if (strcmp(expected, actual) != 0) { \
@@ -121,6 +140,10 @@ typedef struct test_t_ {
         } \
     } while (0); 
 
+/// @brief assert that two values are different 
+/// @param expected what the value to be tested should not be
+/// @param actual what the value to be tested is
+/// @param message a message to print if the assertion fails
 #define ASSERT_NOT_EQUAL(expected, actual, message) \
     do { \
         if (_Generic((expected), \
@@ -139,6 +162,10 @@ typedef struct test_t_ {
         } \
     } while (0); 
 
+/// @brief assert that two strings are different 
+/// @param expected what the string to be tested should not be
+/// @param actual what the string to be tested is
+/// @param message a message to print if the assertion fails
 #define ASSERT_STRING_NOT_EQUAL(expected, actual, message) \
     do { \
         if (strcmp(expected, actual) == 0) { \
@@ -149,6 +176,7 @@ typedef struct test_t_ {
         } \
     } while (0); 
 
+/// @brief automatically fails the test case
 #define FAIL(message) \
     do { \
         printf(ANSI_COLOR_RED "[FAIL] %s (Line %d): %s\n" ANSI_COLOR_RESET, \
