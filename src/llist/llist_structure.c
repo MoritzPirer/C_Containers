@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
@@ -16,6 +17,8 @@ size_t llist_size(const llist_t* self) {
     if (self == NULL) {
         return (size_t) -1;
     }
+
+    return self->size;
 }
 
 llist_element_t* create_element(size_t total_size, size_t item_size, const void* source) {
@@ -59,9 +62,9 @@ llist_status_t llist_push_back(llist_t* self, const void* source) {
 void free_only_element(llist_t* self) {
     assert(self->size == 1);
     free(self->head);
-    self->head == NULL;
-    self->tail == NULL;
-    self->size == 0;
+    self->head = NULL;
+    self->tail = NULL;
+    self->size = 0;
 }
 
 llist_status_t llist_pop_back(llist_t* self, void* destination) {
@@ -137,7 +140,7 @@ llist_status_t llist_pop_front(llist_t* self, void* destination) {
 
     assert(self->head != self->tail);
 
-    llist_element_t* new_head = self->head->previous;
+    llist_element_t* new_head = self->head->next;
     free(self->head);
     self->head = new_head;
     new_head->previous = NULL;

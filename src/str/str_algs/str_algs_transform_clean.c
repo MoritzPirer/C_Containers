@@ -1,9 +1,9 @@
-#include "../../../inc/str/str_algs.h"
-#include "../../utility.h"
-#include "../str/str_internal.h"
-
 #include <ctype.h>
 #include <string.h>
+
+#include "inc/str/str_algs.h"
+#include "src/utility.h"
+#include "src/str/str/str_internal.h"
 
 void str_to_uppercase(str_t* self) {
     if (self == NULL) {
@@ -55,7 +55,7 @@ str_status_t str_trim_left(str_t* self) {
     memcpy(self->array, temp, surviving_chars);
     self->size = surviving_chars;
 
-    if (_str_is_less_than_half_full) {
+    if (_str_is_less_than_half_full(self)) {
         return _str_realloc(self, next_power_of_two(self->size));
     }
 
@@ -120,7 +120,7 @@ str_status_t str_collapse_repeated(str_t* self, char c) {
         write_index++;
     }
 
-    if (_str_is_less_than_half_full) {
+    if (_str_is_less_than_half_full(self)) {
         return _str_realloc(self, next_power_of_two(self->size));
     }
 

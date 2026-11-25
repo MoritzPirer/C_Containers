@@ -9,6 +9,7 @@ void vec_iter_tests(void);
 void hset_tests(void);
 void hset_iter_tests(void);
 void str_tests(void);
+void llist_tests(void);
 
 int main(void) {
     printf("=== STARTING ALL LIBRARY TESTS ===\n\n");
@@ -19,6 +20,7 @@ int main(void) {
     hset_tests();
     hset_iter_tests();
     str_tests();
+    llist_tests();
 
     printf("==================================\n");
     printf("Total Tests Executed: %d\n", tests_run);

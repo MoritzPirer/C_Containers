@@ -189,7 +189,7 @@ void vec_size_afterReserveResize(void) {
     ASSERT_INT_EQ("Resizing should physically shift accessible size to 20 elements", 20, vec_size(&d));
 }
 
-void vec_tests() {
+void vec_tests(void) {
     printf("--- RUNNING CORE VECTOR TESTS ---\n");
 
     RUN_TEST(vec_capacity_afterPartialErase);

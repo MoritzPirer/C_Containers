@@ -132,11 +132,11 @@ void hset_iter_debug(const hset_iter_t* iter) {
     }
 
     printf("=== Hset Iter Debug ===\n");
-    printf("hset_iter at %p\n", iter);
+    printf("hset_iter at %p\n", (void*) iter);
     printf("at internal index %zu\n", iter->current_index);
     printf("iterator_version: %zu\n", iter->iterator_version);
 
-    printf("iterating over following hset at %p\n", iter->hset);
+    printf("iterating over following hset at %p\n", (void*) iter->hset);
     hset_debug(iter->hset);
 
     printf("=== Hset Iter ===\n");
