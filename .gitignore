@@ -1,2 +1,9 @@
+build/
+
+# OS
+.DS_Store
 *.dSYM
+
+# IDE
 .vscode/
+.idea/
